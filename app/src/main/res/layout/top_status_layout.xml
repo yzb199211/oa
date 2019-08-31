@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanxin.oa.view.status.StatusBarHeightView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_60"
+    android:background="#22cccccc"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="horizontal"
+    app:use_type="use_padding_top">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/title_main"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+</com.huanxin.oa.view.status.StatusBarHeightView>

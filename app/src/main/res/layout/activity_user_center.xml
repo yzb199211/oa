@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_bg_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/top_layout" />
+
+        <com.huanxin.oa.view.review.ReviewInfoView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="@dimen/dp_10" />
+
+        <com.huanxin.oa.view.MineItemView
+            android:id="@+id/mineItemView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_140"
+            android:background="@color/white"
+            app:cardCornerRadius="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_50"
+                android:lines="1"
+                android:paddingLeft="@dimen/dp_30"
+                android:paddingTop="@dimen/dp_20"
+                android:text="徐总"
+                android:textColor="@color/default_text_color"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="@dimen/dp_240"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_50"
+                android:lines="1"
+                android:paddingLeft="@dimen/dp_30"
+                android:text="环鑫科技责任有限公司"
+                android:textColor="@color/default_content_color"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/dp_30"
+                android:lines="1"
+                android:paddingLeft="@dimen/dp_30"
+                android:text="销售部"
+                android:textColor="@color/default_content_color"
+                android:textSize="@dimen/sp_14" />
+
+            <include layout="@layout/layout_logo" />
+
+            <com.huanxin.oa.view.triangle.RigthAngleStriangle
+                android:id="@+id/rasEdit"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="right|bottom"
+                app:paintColor="@color/colorPrimary"
+                app:srcScale="0.4"
+                app:striangleSrc="@mipmap/icon_editor" />
+        </androidx.cardview.widget.CardView>
+
+        <com.huanxin.oa.view.review.ReviewSelectItem
+            android:id="@+id/review_select_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:text="nihao"
+            android:textSize="@dimen/sp_12" />
+
+        <com.huanxin.oa.view.review.ReviewSelectView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <com.huanxin.oa.view.review.ReviewTabView
+            android:id="@+id/tab_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.huanxin.oa.view.review.ReviewTabView>
+    </LinearLayout>
+</ScrollView>

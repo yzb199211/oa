@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_36"
+    android:background="@color/form_menu_white">
+
+    <View
+        android:layout_width="@dimen/dp_5"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@color/btn_blue_normal" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_36"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:gravity="center_vertical"
+        android:text="@string/title_menu"
+        android:textColor="@color/default_text_color"
+        android:textSize="@dimen/sp_14" />
+</FrameLayout>

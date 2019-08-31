@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+   >
+
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_10"
+        android:layout_above="@id/ll_content"
+        android:layout_marginLeft="@dimen/dp_45"
+        android:layout_marginBottom="@dimen/dp_m_10"
+        android:background="@color/black" />
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_10"
+        android:layout_below="@+id/ll_content"
+        android:layout_marginLeft="@dimen/dp_45"
+        android:background="@color/black" />
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:maxLength="4"
+            android:singleLine="true"
+            android:text="张三三"
+            android:textColor="@color/default_text_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="发起申请"
+            android:textColor="@color/default_content_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2019-01-01 09:20"
+            android:textColor="@color/default_text_color"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_remark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_content"
+        android:layout_marginLeft="@dimen/dp_80"
+        android:text="12314"
+        android:textColor="@color/default_content_color"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/et_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_content"
+        android:layout_marginLeft="@dimen/dp_80"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/et_bg_conner_0"
+        android:gravity="start"
+        android:hint="请输入审批意见"
+        android:lines="4"
+        android:padding="@dimen/dp_5"
+        android:textColor="@color/default_text_color"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
+
+</merge>

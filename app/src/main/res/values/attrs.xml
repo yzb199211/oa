@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--/*选择弹窗属性*/-->
+    <declare-styleable name="pickerview">
+        <attr name="wheelview_gravity">
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
+        </attr>
+        <attr name="wheelview_textSize" format="dimension" />
+        <attr name="wheelview_textColorOut" format="color" />
+        <attr name="wheelview_textColorCenter" format="color" />
+        <attr name="wheelview_dividerColor" format="color" />
+        <attr name="wheelview_lineSpacingMultiplier" format="float" />
+    </declare-styleable>
+
+    <!--轮播图属性-->
+    <declare-styleable name="CircleViewPager">
+        <!--页面切换时间间隔-->
+        <attr name="interval" format="integer" />
+        <attr name="isCanLoop" format="boolean" />
+        <attr name="isAutoPlay" format="boolean" />
+        <!--<attr name="indicator_gravity" format="integer"/>-->
+        <attr name="indicator_checked_color" format="color" />
+        <attr name="indicator_normal_color" format="color" />
+        <attr name="indicator_radius" format="dimension" />
+        <attr name="indicator_gravity" format="enum">
+            <enum name="center" value="0" />
+            <enum name="start" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <!--圆点属性-->
+    <declare-styleable name="BadgeView">
+        <attr name="iconSrc" format="reference" />
+        <attr name="iconWidth" format="dimension" />
+        <attr name="iconHeight" format="dimension" />
+        <!--若是icon是正方形的,可直接设置这个参数-->
+        <attr name="iconSize" format="dimension" />
+
+        <attr name="text" format="string" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+
+        <attr name="badgeNum" format="integer" />
+        <!--是否显示数字, 为false时只显示小红点; 没有数字时,小红点的大小通过badgeSize设置-->
+        <attr name="showNum" format="boolean" />
+        <attr name="badgeBackgroundColor" format="color" />
+        <!--限制设置小红点的大小不能超过数字显示模式(代码中也做了限制); 显示在文字模式大小的左下角;-->
+        <!-- 不显示数字时, 小红点的大小, 不包括边线-->
+        <attr name="badgeRedSize" format="dimension" />
+        <attr name="badgeNumSize" format="dimension" />
+        <attr name="badgeNumColor" format="color" />
+        <!--若小红点有边缘线,加上边缘线-->
+        <attr name="badgeBorderColor" format="color" />
+        <attr name="badgeBorderWidth" format="dimension" />
+        <!--badge相对于主体右上角的相对位置, 重叠的部分的大小; 可以设置负值-->
+        <!--默认是( badgeHeight/2 ), 正好覆盖一个角-->
+        <attr name="badgeBottom" format="dimension" />
+        <attr name="badgeLeft" format="dimension" />
+        <!-- 有些设计要求未读前面加"+", (至少我们设计师这么设计) 显示成 +1/+34/+99-->
+        <attr name="badgeNumPre" format="string" />
+    </declare-styleable>
+    <!--状态栏站位属性-->
+    <declare-styleable name="StatusBarHeightView">
+        <attr name="use_type" format="integer">
+            <enum name="use_height" value="0" />
+            <enum name="use_padding_top" value="1" />
+        </attr>
+    </declare-styleable>
+    <!--三角形属性-->
+    <declare-styleable name="StriangleView">
+        <attr name="paintColor" format="color"></attr>
+        <attr name="striangleSrc" format="reference"></attr>
+        <attr name="srcScale" format="float"></attr>
+    </declare-styleable>
+    <!--个人中心菜单设置-->
+    <declare-styleable name="MineItemView">
+        <attr name="leftSrc" format="reference|integer" />
+        <attr name="leftVisible" format="boolean" />
+        <attr name="leftWidth" format="dimension" />
+        <attr name="leftHeight" format="dimension" />
+        <attr name="leftPadding" format="dimension" />
+        <attr name="centerText" format="string" />
+        <attr name="centerTextColor" format="color" />
+        <attr name="centerTextSize" format="dimension" />
+        <attr name="centerWidth" format="dimension" />
+        <attr name="centerContentText" format="string" />
+        <attr name="centerContentWidth" format="dimension" />
+        <attr name="centerCotentTextColor" format="color" />
+        <attr name="centerContengtTextSize" format="dimension" />
+        <attr name="rightVisible" format="boolean" />
+    </declare-styleable>
+    <!--审核单属性列-->
+    <declare-styleable name="reviewInfo">
+        <attr name="leftText" format="string" />
+        <attr name="leftTextSize" format="dimension" />
+        <attr name="leftTextColor" format="color" />
+        <attr name="leftTextBold" format="boolean" />
+        <attr name="rightText" format="string" />
+        <attr name="rightTextSize" format="dimension" />
+        <attr name="rightTextColor" format="color" />
+        <attr name="rightTextBold" format="boolean" />
+    </declare-styleable>
+    <!--审核过程属性-->
+    <declare-styleable name="reviewProcess">
+        <attr name="llPaddingRight" format="dimension" />
+        <attr name="llPaddingTop" format="dimension" />
+        <attr name="llPaddingBottom" format="dimension" />
+        <attr name="imgsrc" format="reference" />
+        <attr name="titleText" format="string" />
+        <attr name="titleColor" format="color" />
+        <attr name="titleSize" format="dimension" />
+        <attr name="titleWidth" format="dimension" />
+        <attr name="contentText" format="string" />
+        <attr name="contentTextColor" format="color" />
+        <attr name="contentTextSize" format="dimension" />
+        <attr name="contentPaddingLeft" format="dimension" />
+        <attr name="dateText" format="string" />
+        <attr name="dateTextColor" format="color" />
+        <attr name="dateTextSize" format="dimension" />
+        <attr name="tvRemarkVisiable" format="boolean" />
+        <attr name="tvRemarkText" format="string" />
+        <attr name="tvRemarkTextColor" format="color" />
+        <attr name="tvRemarkTextSize" format="dimension" />
+        <attr name="etRemarkVisiable" format="boolean" />
+        <attr name="etRemarkText" format="string" />
+        <attr name="etRemarkHint" format="string" />
+        <attr name="etRemarkTextSize" format="dimension" />
+        <attr name="etRemarkMarginTop" format="dimension" />
+        <attr name="etRemarkTextColor" format="color" />
+    </declare-styleable>
+    <!--审核筛选样式-->
+    <declare-styleable name="reviewSelectView">
+        <attr name="spandCounts" format="integer" />
+    </declare-styleable>
+    <!--审核筛选项样式-->
+    <declare-styleable name="reviewSelectItem">
+        <attr name="normalColor" format="color" />
+        <attr name="selectColor" format="color" />
+        <attr name="textNormalColor" format="color" />
+        <attr name="textSelectColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="SelectView">
+        <attr name="type" format="integer" />
+
+
+        <attr name="title" format="string" />
+        <attr name="hint" format="string" />
+
+    </declare-styleable>
+</resources>

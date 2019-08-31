@@ -1,0 +1,126 @@
+<resources>
+    <string name="app_name1">oa</string>
+    <string name="cancel">取消</string>
+    <string name="submit">确定</string>
+    <string name="error_data">数据解析错误</string>
+    <string name="error_fail">网络请求失败</string>
+
+    <string name="empty">暂无数据，点击刷新</string>
+    <string name="preferenceCache">oaCache</string>
+    <string name="str_login">登录</string>
+    <string name="str_sweep">扫描二维码</string>
+    <string name="title_main">首页</string>
+    <string name="title_contact">联系人</string>
+    <string name="title_find">发现</string>
+    <string name="title_form">报表</string>
+    <string name="title_my">我的</string>
+    <string name="title_user_center">个人中心</string>
+    <string name="title_review_list">审核列表</string>
+    <string name="title_review_detail">审核详情</string>
+
+    <string name="title_menu">常用功能</string>
+
+    <string name="btn_cancel">注销</string>
+    <string name="btn_more">更多</string>
+    <string name="btn_yes">是</string>
+    <string name="btn_no">否</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--选择弹窗-->
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_month">月</string>
+    <string name="pickerview_day">日</string>
+    <string name="pickerview_hours">时</string>
+    <string name="pickerview_minutes">分</string>
+    <string name="pickerview_seconds">秒</string>
+    <!--首页菜单标题-->
+    <string name="menu_message">提醒</string>
+    <string name="menu_review">审核</string>
+    <string name="menu_check">考勤</string>
+    <string name="menu_daily">日报</string>
+    <string name="menu_customer">客户</string>
+    <string name="menu_supplier">供应商</string>
+    <string name="menu_sales">销售</string>
+    <string name="menu_purchase">采购</string>
+    <string name="menu_produce">生产</string>
+    <string name="menu_finance">财务</string>
+    <string name="menu_files">文档</string>
+    <string name="menu_set">设置</string>
+    <!--个人中心标题-->
+    <string name="mine_person">企业人员</string>
+    <string name="mine_mobile">联系电话</string>
+    <string name="mine_mail">电子邮箱</string>
+    <string name="mine_help">我的客服</string>
+    <string name="mine_study">学习中心</string>
+    <string name="mine_code">二维码</string>
+    <!--审核默认文字-->
+    <string name="review_style_title">样式</string>
+    <!--矢量图-->
+    <string name="icon_add">&#xe641;</string>
+    <string name="icon_edit">&#xe6f5;</string>
+    <string name="icon_clear">&#xe645;</string>
+    <string name="icon_clear1">&#xe6df;</string>
+    <string name="icon_remove">&#xe606;</string>
+    <string name="icon_save">&#xe601;</string>
+    <string name="icon_cut">&#xe63c;</string>
+    <string name="icon_ok">&#xe631;</string>
+    <string name="icon_no">&#xe64e;</string>
+    <string name="icon_import">&#xe6b6;</string>
+    <string name="icon_cancel">&#xe650;</string>
+    <string name="icon_reload">&#xe7aa;</string>
+    <string name="icon_search">&#xe873;</string>
+    <string name="icon_print">&#xe666;</string>
+    <string name="icon_help">&#xe611;</string>
+    <string name="icon_undo">&#xe822;</string>
+    <string name="icon_redo">&#xe7cf;</string>
+    <string name="icon_back">&#xe61c;</string>
+    <string name="icon_sum">&#xe810;</string>
+    <string name="icon_tip">&#xe62a;</string>
+    <string name="icon_filter">&#xe734;</string>
+    <string name="icon_man">&#xe71b;</string>
+    <string name="icon_lock">&#xe644;</string>
+    <string name="icon_next">&#xe610;</string>
+    <string name="icon_preview">&#xe712;</string>
+    <string name="icon_todo">&#xe609;</string>
+    <string name="icon_remind">&#xe675;</string>
+    <string name="icon_gg">&#xe628;</string>
+    <string name="icon_calendar">&#xe638;</string>
+    <string name="icon_link">&#xe612;</string>
+    <string name="icon_job">&#xe607;</string>
+    <string name="icon_chart">&#xe61f;</string>
+    <string name="icon_home">&#xe652;</string>
+    <string name="icon_customer">&#xe68d;</string>
+    <string name="icon_export">&#xe6e0;</string>
+    <string name="icon_submit">&#xe620;</string>
+    <string name="icon_submitcancel">&#xe650;</string>
+    <string name="icon_refresh">&#xe7aa;</string>
+    <string name="icon_associate">&#xe62c;</string>
+    <string name="icon_copy">&#xe622;</string>
+    <string name="icon_word">&#xe63e;</string>
+    <string name="icon_book">&#xe664;</string>
+    <string name="icon_list">&#xe68c;</string>
+    <string name="icon_all">&#xe68e;</string>
+    <string name="icon_group">&#xe613;</string>
+    <string name="icon_original">&#xeba0;</string>
+    <string name="icon_now">&#xe7e8;</string>
+    <string name="icon_address">&#xe603;</string>
+    <string name="icon_businessCard">&#xe6e6;</string>
+    <string name="icon_zoomin">&#xe63a;</string>
+    <string name="icon_stop">&#xe72f;</string>
+    <string name="icon_forbidden">&#xe62b;</string>
+    <string name="icon_checkcancel">&#xe62b;</string>
+    <string name="icon_config">&#xe6ea;</string>
+    <string name="icon_system">&#xe625;</string>
+    <string name="icon_purchase">&#xe642;</string>
+    <string name="icon_sale">&#xea8f;</string>
+    <string name="icon_stock">&#xe647;</string>
+    <string name="icon_document">&#xe662;</string>
+    <string name="icon_finance">&#xe653;</string>
+    <string name="icon_finishWork">&#xe62e;</string>
+    <string name="icon_barcode">&#xe616;</string>
+    <string name="icon_form">&#xe605;</string>
+    <string name="icon_warehouse">&#xe604;</string>
+    <string name="icon_order">&#xe70c;</string>
+    <string name="icon_basedata">&#xe64f;</string>
+    <string name="icon_default">&#xe639;</string>
+</resources>
+
