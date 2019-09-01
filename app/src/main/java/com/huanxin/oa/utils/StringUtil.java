@@ -8,6 +8,10 @@ import androidx.annotation.Nullable;
 
 import com.huanxin.oa.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -140,5 +144,28 @@ public class StringUtil {
                 break;
         }
         return text;
+    }
+
+    /*解析lookup数据*/
+    public static String getLookupData(String tables, String keyReturn, String keyShow) throws JSONException {
+        JSONObject jsonObject = new JSONObject(tables);
+        JSONArray jsonArray = jsonObject.optJSONArray("LookupData");
+        String data = "[";
+        for (int i = 0; i < jsonArray.length(); i++) {
+            data = data + "{";
+            data = data + "\"id\":";
+            data = data + "\"";
+            data = data + jsonArray.getJSONObject(i).optString(keyReturn);
+            data = data + "\"";
+            data = data + ",";
+            data = data + "\"name\":";
+            data = data + "\"";
+            data = data + jsonArray.getJSONObject(i).optString(keyShow);
+            data = data + "\"";
+            data = data + "}";
+            if (i != jsonArray.length() - 1)
+                data = data + ",";
+        }
+        return data + "]";
     }
 }

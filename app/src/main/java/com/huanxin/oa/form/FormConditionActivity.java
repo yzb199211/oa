@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -32,10 +33,15 @@ public class FormConditionActivity extends BaseActivity {
     TextView tvTitle;
     @BindView(R.id.ll_content)
     LinearLayout llContent;
+    @BindView(R.id.bottom_review)
+    RelativeLayout bottonView;
+    @BindView(R.id.tv_disagree)
+    TextView tvDisagree;
 
     SharedPreferencesHelper preferencesHelper;
     private String userId;
     private List<FormBean.ReportConditionBean> conditions;
+    private List<FunctionView> viewList;
 
     public static FormConditionActivity mActivity;
 
@@ -53,7 +59,9 @@ public class FormConditionActivity extends BaseActivity {
     private void init() {
         tvTitle.setText("筛选条件");
         ivBack.setVisibility(View.VISIBLE);
+        tvDisagree.setVisibility(View.INVISIBLE);
         conditions = new ArrayList<>();
+        viewList = new ArrayList<>();
         Intent intent = getIntent();
         String data = intent.getStringExtra("data");
         if (StringUtil.isNotEmpty(data)) {
@@ -65,8 +73,8 @@ public class FormConditionActivity extends BaseActivity {
     }
 
     private void initView() {
-
         if (conditions.size() > 0) {
+            bottonView.setVisibility(View.VISIBLE);
             for (int i = 0; i < conditions.size(); i++) {
                 FunctionView view = new FunctionView(this);
 //        view.setView_type("S");
@@ -79,12 +87,22 @@ public class FormConditionActivity extends BaseActivity {
                 view.setmActivity(this);
                 view.build(conditions.get(i).getSFieldType());
                 llContent.addView(view);
+                viewList.add(view);
             }
         }
     }
 
-    @OnClick(R.id.iv_back)
-    public void onViewClicked() {
-        finish();
+
+    @OnClick({R.id.iv_back, R.id.tv_agree})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_agree:
+                break;
+            default:
+                break;
+        }
     }
 }

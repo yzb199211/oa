@@ -30,6 +30,7 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.lookup.LookUpActivity;
+import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
@@ -39,6 +40,7 @@ import com.huanxin.oa.view.pick.listener.OnTimeSelectChangeListener;
 import com.huanxin.oa.view.pick.listener.OnTimeSelectListener;
 import com.huanxin.oa.view.pick.view.TimePickerView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +51,7 @@ import java.util.List;
 
 import static com.huanxin.oa.utils.StringUtil.getDate;
 import static com.huanxin.oa.utils.StringUtil.getDefaulText;
+import static com.huanxin.oa.utils.StringUtil.getLookupData;
 import static com.huanxin.oa.utils.StringUtil.getTime;
 import static com.huanxin.oa.utils.StringUtil.isNotEmpty;
 
@@ -208,16 +211,32 @@ public class FunctionView extends LinearLayout {
         new NetUtil(getParams(), NetConfig.url + NetConfig.MobileHandler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-                Log.e("data", string);
+//                Log.e("data", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.optBoolean("success");
                     if (isSuccess) {
+                        String keyValue = jsonObject.optString("data");
+                        if (StringUtil.isNotEmpty(keyValue)) {
+                            JSONObject keyJson = new JSONObject(keyValue);
+                            String keyReturn = keyJson.optString("sReturnField");
+                            String keyShow = keyJson.optString("sDisplayField");
+                            if (StringUtil.isNotEmpty(keyReturn) && StringUtil.isNotEmpty(keyShow)) {
+                                initLookupData(jsonObject.optString("tables"), keyReturn, keyShow);
+                            } else {
+                                loadFail("未返回关键字");
+                            }
+                        } else {
+                            loadFail("未返回关键字");
+                        }
                     } else {
                         loadFail(jsonObject.optString("message"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    loadFail("json数据解析错误");
+                } catch (Exception e) {
+                    loadFail("数据解析错误");
                 }
             }
 
@@ -227,6 +246,25 @@ public class FunctionView extends LinearLayout {
                 loadFail("未获取到数据");
             }
         });
+    }
+
+    /*处理Lookup数据*/
+    private void initLookupData(String tables, String keyReturn, String keyShow) throws JSONException, Exception {
+
+        //Log.e("jsonArrayLength", jsonArray.length() + "");
+        if (tables.contains(keyReturn) && tables.contains(keyShow)) {
+            this.data = getLookupData(tables, keyReturn, keyShow);
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    goLookup();
+                }
+            });
+            loadFail("");
+        } else {
+            loadFail("lookup数据或关键字错误");
+        }
+
     }
 
     /*获取数据参数*/
