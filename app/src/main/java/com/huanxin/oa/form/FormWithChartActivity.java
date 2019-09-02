@@ -2,6 +2,7 @@ package com.huanxin.oa.form;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.model.FormBean;
@@ -20,12 +22,15 @@ import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +51,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     List<FormBean.ReportConditionBean> conditionBeans;
     List<FormBean.ReportColumnsBean> columnsBeans;
 
-
+    Set<String> fields;
     SharedPreferencesHelper preferencesHelper;
 
     @Override
@@ -65,6 +70,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();
         conditionBeans = new ArrayList<>();
+        fields = new HashSet<>();
 
         Intent intent = getIntent();
         menuid = intent.getStringExtra("menuid");
@@ -83,6 +89,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     boolean isSuccess = jsonObject.getBoolean("success");
                     if (isSuccess) {
                         String table = jsonObject.optString("info");
+                        String data = jsonObject.optString("olddata");
                         Gson gson = new Gson();
                         FormBean formBean = gson.fromJson(table, FormBean.class);
                         List<FormBean.ReportInfoBean> info = formBean.getReportInfo();
@@ -97,6 +104,26 @@ public class FormWithChartActivity extends AppCompatActivity {
                         if (column != null && column.size() > 0) {
                             columnsBeans.addAll(column);
                         }
+                        String field = infoBeans.get(0).getSSerialField();
+                        String xValue = infoBeans.get(0).getSXAxisField();
+                        String yValue = infoBeans.get(0).getSYAxisField();
+                        if (TextUtils.isEmpty(field)) {
+                            loadFail("sSerialField为空");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(xValue)) {
+                            loadFail("sXAxisField");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(yValue)) {
+                            loadFail("sYAxisField为空");
+                            return;
+                        }
+                        JSONArray jsonArray = new JSONArray(data);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            fields.add(jsonArray.getJSONObject(i).optString(field));
+                        }
+
 
 
                     } else {
