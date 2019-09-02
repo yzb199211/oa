@@ -51,6 +51,16 @@ public class FormBean {
         private String sLookUpFilters;
         private String sOpTion;
         private String sValue;
+        private  String selectValue;
+
+
+        public String getSelectValue() {
+            return selectValue;
+        }
+
+        public void setSelectValue(String selectValue) {
+            this.selectValue = selectValue;
+        }
 
         public int getISerial() {
             return iSerial;

@@ -2,17 +2,21 @@ package com.huanxin.oa.form;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huanxin.oa.BaseActivity;
 import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormBean;
+import com.huanxin.oa.utils.LookupDataUtil;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.view.select.FunctionView;
@@ -40,8 +44,10 @@ public class FormConditionActivity extends BaseActivity {
 
     SharedPreferencesHelper preferencesHelper;
     private String userId;
+    int code;
     private List<FormBean.ReportConditionBean> conditions;
     private List<FunctionView> viewList;
+
 
     public static FormConditionActivity mActivity;
 
@@ -53,13 +59,15 @@ public class FormConditionActivity extends BaseActivity {
         ButterKnife.bind(this);
         preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
+        code = getIntent().getIntExtra("code", 0);
         init();
     }
 
     private void init() {
         tvTitle.setText("筛选条件");
-        ivBack.setVisibility(View.VISIBLE);
         tvDisagree.setVisibility(View.INVISIBLE);
+        ivBack.setVisibility(View.VISIBLE);
+
         conditions = new ArrayList<>();
         viewList = new ArrayList<>();
         Intent intent = getIntent();
@@ -80,7 +88,7 @@ public class FormConditionActivity extends BaseActivity {
 //        view.setView_type("S");
                 view.setTitle(conditions.get(i).getSCaption());
                 view.setHint("请输入" + conditions.get(i).getSCaption());
-                view.setText(conditions.get(i).getSValue());
+                view.setText(TextUtils.isEmpty(conditions.get(i).getSValue()) ? "" : conditions.get(i).getSValue());
                 view.setLookupName(conditions.get(i).getSLookUpName());
                 view.setLookupFilter(conditions.get(i).getSLookUpFilters());
                 view.setCode(BASE_CODE + i);
@@ -100,9 +108,31 @@ public class FormConditionActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_agree:
+                for (int i = 0; i < conditions.size(); i++) {
+                    if (TextUtils.isEmpty(conditions.get(i).getSLookUpName())) {
+                        conditions.get(i).setSelectValue(viewList.get(i).getText());
+                    }
+                }
+                String data = LookupDataUtil.getConditionData(conditions);
+                Intent intent = new Intent();
+                intent.putExtra("data", data);
+                setResult(code, intent);
+                finish();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            int code = requestCode - BASE_CODE;
+            if (code > -1 || code < conditions.size()) {
+                conditions.get(code).setSelectValue(data.getStringExtra("id"));
+                viewList.get(code).setText(data.getStringExtra("name"));
+            }
         }
     }
 }

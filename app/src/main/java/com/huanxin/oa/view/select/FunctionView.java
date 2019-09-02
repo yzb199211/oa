@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +39,6 @@ import com.huanxin.oa.view.pick.listener.OnTimeSelectChangeListener;
 import com.huanxin.oa.view.pick.listener.OnTimeSelectListener;
 import com.huanxin.oa.view.pick.view.TimePickerView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,6 +70,7 @@ public class FunctionView extends LinearLayout {
     private String data;
     private String lookupName;
     private String lookupFilter;
+
     private Activity mActivity;
     TimePickerView timePicker;
     TimePickerView datePicker;
@@ -109,12 +108,13 @@ public class FunctionView extends LinearLayout {
         tvTitle.setText(TextUtils.isEmpty(title) ? "" : title);
         tvContent.setHint(TextUtils.isEmpty(hint) ? "" : hint);
         tvContent.setText(getDefaulText(context, text));
+        this.text = getDefaulText(context,text);
         setView();
 
     }
 
     private void setView() {
-        switch (view_type) {
+        switch (view_type.toUpperCase()) {
             case "D":
                 setDateLookUp();
                 break;
@@ -461,6 +461,8 @@ public class FunctionView extends LinearLayout {
 
     public void setText(String text) {
         this.text = text;
+        if (tvContent != null)
+            tvContent.setText(text);
     }
 
     public String getHint() {
@@ -507,4 +509,5 @@ public class FunctionView extends LinearLayout {
     public void setmActivity(Activity mActivity) {
         this.mActivity = mActivity;
     }
+
 }

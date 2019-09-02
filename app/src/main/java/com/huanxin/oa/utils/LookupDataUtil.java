@@ -22,6 +22,7 @@ public class LookupDataUtil {
         return data;
     }
 
+
     public static String getValue(String option, String type, String data) {
         String value = "";
         switch (type) {

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bin.david.form.core.SmartTable;
@@ -56,6 +57,7 @@ public class FormNewActivity extends AppCompatActivity {
 
     private String menuId;
     private String userId;
+    private String filter;
     //    private String formData;
 //    private String formInfo;
     private List<FormConditionBean> fixconditions;
@@ -64,6 +66,7 @@ public class FormNewActivity extends AppCompatActivity {
     SharedPreferencesHelper preferencesHelper;
     TabView currentView;
     int currenViewPos = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,10 +251,14 @@ public class FormNewActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "getReportData"));
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("iMenuID", menuId));
-        if (pos != -1)
-            params.add(new NetParams("filters", fixconditions.get(pos).getFilters()));
-        else
+        if (pos == -1) {
             params.add(new NetParams("filters", ""));
+        } else if (pos == -2) {
+            params.add(new NetParams("filters", filter));
+        } else {
+            params.add(new NetParams("filters", fixconditions.get(pos).getFilters()));
+        }
+
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));
         return params;
@@ -269,10 +276,23 @@ public class FormNewActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (resultCode == CONDIRION_CODE) {
+                filter = data.getStringExtra("data");
+                Log.e("filter", filter);
+                getFormData(-2);
+            }
+        }
+    }
+
     private void goCondition() {
         Intent intent = new Intent();
         intent.setClass(this, FormConditionActivity.class);
         intent.putExtra("data", new Gson().toJson(conditions));
+        intent.putExtra("code", CONDIRION_CODE);
         startActivityForResult(intent, CONDIRION_CODE);
     }
 
@@ -294,6 +314,4 @@ public class FormNewActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

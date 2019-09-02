@@ -11,5 +11,4 @@ public class NetConfig {
     public final static String Message_Method = "MobileRemindHandler.ashx";
     public final static String Form_Method = "MobileReportHandler.ashx";
     public final static String MobileHandler_Method = "MobileHandler.ashx";
-
 }
