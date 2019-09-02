@@ -202,8 +202,9 @@ public class FormFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     if (menus.get(position).isTitle() == false) {
                         int isChart = menus.get(position).getIShowChart();
+                        int isUnion = menus.get(position).getIIsUnion();
                         int menuId = menus.get(position).getIMenuID();
-                        if (isChart == 0) {
+                        if (isUnion == 0 && isChart == 0) {
                             Intent intent = new Intent();
                             intent.setClass(getActivity(), FormNewActivity.class);
                             intent.putExtra("menuid", menuId + "");

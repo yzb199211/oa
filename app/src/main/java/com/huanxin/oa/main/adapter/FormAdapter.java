@@ -1,6 +1,7 @@
 package com.huanxin.oa.main.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.model.main.FormChildMenusBean;
@@ -55,8 +57,10 @@ public class FormAdapter extends RecyclerView.Adapter {
             ((MenuHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onItemClickListener != null)
+                    if (onItemClickListener != null) {
                         onItemClickListener.onItemClick(v, position);
+                        Log.e("menuid", new Gson().toJson(menus.get(position)));
+                    }
                 }
             });
         }

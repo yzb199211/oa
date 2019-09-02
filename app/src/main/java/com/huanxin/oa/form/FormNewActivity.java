@@ -227,6 +227,8 @@ public class FormNewActivity extends AppCompatActivity {
                             }
                         });
 
+                    } else {
+                        loadFail(jsonObject.getString("message"));
                     }
                 } catch (JSONException e) {
                     loadFail("json解析错误");
