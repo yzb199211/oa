@@ -1,11 +1,9 @@
 package com.huanxin.oa.form;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,11 +13,8 @@ import androidx.annotation.Nullable;
 import com.huanxin.oa.BaseActivity;
 import com.huanxin.oa.R;
 import com.huanxin.oa.model.form.FormModel;
-import com.huanxin.oa.model.form.FormTitle;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.view.form.GridUtil;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

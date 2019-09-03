@@ -61,7 +61,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     Set<String> fields;
     List<String> titlte;
     List<LineBean> lineORbarData;
-    List<LineBean.Line> barData;
+    List<LineBean.Line> pieData;
 
     SharedPreferencesHelper preferencesHelper;
 
@@ -81,6 +81,9 @@ public class FormWithChartActivity extends AppCompatActivity {
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();
         conditionBeans = new ArrayList<>();
+        lineORbarData = new ArrayList<>();
+        pieData = new ArrayList<>();
+
         fields = new HashSet<>();
 
         Intent intent = getIntent();
@@ -153,7 +156,8 @@ public class FormWithChartActivity extends AppCompatActivity {
 
             @Override
             public void onFail(IOException e) {
-
+                e.printStackTrace();
+                loadFail("获取数据失败");
             }
         });
 
@@ -163,6 +167,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void initData(String data) throws JSONException, Exception {
         initChart(data);
 //        initForm(data);
+        loadFail("");
     }
 
 
@@ -222,12 +227,50 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     /*获取数据源*/
-    private void getChartData(JSONArray jsonArray) {
+    private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
         switch (chartType) {
-
+            case "0":
+                getLineORBartData(jsonArray);
+                break;
+            case "1":
+                getLineORBartData(jsonArray);
+                break;
+            case "2":
+                getPieData(jsonArray);
+                break;
+            default:
+                break;
         }
     }
 
+    /*获取线性或柱状数据*/
+    private void getLineORBartData(JSONArray jsonArray) throws Exception, JSONException {
+        for (String value : fields) {
+//            Log.e("value", value);
+            List<LineBean.Line> line = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (jsonArray.getJSONObject(i).optString(field).equals(value)) {
+                    LineBean.Line data = new LineBean.Line();
+                    data.setxValue(jsonArray.getJSONObject(i).optString(xValue));
+                    String y = jsonArray.getJSONObject(i).opt(yValue).toString();
+                    Float yValue = Float.parseFloat(y);
+                    data.setyValue(yValue);
+                    line.add(data);
+                }
+            }
+            LineBean lineBean = new LineBean();
+            lineBean.setName(value);
+            lineBean.setList(line);
+            lineBean.setUnit(infoBeans.get(0).getSYAxisLabelFormatterSimple());
+            lineORbarData.add(lineBean);
+        }
+        Log.e("lineData", new Gson().toJson(lineORbarData));
+    }
+
+    /*获取饼图数据*/
+    private void getPieData(JSONArray jsonArray) {
+
+    }
 
     /*获取初始化数据参数*/
     private List<NetParams> getParams() {
