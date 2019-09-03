@@ -88,6 +88,7 @@ public class ChartActivity extends AppCompatActivity {
         }
         LineCharts charts = new LineCharts(this);
         charts.setData(lineBeans);
+
         llContent.addView(charts);
 
         BarCharts barCharts = new BarCharts(this);

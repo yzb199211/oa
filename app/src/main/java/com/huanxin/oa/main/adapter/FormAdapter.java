@@ -59,7 +59,7 @@ public class FormAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
                         onItemClickListener.onItemClick(v, position);
-                        Log.e("menuid", new Gson().toJson(menus.get(position)));
+//                        Log.e("menuid", new Gson().toJson(menus.get(position)));
                     }
                 }
             });

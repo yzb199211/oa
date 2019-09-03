@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.FormNewActivity;
+import com.huanxin.oa.form.FormWithChartActivity;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.MainActivity;
 import com.huanxin.oa.main.adapter.FormAdapter;
@@ -110,8 +111,9 @@ public class FormFragment extends Fragment {
     private void initData(String string) throws Exception {
         FormModel formModel = new Gson().fromJson(string, FormModel.class);
         if (formModel.isSuccess()) {
-            menusBeans.addAll(formModel.getMenus());
-            if (menusBeans != null || menusBeans.size() != 0) {
+            List<FormMenusBean> list = formModel.getMenus();
+            if (list != null && list.size() > 0) {
+                menusBeans.addAll(list);
                 initMenus(menusBeans);
             }
             getActivity().runOnUiThread(new Runnable() {
@@ -207,6 +209,12 @@ public class FormFragment extends Fragment {
                         if (isUnion == 0 && isChart == 0) {
                             Intent intent = new Intent();
                             intent.setClass(getActivity(), FormNewActivity.class);
+                            intent.putExtra("menuid", menuId + "");
+                            intent.putExtra("title", menus.get(position).getSMenuName());
+                            startActivity(intent);
+                        } else if (isUnion == 0 && isChart == 1) {
+                            Intent intent = new Intent();
+                            intent.setClass(getActivity(), FormWithChartActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);
