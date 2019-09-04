@@ -22,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".form.FormWithChartActivity"></activity>
+        <activity
+            android:name=".form.FormWithChartActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="portrait">
@@ -69,7 +71,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".form.FormNewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

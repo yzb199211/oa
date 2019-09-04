@@ -3,6 +3,10 @@
     android:id="@+id/tv_title"
     android:layout_width="@dimen/dp_270"
     android:layout_height="@dimen/dp_60"
-    android:gravity="center">
+    android:layout_margin="@dimen/dp_1"
+    android:background="@color/blue1"
+    android:gravity="center"
+    android:singleLine="true"
+    android:textColor="@color/black">
 
 </TextView>

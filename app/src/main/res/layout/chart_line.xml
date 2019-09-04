@@ -7,5 +7,5 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_200" />
+        android:layout_height="@dimen/dp_250" />
 </LinearLayout>

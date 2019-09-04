@@ -211,8 +211,8 @@ public class LoginActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    LoadingDialog.cancelDialogForLoading();
                     startActivity(intent);
+                    LoadingDialog.cancelDialogForLoading();
                     finish();
                 }
             });

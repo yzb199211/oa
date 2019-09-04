@@ -1,5 +1,7 @@
 package com.huanxin.oa.model.form;
 
+import com.huanxin.oa.form.model.FormTitle;
+
 import java.util.List;
 
 public class FormBean {

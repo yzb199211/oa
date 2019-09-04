@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -22,7 +27,9 @@ import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
 import com.huanxin.oa.utils.net.Otype;
+import com.huanxin.oa.view.chart.bar.BarCharts;
 import com.huanxin.oa.view.chart.line.LineBean;
+import com.huanxin.oa.view.chart.line.LineCharts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +46,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FormWithChartActivity extends AppCompatActivity {
+    private final static String TAG = "FormWithChartActivity";
+
+    private final static int CONDIRION_CODE = 500;
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -46,6 +56,10 @@ public class FormWithChartActivity extends AppCompatActivity {
     TextView tvTitle;
     @BindView(R.id.tv_right)
     TextView tvRight;
+    @BindView(R.id.ll_content)
+    LinearLayout llContent;
+
+    GridLayout glForm;
 
     String userid;
     String menuid;
@@ -53,6 +67,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     String xValue = "";
     String yValue = "";
     String chartType;
+    String filter = "";
 
     List<FormBean.ReportInfoBean> infoBeans;
     List<FormBean.ReportConditionBean> conditionBeans;
@@ -60,10 +75,11 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     Set<String> fields;
     List<String> titlte;
-    List<LineBean> lineORbarData;
+    List<LineBean> ChartData;
     List<LineBean.Line> pieData;
 
     SharedPreferencesHelper preferencesHelper;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +94,12 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void init() {
+        url = NetConfig.url + NetConfig.Form_Method;
+
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();
         conditionBeans = new ArrayList<>();
-        lineORbarData = new ArrayList<>();
+        ChartData = new ArrayList<>();
         pieData = new ArrayList<>();
 
         fields = new HashSet<>();
@@ -91,14 +109,14 @@ public class FormWithChartActivity extends AppCompatActivity {
         Log.e("menuid", menuid);
         ivBack.setVisibility(View.VISIBLE);
         tvTitle.setText(intent.getStringExtra("title"));
-
+        tvRight.setVisibility(View.VISIBLE);
         getData();
     }
 
     /*获取初始化数据*/
     private void getData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -106,7 +124,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     boolean isSuccess = jsonObject.getBoolean("success");
                     if (isSuccess) {
                         String table = jsonObject.optString("info");
-//                        Log.e("tabledata", table);
+                        Log.e("tabledata", table);
                         String data = jsonObject.optString("olddata");
                         Gson gson = new Gson();
                         FormBean formBean = gson.fromJson(table, FormBean.class);
@@ -167,7 +185,34 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void initData(String data) throws JSONException, Exception {
         initChart(data);
 //        initForm(data);
+
+
         loadFail("");
+    }
+
+    LineCharts lineCharts;
+    BarCharts barCharts;
+
+    /*设置图表*/
+    private void setView() throws Exception {
+        switch (chartType) {
+            case "0":
+                lineCharts = new LineCharts(this);
+                lineCharts.setData(ChartData);
+                llContent.addView(lineCharts);
+                break;
+            case "1":
+                barCharts = new BarCharts(this);
+                barCharts.setData(ChartData);
+                barCharts.build();
+                llContent.addView(barCharts);
+                break;
+            case "2":
+
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -184,11 +229,46 @@ public class FormWithChartActivity extends AppCompatActivity {
         JSONArray jsonArray = new JSONArray(data);
         getChartFields(jsonArray);
         getChartData(jsonArray);
+
     }
 
-    /*初始化表数据*/
-    private void initForm(String data) throws JSONException, Exception {
+    /*初始化表*/
+    private void initForm() throws JSONException, Exception {
+        glForm = new GridLayout(this);
+        glForm.setRowCount(ChartData.get(0).getList().size() + 1);
+        glForm.setColumnCount(fields.size() + 1);
+        addFormChild(0, 0, "月份", true);
+        for (int i = 0; i < ChartData.size(); i++) {
+            addFormChild(0, i + 1, ChartData.get(i).getName(), true);
+            for (int j = 0; j < ChartData.get(0).getList().size(); j++) {
+                if (i == 0) {
+                    addFormChild(j + 1, 0, ChartData.get(0).getList().get(j).getxValue(), false);
+                }
+                addFormChild(j + 1, i + 1, ChartData.get(0).getList().get(j).getyValue() + "", false);
+            }
+        }
 
+        llContent.addView(glForm);
+    }
+
+    private void addFormChild(int row, int col, String text, boolean isTitle) throws JSONException, Exception {
+        TextView tvTitle = (TextView) LayoutInflater.from(this).inflate(R.layout.item_form, glForm, false);
+        tvTitle.setText(text);
+        tvTitle.setGravity(Gravity.CENTER);
+        if (isTitle) {
+            tvTitle.setBackgroundColor(getColor(R.color.blue));
+            tvTitle.setTextColor(getColor(R.color.white));
+        }
+        GridLayout.Spec rowSpec;
+        rowSpec = GridLayout.spec(row, 1.0F);     //设置它的行和列
+        GridLayout.Spec columnSpec = GridLayout.spec(col, 1.0F);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
+        params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.topMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.height = getResources().getDimensionPixelOffset(R.dimen.dp_30);
+        glForm.addView(tvTitle, params);
     }
 
     /*判断Y轴数据类型是否正确*/
@@ -221,6 +301,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     /*获取图表数据源名字*/
     private void getChartFields(JSONArray jsonArray) throws JSONException, Exception {
+        fields.clear();
         for (int i = 0; i < jsonArray.length(); i++) {
             fields.add(jsonArray.getJSONObject(i).optString(field));
         }
@@ -228,23 +309,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     /*获取数据源*/
     private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
-        switch (chartType) {
-            case "0":
-                getLineORBartData(jsonArray);
-                break;
-            case "1":
-                getLineORBartData(jsonArray);
-                break;
-            case "2":
-                getPieData(jsonArray);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /*获取线性或柱状数据*/
-    private void getLineORBartData(JSONArray jsonArray) throws Exception, JSONException {
+        ChartData.clear();
         for (String value : fields) {
 //            Log.e("value", value);
             List<LineBean.Line> line = new ArrayList<>();
@@ -252,7 +317,8 @@ public class FormWithChartActivity extends AppCompatActivity {
                 if (jsonArray.getJSONObject(i).optString(field).equals(value)) {
                     LineBean.Line data = new LineBean.Line();
                     data.setxValue(jsonArray.getJSONObject(i).optString(xValue));
-                    String y = jsonArray.getJSONObject(i).opt(yValue).toString();
+                    Object object = jsonArray.getJSONObject(i).opt(yValue);
+                    String y = (object == null ? "" : object.toString());
                     Float yValue = Float.parseFloat(y);
                     data.setyValue(yValue);
                     line.add(data);
@@ -262,15 +328,23 @@ public class FormWithChartActivity extends AppCompatActivity {
             lineBean.setName(value);
             lineBean.setList(line);
             lineBean.setUnit(infoBeans.get(0).getSYAxisLabelFormatterSimple());
-            lineORbarData.add(lineBean);
+            ChartData.add(lineBean);
         }
-        Log.e("lineData", new Gson().toJson(lineORbarData));
+        if (ChartData.size() > 0)
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        setView();
+                        initForm();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
     }
 
-    /*获取饼图数据*/
-    private void getPieData(JSONArray jsonArray) {
-
-    }
 
     /*获取初始化数据参数*/
     private List<NetParams> getParams() {
@@ -300,7 +374,89 @@ public class FormWithChartActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.tv_right:
+                goCondition();
                 break;
         }
+    }
+
+    /*跳转筛选页*/
+    private void goCondition() {
+        Intent intent = new Intent();
+        intent.setClass(this, FormConditionActivity.class);
+        intent.putExtra("data", new Gson().toJson(conditionBeans));
+        intent.putExtra("code", CONDIRION_CODE);
+        startActivityForResult(intent, CONDIRION_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (resultCode == CONDIRION_CODE) {
+                filter = data.getStringExtra("data");
+                Log.e("filter", filter);
+                llContent.removeAllViews();
+                getFormData();
+            }
+        }
+    }
+
+    /*获取表单数据*/
+    private void getFormData() {
+        LoadingDialog.showDialogForLoading(this);
+        new NetUtil(getFormParams(), url, new ResponseListener() {
+            @Override
+            public void onSuccess(String string) {
+                try {
+                    Log.e("Data", string);
+                    JSONObject jsonObject = new JSONObject(string);
+                    boolean isSuccess = jsonObject.optBoolean("success");
+
+                    if (isSuccess) {
+                        String data = jsonObject.optString("data");
+                        if (StringUtil.isNotEmpty(data)) {
+                            initData(data);
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadFail("");
+                                    llContent.removeAllViews();
+                                }
+                            });
+                        }
+                    } else {
+                        loadFail(jsonObject.optString("message"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    loadFail("json数据解析错误");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    loadFail("数据解析错误");
+                }
+
+            }
+
+            @Override
+            public void onFail(IOException e) {
+                e.printStackTrace();
+                loadFail("获取数据失败");
+            }
+        });
+
+    }
+
+
+    private List<NetParams> getFormParams() {
+        List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("otype", "getChartReportData"));
+        params.add(new NetParams("userid", userid));
+        params.add(new NetParams("iMenuID", menuid));
+        params.add(new NetParams("filters", filter));
+        params.add(new NetParams("sort", ""));
+        params.add(new NetParams("order", "asc"));
+        return params;
     }
 }
