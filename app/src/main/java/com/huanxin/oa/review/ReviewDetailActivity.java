@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.JudgeDialog;
@@ -75,10 +75,13 @@ public class ReviewDetailActivity extends AppCompatActivity {
     ScrollView scrollView;
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
+
     List<ReviewInfo> infoList = new ArrayList<>();
     List<ReviewInfo> styleList = new ArrayList<>();
     List<ReviewStyle> styles = new ArrayList<>();
     List<ReviewProcess> processes = new ArrayList<>();
+    List<String> imgs = new ArrayList<>();
+
     int id;
     int billId;
     int formId;
@@ -177,9 +180,11 @@ public class ReviewDetailActivity extends AppCompatActivity {
         List<List<DetailsBean>> detailsBeanList = tables.get(0).getDetails();
         List<OpinionBean> opinionBeanList = tables.get(0).getOpinion();
         List<String> imgList = tables.get(0).getImage();
+
         initMain(mainBeanList);
         initDetail(detailsBeanList);
         initProgress(opinionBeanList);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -187,6 +192,10 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 setInfo();
                 setInfoView();
                 setStyleView();
+                if (imgList != null && imgList.size() > 0) {
+                    imgs.addAll(imgList);
+                    setImage();
+                }
                 setProcessView();
             }
         });
@@ -331,14 +340,39 @@ public class ReviewDetailActivity extends AppCompatActivity {
         }
     }
 
+    /*设置图片*/
     private void setImage() {
-        TabLayout tabLayout = new TabLayout(this);
+        GridLayout imgLayout = new GridLayout(this);
+        imgLayout.setPadding(getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10));
+        imgLayout.setColumnCount(4);
+        int row = getRow();
+        imgLayout.setRowCount(row);
+        for (int i = 0; i < row; i++) {
 
+        }
+        llContent.addView(imgLayout);
+    }
+
+    private void addImgChild(GridLayout imgLayout, int row, int col) {
+        GridLayout.Spec rowSpec;
+        rowSpec = GridLayout.spec(row, 1.0F);     //设置它的行和列
+        GridLayout.Spec columnSpec = GridLayout.spec(col, 1.0F);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
+        params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.topMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
+        params.height = getResources().getDimensionPixelOffset(R.dimen.dp_60);
+        imgLayout.addView(tvTitle, params);
     }
 
     private int getRow() {
         int row = 0;
-
+        if (imgs.size() % 4 == 0) {
+            row = imgs.size() / 4;
+        } else {
+            row = (imgs.size() - imgs.size() % 4) / 4 + 1;
+        }
         return row;
     }
 
