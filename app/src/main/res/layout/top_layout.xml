@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:padding="@dimen/dp_12"
         android:visibility="gone"
-        app:srcCompat="@mipmap/icon_back" />
+        android:src="@mipmap/icon_back" />
 
     <TextView
         android:id="@+id/tv_title"

@@ -348,12 +348,26 @@ public class ReviewDetailActivity extends AppCompatActivity {
         int row = getRow();
         imgLayout.setRowCount(row);
         for (int i = 0; i < row; i++) {
-
+            for (int j = 0; j < 4; j++) {
+                addImgChild(imgLayout, i, j);
+            }
         }
         llContent.addView(imgLayout);
     }
 
     private void addImgChild(GridLayout imgLayout, int row, int col) {
+        ImageView imageView = new ImageView(this);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(ReviewDetailActivity.this, ReviewImageActivity.class);
+                intent.putExtra("img", imgs.get(row * 4 + col));
+                startActivity(intent);
+            }
+        });
+        ImageLoaderUtil.loadImg(imageView, imgs.get(row * 4 + col));
+
         GridLayout.Spec rowSpec;
         rowSpec = GridLayout.spec(row, 1.0F);     //设置它的行和列
         GridLayout.Spec columnSpec = GridLayout.spec(col, 1.0F);
@@ -363,7 +377,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.height = getResources().getDimensionPixelOffset(R.dimen.dp_60);
-        imgLayout.addView(tvTitle, params);
+        imgLayout.addView(imageView, params);
     }
 
     private int getRow() {
