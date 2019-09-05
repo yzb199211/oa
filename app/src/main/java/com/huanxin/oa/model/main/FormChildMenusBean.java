@@ -20,6 +20,8 @@ public class FormChildMenusBean {
     private String sAppStyle;
     private int iShowChart;
     private int iIsUnion;
+    private int iPageGetData;
+
 
     public boolean isTitle() {
         return isTitle;
@@ -93,5 +95,13 @@ public class FormChildMenusBean {
 
     public void setIIsUnion(int iIsUnion) {
         this.iIsUnion = iIsUnion;
+    }
+
+    public int getiPageGetData() {
+        return iPageGetData;
+    }
+
+    public void setiPageGetData(int iPageGetData) {
+        this.iPageGetData = iPageGetData;
     }
 }

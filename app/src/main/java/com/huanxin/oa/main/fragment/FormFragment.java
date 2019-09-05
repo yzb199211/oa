@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.FormNewActivity;
+import com.huanxin.oa.form.FormRefreshActivity;
 import com.huanxin.oa.form.FormWithChartActivity;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.MainActivity;
@@ -206,9 +207,13 @@ public class FormFragment extends Fragment {
                         int isChart = menus.get(position).getIShowChart();
                         int isUnion = menus.get(position).getIIsUnion();
                         int menuId = menus.get(position).getIMenuID();
+                        int isPage = menus.get(position).getiPageGetData();
                         if (isUnion == 0 && isChart == 0) {
                             Intent intent = new Intent();
-                            intent.setClass(getActivity(), FormNewActivity.class);
+                            if (isPage == 0)
+                                intent.setClass(getActivity(), FormNewActivity.class);
+                            else
+                                intent.setClass(getActivity(), FormRefreshActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);

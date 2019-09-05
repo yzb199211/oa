@@ -72,6 +72,9 @@
         <activity
             android:name=".form.FormNewActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".form.FormRefreshActivity"
+            android:screenOrientation="landscape" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

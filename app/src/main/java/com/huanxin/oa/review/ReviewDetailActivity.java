@@ -596,6 +596,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 try {
                     initSendData(string);
                 } catch (Exception e) {
+                    cancelDialog("获取数据失败");
                     e.printStackTrace();
                 }
             }

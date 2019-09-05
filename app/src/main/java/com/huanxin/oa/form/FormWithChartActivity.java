@@ -30,6 +30,7 @@ import com.huanxin.oa.utils.net.Otype;
 import com.huanxin.oa.view.chart.bar.BarCharts;
 import com.huanxin.oa.view.chart.line.LineBean;
 import com.huanxin.oa.view.chart.line.LineCharts;
+import com.huanxin.oa.view.chart.pie.PieCharts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -208,7 +209,13 @@ public class FormWithChartActivity extends AppCompatActivity {
                 llContent.addView(barCharts);
                 break;
             case "2":
-
+                for (int i = 0; i < ChartData.size(); i++) {
+                    PieCharts pieCharts = new PieCharts(this);
+                    pieCharts.setData(ChartData.get(0).getList());
+                    pieCharts.setCenterText(TextUtils.isEmpty(ChartData.get(0).getName()) ? "" : ChartData.get(0).getName());
+                    pieCharts.build();
+                    llContent.addView(pieCharts);
+                }
                 break;
             default:
                 break;

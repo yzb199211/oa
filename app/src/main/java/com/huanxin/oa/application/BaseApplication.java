@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.huanxin.oa.service.LocationService;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 
 public class BaseApplication extends Application {
@@ -28,8 +30,12 @@ public class BaseApplication extends Application {
 
 
     public OkHttpClient getClient() {
-        if (okHttpClient == null)
-            okHttpClient = new OkHttpClient();
+        if (okHttpClient == null) {
+            okHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)//设置连接超时时间
+                    .readTimeout(30, TimeUnit.SECONDS)//设置读取超时时间
+                    .build();
+        }
         return okHttpClient;
     }
 

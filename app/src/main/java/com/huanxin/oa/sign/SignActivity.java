@@ -239,7 +239,7 @@ public class SignActivity extends BaseActivity {
                 .build();
         //创建Request
         Request request = new Request.Builder()
-                .url(NetConfig.url1 + NetConfig.MobileOA_Method)
+                .url(NetConfig.url + NetConfig.MobileOA_Method)
                 .post(multipartBody)
                 .build();
         //创建okHttpClient
