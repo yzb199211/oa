@@ -279,8 +279,8 @@ public class MainFragment extends Fragment {
             NumBean numBean = new Gson().fromJson(numData, NumBean.class);
             menus.get(0).setMsg(numBean.getMessageCout());
             menus.get(1).setMsg(numBean.getRemindCout());
-        }else {
-            Toasts.showShort(getActivity(),"固定菜单未配置");
+        } else {
+            Toasts.showShort(getActivity(), "固定菜单未配置");
         }
     }
 
@@ -294,6 +294,7 @@ public class MainFragment extends Fragment {
             if (menuBeans != null && menuBeans.size() > 0) {
                 MenuUtil menuUsualUtil = new MenuUtil(menuBeans, getActivity());
                 menuUsuals = menuUsualUtil.getMenu();
+                Log.e("menu", new Gson().toJson(menuUsuals));
             } else {
                 Toasts.showShort(getActivity(), "常用菜单未配置");
             }

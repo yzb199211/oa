@@ -98,27 +98,6 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void getData() {
-        new NetUtil(getParams1(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
-            @Override
-            public void onSuccess(String string) {
-
-            }
-
-            @Override
-            public void onFail(IOException e) {
-
-            }
-        });
-    }
-
-    private List<NetParams> getParams1() {
-        List<NetParams> params = new ArrayList<>();
-        params.add(new NetParams("otype", Otype.FormSelect));
-        params.add(new NetParams("userid", "master"));
-        params.add(new NetParams("iMenuID", "287"));
-        return params;
-    }
 
     /**
      * 判断url,用户名和密码是否为空
