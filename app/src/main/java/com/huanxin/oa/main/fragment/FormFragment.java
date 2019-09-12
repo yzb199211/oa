@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
+import com.huanxin.oa.form.FormListActivity;
 import com.huanxin.oa.form.FormNewActivity;
 import com.huanxin.oa.form.FormRefreshActivity;
 import com.huanxin.oa.form.FormWithChartActivity;
@@ -206,11 +207,15 @@ public class FormFragment extends Fragment {
                     if (menus.get(position).isTitle() == false) {
                         int isChart = menus.get(position).getIShowChart();
                         int isUnion = menus.get(position).getIIsUnion();
-                        int menuId = menus.get(position).getIMenuID();
+                        int menuId = menus.get(position).getIFormID();
                         int isPage = menus.get(position).getiPageGetData();
+                        String isAppStyle = menus.get(position).getSAppStyle();
+
                         if (isUnion == 0 && isChart == 0) {
                             Intent intent = new Intent();
-                            if (isPage == 0)
+                            if (isAppStyle.equals("列表")) {
+                                intent.setClass(getActivity(), FormListActivity.class);
+                            } else if (isPage == 0)
                                 intent.setClass(getActivity(), FormNewActivity.class);
                             else
                                 intent.setClass(getActivity(), FormRefreshActivity.class);

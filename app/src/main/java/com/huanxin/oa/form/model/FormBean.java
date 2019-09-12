@@ -6,6 +6,7 @@ public class FormBean {
     private List<ReportConditionBean> ReportCondition;
     private List<ReportInfoBean> ReportInfo;
     private List<ReportColumnsBean> ReportColumns;
+    private List<ReportColumns2> ReportColumns2;
 
     public List<ReportConditionBean> getReportCondition() {
         return ReportCondition;
@@ -31,6 +32,113 @@ public class FormBean {
         this.ReportColumns = ReportColumns;
     }
 
+    public static class ReportColumns2 {
+        /**
+         * "iSerial": 1,
+         * "iColumnNum": 0,
+         * "sFieldsName": "",
+         * "sFieldsDisplayName": "",
+         * "sNameFontColor": "",
+         * "sNameFontSize": "",
+         * "iNameFontBold": 0,
+         * "sValueFontColor": "",
+         * "sValueFontSize": "",
+         * "iValueFontBold": 0,
+         * "iProportion":3
+         */
+
+        private int iSerial;
+        private String iColumnNum;
+        private String sFieldsDisplayName;
+        private String sNameFontColor;
+        private String sNameFontSize;
+        private int iNameFontBold;
+        private String sValueFontColor;
+        private String sValueFontSize;
+        private int iValueFontBold;
+        private int iProportion;
+
+        public int getiSerial() {
+            return iSerial;
+        }
+
+        public void setiSerial(int iSerial) {
+            this.iSerial = iSerial;
+        }
+
+        public String getiColumnNum() {
+            return iColumnNum;
+        }
+
+        public void setiColumnNum(String iColumnNum) {
+            this.iColumnNum = iColumnNum;
+        }
+
+        public String getsFieldsDisplayName() {
+            return sFieldsDisplayName;
+        }
+
+        public void setsFieldsDisplayName(String sFieldsDisplayName) {
+            this.sFieldsDisplayName = sFieldsDisplayName;
+        }
+
+        public String getsNameFontColor() {
+            return sNameFontColor;
+        }
+
+        public void setsNameFontColor(String sNameFontColor) {
+            this.sNameFontColor = sNameFontColor;
+        }
+
+        public String getsNameFontSize() {
+            return sNameFontSize;
+        }
+
+        public void setsNameFontSize(String sNameFontSize) {
+            this.sNameFontSize = sNameFontSize;
+        }
+
+        public int getiNameFontBold() {
+            return iNameFontBold;
+        }
+
+        public void setiNameFontBold(int iNameFontBold) {
+            this.iNameFontBold = iNameFontBold;
+        }
+
+        public String getsValueFontColor() {
+            return sValueFontColor;
+        }
+
+        public void setsValueFontColor(String sValueFontColor) {
+            this.sValueFontColor = sValueFontColor;
+        }
+
+        public String getsValueFontSize() {
+            return sValueFontSize;
+        }
+
+        public void setsValueFontSize(String sValueFontSize) {
+            this.sValueFontSize = sValueFontSize;
+        }
+
+        public int getiValueFontBold() {
+            return iValueFontBold;
+        }
+
+        public void setiValueFontBold(int iValueFontBold) {
+            this.iValueFontBold = iValueFontBold;
+        }
+
+        public int getiProportion() {
+            return iProportion;
+        }
+
+        public void setiProportion(int iProportion) {
+            this.iProportion = iProportion;
+        }
+    }
+
     public static class ReportConditionBean {
         /**
          * iSerial : 1
@@ -51,7 +159,7 @@ public class FormBean {
         private String sLookUpFilters;
         private String sOpTion;
         private String sValue;
-        private  String selectValue;
+        private String selectValue;
 
 
         public String getSelectValue() {

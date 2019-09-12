@@ -10,7 +10,15 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //引用tbsplus
-        ndk{ abiFilters "armeabi"}
+        ndk { abiFilters "armeabi" }
+        splits {
+            abi {
+                enable true
+                reset()
+                include 'x86', 'armeabi-v7a', 'x86_64'
+                universalApk true
+            }
+        }
     }
     buildTypes {
         release {
@@ -80,7 +88,6 @@ android.useAndroidX=true*/
     /*百度地图定位*/
     implementation files('libs/BaiduLBS_Android.jar')
     //引用tbsplus
-    implementation files ('libs/tbs_sdk_thirdapp_v4.3.0.1148_43697_sharewithdownloadwithfile_withoutGame_obfs_20190805_175505.jar')
-
+    implementation files('libs/tbs_sdk_thirdapp_v4.3.0.1148_43697_sharewithdownloadwithfile_withoutGame_obfs_20190805_175505.jar')
 
 }

@@ -252,7 +252,7 @@ public class FormNewActivity extends AppCompatActivity {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "getReportData"));
         params.add(new NetParams("userid", userId));
-        params.add(new NetParams("iMenuID", menuId));
+        params.add(new NetParams("iFormID", menuId));
         if (pos == -1) {
             params.add(new NetParams("filters", ""));
         } else if (pos == -2) {
@@ -300,7 +300,7 @@ public class FormNewActivity extends AppCompatActivity {
 
     //传入json直接形成表单
     private void setGsonData(String data) {
-        table.getConfig().setShowTableTitle(false);
+        table.getConfig().setShowTableTitle(false).setShowXSequence(false).setShowYSequence(false);
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
     }

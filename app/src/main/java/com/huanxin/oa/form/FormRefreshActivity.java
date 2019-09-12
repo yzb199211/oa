@@ -283,7 +283,7 @@ public class FormRefreshActivity extends BaseActivity {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "getReportData"));
         params.add(new NetParams("userid", userId));
-        params.add(new NetParams("iMenuID", menuId));
+        params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("pageNo", pagerIndex + ""));
         params.add(new NetParams("filters", filter));
         params.add(new NetParams("sort", ""));
