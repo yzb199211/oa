@@ -24,13 +24,13 @@ import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.MainActivity;
 import com.huanxin.oa.model.login.LoginBean;
 import com.huanxin.oa.permission.PermissionListener;
+import com.huanxin.oa.tencent.DisplayFileActivity;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
-import com.huanxin.oa.utils.net.Otype;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
@@ -92,11 +92,12 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.btn_sweep:
 //                permission(intent);
-                startActivity(new Intent().setClass(LoginActivity.this, ChartActivity.class));
+                String filePath = "/storage/emulated/0/Download/browser/031001700311-20586419.pdf";
+                String fileName = "031001700311-20586419.pdf";
+                DisplayFileActivity.openDispalyFileActivity(LoginActivity.this,filePath,fileName);
                 break;
         }
     }
-
 
 
     /**
@@ -137,6 +138,7 @@ public class LoginActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Toasts.showLong(LoginActivity.this, "数据解析失败");
                             LoadingDialog.cancelDialogForLoading();
                         }
                     });

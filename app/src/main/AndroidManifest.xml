@@ -22,7 +22,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".review.ReviewImageActivity"></activity>
+        <activity
+            android:name=".tencent.DisplayFileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".review.ReviewImageActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".form.FormWithChartActivity"
             android:screenOrientation="landscape" />

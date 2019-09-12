@@ -114,6 +114,4 @@ public class MainActivity extends BaseActivity {
             tabLayout.addTab(tab);
         }
     }
-
-
 }
