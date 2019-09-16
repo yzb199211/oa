@@ -88,6 +88,7 @@ public class ReviewInfoView extends LinearLayout {
     public void setTitleColor(int titleColor) {
         this.titleColor = titleColor;
         tvTitle.setTextColor(titleColor);
+        tvContent.setTextColor(titleColor);
     }
 
     //设置内容颜色

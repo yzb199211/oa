@@ -54,7 +54,7 @@
     <string name="mine_study">学习中心</string>
     <string name="mine_code">二维码</string>
     <!--审核默认文字-->
-    <string name="review_style_title">样式</string>
+    <string name="review_style_title">明细</string>
     <!--矢量图-->
     <string name="icon_add">&#xe641;</string>
     <string name="icon_edit">&#xe6f5;</string>

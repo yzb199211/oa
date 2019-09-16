@@ -63,6 +63,11 @@ public class ReviewStyleView extends FrameLayout {
         addView(tvStyleTitle);
     }
 
+    public void setStyleTitleVisiable(boolean ishow) {
+        if (!ishow) {
+            tvStyleTitle.setVisibility(GONE);
+        }
+    }
 
     /**
      * 设置标题文字

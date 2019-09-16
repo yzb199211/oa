@@ -277,8 +277,8 @@ public class MainFragment extends Fragment {
         menus = menuUtil.getMenu();
         if (!TextUtils.isEmpty(numData)) {
             NumBean numBean = new Gson().fromJson(numData, NumBean.class);
-            menus.get(0).setMsg(numBean.getMessageCout());
-            menus.get(1).setMsg(numBean.getRemindCout());
+            menus.get(0).setMsg(numBean.getRemindCout());
+            menus.get(1).setMsg(numBean.getMessageCout());
         } else {
             Toasts.showShort(getActivity(), "固定菜单未配置");
         }

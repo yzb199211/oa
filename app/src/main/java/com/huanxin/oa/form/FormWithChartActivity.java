@@ -127,11 +127,14 @@ public class FormWithChartActivity extends AppCompatActivity {
                         String table = jsonObject.optString("info");
                         Log.e("tabledata", table);
                         String data = jsonObject.optString("olddata");
+
                         Gson gson = new Gson();
                         FormBean formBean = gson.fromJson(table, FormBean.class);
                         List<FormBean.ReportInfoBean> info = formBean.getReportInfo();
                         List<FormBean.ReportConditionBean> condition = formBean.getReportCondition();
                         List<FormBean.ReportColumnsBean> column = formBean.getReportColumns();
+
+
 
 //                        Log.e("info", new Gson().toJson(info));
 //                        Log.e("condition", new Gson().toJson(condition));

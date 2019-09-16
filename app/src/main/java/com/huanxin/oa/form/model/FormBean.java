@@ -32,6 +32,14 @@ public class FormBean {
         this.ReportColumns = ReportColumns;
     }
 
+    public List<FormBean.ReportColumns2> getReportColumns2() {
+        return ReportColumns2;
+    }
+
+    public void setReportColumns2(List<FormBean.ReportColumns2> reportColumns2) {
+        ReportColumns2 = reportColumns2;
+    }
+
     public static class ReportColumns2 {
         /**
          * "iSerial": 1,

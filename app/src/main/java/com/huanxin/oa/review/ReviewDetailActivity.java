@@ -130,7 +130,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         new NetUtil(getParams(), NetConfig.url + NetConfig.Review_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-//                Log.e(TAG, string);
+                Log.e(TAG, string);
 //                LoadingDialog.cancelDialogForLoading();
                 try {
                     ReviewDetail reviewDetail = new Gson().fromJson(string, ReviewDetail.class);
@@ -271,7 +271,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
             reviewStyle.setList(reviewInfos);
             styles.add(reviewStyle);
         }
-//        Log.e(TAG, new Gson().toJson(styles));
+//        Log.e(TAG, new Gson().toJson(detailsBeanList));
     }
 
     /**
