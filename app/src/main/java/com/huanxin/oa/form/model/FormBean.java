@@ -57,6 +57,7 @@ public class FormBean {
 
         private int iSerial;
         private String iColumnNum;
+        private String sFieldsName;
         private String sFieldsDisplayName;
         private String sNameFontColor;
         private String sNameFontSize;
@@ -65,6 +66,14 @@ public class FormBean {
         private String sValueFontSize;
         private int iValueFontBold;
         private int iProportion;
+
+        public String getsFieldsName() {
+            return sFieldsName;
+        }
+
+        public void setsFieldsName(String sFieldsName) {
+            this.sFieldsName = sFieldsName;
+        }
 
         public int getiSerial() {
             return iSerial;

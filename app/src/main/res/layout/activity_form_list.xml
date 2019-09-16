@@ -9,7 +9,7 @@
 
     <include layout="@layout/top_layout" />
 
-    <com.huanxin.oa.view.recycle.RefreshRecycleView
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/refresh_list"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"

@@ -56,7 +56,10 @@ public class ReviewStyleView1 extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        setPadding(0, 0, 0,  context.getResources().getDimensionPixelOffset(R.dimen.dp_10));
         measureView();
+        setBackgroundColor(context.getColor(R.color.white));
+
         screenWidth = PxUtil.getWidth(context);
         paddingleft = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
         paddingRight = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
@@ -87,7 +90,8 @@ public class ReviewStyleView1 extends FrameLayout {
      */
     private void setView() {
         int row = -1;
-        int itemWidth = (int) (screenWidth - tvStyleTitle.getPaddingLeft() * 2 - getPaddingLeft() * 2);
+//        int itemWidth = (int) (screenWidth - tvStyleTitle.getPaddingLeft() * 2 - getPaddingLeft() * 2);
+        int itemWidth = (int) (screenWidth);
         //测量标题
         tvStyleTitle.measure(w, h);
         textSize = tvStyleTitle.getTextSize();
@@ -160,7 +164,7 @@ public class ReviewStyleView1 extends FrameLayout {
             count = 1;
         } else if (count == 1 && i + 1 == infoList.size()) {
             rivItem.setPadding(paddingleft, paddingTop, paddingRight, 0);
-            Log.e(TAG, i + "c");
+//            Log.e(TAG, i + "c");
         } else if ((i + 1 < infoList.size() && row != infoList.get(i + 1).getRow())) {
             rivItem.setPadding(paddingMiddle, paddingTop, paddingRight, 0);
             count = 1;
@@ -239,4 +243,11 @@ public class ReviewStyleView1 extends FrameLayout {
         this.infoList = infoList;
         setView();
     }
+
+    public void setTitleVisiable(boolean isShow) {
+        if (!isShow) {
+            tvStyleTitle.setVisibility(GONE);
+        }
+    }
+
 }

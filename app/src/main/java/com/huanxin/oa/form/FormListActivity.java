@@ -1,6 +1,7 @@
 package com.huanxin.oa.form;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,20 +11,26 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
+import com.huanxin.oa.form.adapter.FormListAdapter;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormConditionBean;
 import com.huanxin.oa.interfaces.ResponseListener;
+import com.huanxin.oa.review.model.ReviewInfo;
+import com.huanxin.oa.review.model.ReviewStyle;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
-import com.huanxin.oa.view.recycle.RefreshRecycleView;
+import com.huanxin.oa.view.recycle.MyRecyclerViewDivider;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +54,7 @@ public class FormListActivity extends AppCompatActivity {
     @BindView(R.id.tv_right)
     TextView tvRight;
     @BindView(R.id.refresh_list)
-    RefreshRecycleView refreshList;
+    XRecyclerView refreshList;
 
     LinearLayoutManager manager;
 
@@ -65,7 +72,9 @@ public class FormListActivity extends AppCompatActivity {
     //    List<FormBean.ReportColumnsBean> columnsBeans;
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
+    private List<ReviewStyle> items;
 
+    FormListAdapter formListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +92,31 @@ public class FormListActivity extends AppCompatActivity {
 //        columnsBeans = new ArrayList<>();
         fixconditions = new ArrayList<>();
         conditions = new ArrayList<>();
+        items = new ArrayList<>();
 
         manager = new LinearLayoutManager(this);
+        manager.setOrientation(RecyclerView.VERTICAL);
         refreshList.setLayoutManager(manager);
+        refreshList.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        refreshList.setLoadingMoreProgressStyle(ProgressStyle.Pacman);
+        refreshList.setArrowImageView(R.mipmap.iconfont_downgrey);
+        refreshList.getDefaultRefreshHeaderView()
+                .setRefreshTimeVisible(true);
+
+        refreshList.setLoadingMoreEnabled(true);
+
 
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
         Intent intent = getIntent();
-        tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("titlte"));
+        tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
         menuId = intent.getStringExtra("menuid");
         ivBack.setVisibility(View.VISIBLE);
-        getData();
+        getData(false, false, pagerIndex);
     }
 
     /*获取数据*/
-    private void getData() {
+    private void getData(boolean isRefresh, boolean isLoadMore, int page) {
+        LoadingDialog.showDialogForLoading(this);
         new NetUtil(getParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
@@ -125,6 +145,7 @@ public class FormListActivity extends AppCompatActivity {
                         initData(jsonObject.optJSONArray("data"));
                         if (reportConditionBeans.size() > 0) {
                             conditions.addAll(reportConditionBeans);
+                            pagerIndex = page;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -156,8 +177,132 @@ public class FormListActivity extends AppCompatActivity {
 
     /*格式化数据*/
     private void initData(JSONArray jsonArray) throws Exception {
-        Log.e("size", jsonArray.length() + "");
+//        Log.e("size", jsonArray.length() + "");
+        if (jsonArray.length() > 0) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ReviewStyle reviewStyle = new ReviewStyle();
+                List<ReviewInfo> infos = new ArrayList<>();
+
+                for (int j = 0; j < styleList.size(); j++) {
+                    String name = jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName());
+                    ReviewInfo info = new ReviewInfo();
+                    info.setTitle(styleList.get(j).getsFieldsDisplayName());
+                    info.setTitleBold((styleList.get(j).getiNameFontBold() == 1) ? true : false);
+                    if (StringUtil.isColor(styleList.get(j).getsNameFontColor()))
+                        info.setTitleColor(Color.parseColor(styleList.get(j).getsNameFontColor()));
+                    info.setContent(jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName()));
+                    info.setSingleLine(true);
+                    info.setContentBold((styleList.get(j).getiValueFontBold() == 1) ? true : false);
+                    if (StringUtil.isColor(styleList.get(j).getsValueFontColor()))
+                        info.setContentColor(Color.parseColor(styleList.get(j).getsValueFontColor()));
+                    info.setWidthPercent(StringUtil.isPercent(styleList.get(j).getiProportion()));
+                    info.setRow(styleList.get(j).getiSerial());
+                    infos.add(info);
+                }
+                reviewStyle.setList(infos);
+                items.add(reviewStyle);
+//                Log.e("datas", new Gson().toJson(items));
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
+                }
+            });
+        } else {
+            loadFail("无数据");
+        }
     }
+
+    private void getFormData(boolean isRefresh, boolean isLoadMore, int pager) {
+        LoadingDialog.showDialogForLoading(this);
+        new NetUtil(getFormParams(pager), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+            @Override
+            public void onSuccess(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    boolean isSuccess = jsonObject.optBoolean("success");
+                    if (isSuccess) {
+                        if (jsonObject.optString("data").equals("[]")) {
+                            loadFail("无数据");
+                        } else {
+                            pagerIndex = pager;
+                            initData(jsonObject.optJSONArray("data"));
+
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isRefresh) {
+                                    refreshList.refreshComplete();
+                                }
+                                if (isLoadMore) {
+                                    refreshList.loadMoreComplete();
+                                }
+                            }
+                        });
+                        loadFail("");
+
+                    } else {
+                        loadFail(jsonObject.getString("message"));
+                    }
+                } catch (JSONException e) {
+                    loadFail("json解析错误");
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    loadFail("数据解析错误");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(IOException e) {
+                e.printStackTrace();
+                loadFail("未获取到数据");
+
+            }
+        });
+    }
+
+    private List<NetParams> getFormParams(int pagerIndex) {
+        List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("otype", "getReportData"));
+        params.add(new NetParams("userid", userId));
+        params.add(new NetParams("iFormID", menuId));
+        params.add(new NetParams("pageNo", pagerIndex + ""));
+        params.add(new NetParams("filters", filter));
+        params.add(new NetParams("sort", ""));
+        params.add(new NetParams("order", "asc"));
+        return params;
+    }
+
+    private void refresh() {
+        if (formListAdapter == null) {
+            formListAdapter = new FormListAdapter(this, items);
+            refreshList.addItemDecoration(new MyRecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
+            refreshList.setAdapter(formListAdapter);
+            refreshList.setLoadingListener(new XRecyclerView.LoadingListener() {
+                @Override
+                public void onRefresh() {
+//                    List<ReviewStyle> styles = new ArrayList<>();
+//                    styles.addAll(items);
+                    items.removeAll(items);
+                    formListAdapter.notifyDataSetChanged();
+                    pagerIndex = 1;
+                    getFormData(true, false, pagerIndex);
+                }
+
+                @Override
+                public void onLoadMore() {
+                    Log.e("load", "loading"+pagerIndex);
+                    getFormData(false, true, pagerIndex+1);
+                }
+            });
+        } else {
+            formListAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     /*初始化固定条件*/
     private void initFix(FormBean.ReportInfoBean fixcondition) throws Exception {
@@ -178,7 +323,7 @@ public class FormListActivity extends AppCompatActivity {
     private List<NetParams> getParams() {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "GetReportInfo"));
-        params.add(new NetParams("iMenuID", menuId));
+        params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("pageNo", pagerIndex + ""));
         return params;

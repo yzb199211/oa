@@ -394,7 +394,6 @@ public class ReviewDetailActivity extends AppCompatActivity {
      * 设置审批流程信息
      */
     private void setProcessView() {
-
         for (int i = 0; i < processes.size(); i++) {
             ReviewProcessView processView = new ReviewProcessView(this);
             processView.setItem(processes.get(i));

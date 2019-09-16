@@ -14,6 +14,7 @@ public class LoginBean {
     private TablesBean tables;
     private NumBean data;
 
+
     public boolean isSuccess() {
         return success;
     }
@@ -44,5 +45,7 @@ public class LoginBean {
     public void setData(NumBean data) {
         this.data = data;
     }
+
+
 
 }
