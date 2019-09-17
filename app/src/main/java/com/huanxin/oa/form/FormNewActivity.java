@@ -72,7 +72,7 @@ public class FormNewActivity extends AppCompatActivity {
     SharedPreferencesHelper preferencesHelper;
     TabView currentView;
     int currenViewPos = -1;
-
+    int isInterval = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +151,7 @@ public class FormNewActivity extends AppCompatActivity {
 //        List<FormBean.ReportColumnsBean> reportColumnsBeans = formBean.getReportColumns();
         if (reportInfoBeans.size() > 0) {
             FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+            isInterval = reportInfoBeans.get(0).getiRowAlternation();
             if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
                 fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), fixcondition.getSAppFilters1()));
             }
@@ -325,12 +326,16 @@ public class FormNewActivity extends AppCompatActivity {
         table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
             @Override
             public int getBackGroundColor(CellInfo cellInfo) {
-                if (cellInfo.row % 2 == 1) {
-                    return ContextCompat.getColor(FormNewActivity.this, R.color.blue1);
+                if (isInterval == 1) {
+                    if (cellInfo.row % 2 == 1) {
+                        return ContextCompat.getColor(FormNewActivity.this, R.color.blue1);
 
-                }
-                return ContextCompat.getColor(FormNewActivity.this, R.color.white);
+                    }
+                    return ContextCompat.getColor(FormNewActivity.this, R.color.white);
 //                return TableConfig.INVALID_COLOR;
+                } else {
+                    return ContextCompat.getColor(FormNewActivity.this, R.color.white);
+                }
             }
 
         });

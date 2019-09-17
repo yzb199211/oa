@@ -68,6 +68,7 @@ public class FormRefreshActivity extends BaseActivity {
     SharedPreferencesHelper preferencesHelper;
 
     int pagerIndex = 1;
+    int isInterval = 1;
 
     private String menuId;
     private String userId;
@@ -157,8 +158,10 @@ public class FormRefreshActivity extends BaseActivity {
         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
         List<FormBean.ReportColumnsBean> reportColumnsBeans = formBean.getReportColumns();
         Log.e("conditions", new Gson().toJson(reportInfoBeans));
+
         if (reportInfoBeans.size() > 0) {
             FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+            isInterval = reportInfoBeans.get(0).getiRowAlternation();
             if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
                 fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
             }
@@ -204,10 +207,14 @@ public class FormRefreshActivity extends BaseActivity {
         table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
             @Override
             public int getBackGroundColor(CellInfo cellInfo) {
-                if (cellInfo.row % 2 == 1) {
-                    return ContextCompat.getColor(FormRefreshActivity.this, R.color.blue1);
+                if (isInterval == 1) {
+                    if (cellInfo.row % 2 == 1) {
+                        return ContextCompat.getColor(FormRefreshActivity.this, R.color.blue1);
+                    }
+                    return ContextCompat.getColor(FormRefreshActivity.this, R.color.white);
+                } else {
+                    return ContextCompat.getColor(FormRefreshActivity.this, R.color.white);
                 }
-                return ContextCompat.getColor(FormRefreshActivity.this, R.color.white);
 //                return TableConfig.INVALID_COLOR;
             }
 

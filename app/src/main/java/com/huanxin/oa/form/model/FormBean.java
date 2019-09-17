@@ -303,6 +303,7 @@ public class FormBean {
 
         private String sBillType;
         private int pPageCount;
+        private int iRowAlternation;
         private String sAppStyle;
         private int iShowChart;
         private String sAppFilters1;
@@ -346,6 +347,14 @@ public class FormBean {
         private String sPieCenter;
         private String sPieRadius;
         private String sPieRoseType;
+
+        public int getiRowAlternation() {
+            return iRowAlternation;
+        }
+
+        public void setiRowAlternation(int iRowAlternation) {
+            this.iRowAlternation = iRowAlternation;
+        }
 
         public String getSBillType() {
             return sBillType;
