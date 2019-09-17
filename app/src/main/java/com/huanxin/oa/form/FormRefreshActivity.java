@@ -1,6 +1,7 @@
 package com.huanxin.oa.form;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,9 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.core.TableParser;
+import com.bin.david.form.data.CellInfo;
+import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
+import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
+import com.bin.david.form.data.style.FontStyle;
 import com.bin.david.form.data.table.MapTableData;
 import com.google.gson.Gson;
 import com.huanxin.oa.BaseActivity;
@@ -195,7 +201,24 @@ public class FormRefreshActivity extends BaseActivity {
 
     //传入json直接形成表单
     private void setGsonData(String data) {
+        table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
+            @Override
+            public int getBackGroundColor(CellInfo cellInfo) {
+                if (cellInfo.row % 2 == 1) {
+                    return ContextCompat.getColor(FormRefreshActivity.this, R.color.blue1);
+                }
+                return ContextCompat.getColor(FormRefreshActivity.this, R.color.white);
+//                return TableConfig.INVALID_COLOR;
+            }
+
+        });
         table.getConfig().setShowTableTitle(false);
+        table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
+        table.getConfig().setColumnTitleStyle(new FontStyle(this, 15, getResources().getColor(R.color.white)).setAlign(Paint.Align.CENTER));
+//        table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
+        table.getConfig().setVerticalPadding(30);
+//        table.getConfig().setHorizontalPadding(30);
+        table.getConfig().setColumnTitleVerticalPadding(30);
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
     }
@@ -207,24 +230,37 @@ public class FormRefreshActivity extends BaseActivity {
             TabView tab = new TabView(this);
             tab.setText(fixconditions.get(i).getName());
             tab.setPosition(i);
+            if (i == 0) {
+                currenViewPos = i;
+                currentView = tab;
+            }
             tab.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 //                    Log.e("position", "position:" + position);
-                    if (currentView == null) {
-                        currenViewPos = position;
-                        currentView = (TabView) view;
-                        filter = fixconditions.get(position).getFilters();
-                        getFormData(1);
-                    } else if (currenViewPos == position) {
-                        currenViewPos = -1;
-                        currentView = null;
-                        filter = "";
-                        getFormData(1);
-                    } else {
+//                    if (currentView == null) {
+//                        currenViewPos = position;
+//                        currentView = (TabView) view;
+//                        filter = fixconditions.get(position).getFilters();`
+//                        getFormData(1);
+//                    } else if (currenViewPos == position) {
+//                        currenViewPos = -1;
+//                        currentView = null;
+//                        filter = "";
+//                        getFormData(1);
+//                    } else {
+//                        currenViewPos = position;
+//                        currentView.setChecked(false);
+//                        currentView = (TabView) view;
+//                        filter = fixconditions.get(position).getFilters();
+//                        getFormData(1);
+//                    }
+
+                    if (currenViewPos != position) {
                         currenViewPos = position;
                         currentView.setChecked(false);
                         currentView = (TabView) view;
+                        currentView.setChecked(true);
                         filter = fixconditions.get(position).getFilters();
                         getFormData(1);
                     }
@@ -232,6 +268,7 @@ public class FormRefreshActivity extends BaseActivity {
             });
             llTab.addView(tab);
         }
+        currentView.setChecked(true);
     }
 
     private void getFormData(int pagerIndex) {
@@ -341,9 +378,11 @@ public class FormRefreshActivity extends BaseActivity {
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
-                currenViewPos = -1;
-                currentView.setChecked(false);
-                currentView = null;
+                if (currentView != null) {
+                    currenViewPos = -1;
+                    currentView.setChecked(false);
+                    currentView = null;
+                }
 //                Log.e("filter", filter);
                 getFormData(1);
             }

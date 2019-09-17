@@ -89,6 +89,8 @@ public class SignActivity extends BaseActivity {
     ImageView ivPhoto;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
 
     private LocationService locationService;
     SharedPreferencesHelper preferencesHelper;
@@ -142,6 +144,7 @@ public class SignActivity extends BaseActivity {
         bottomReview.setVisibility(View.VISIBLE);
         tvTitle.setText("考勤");
         tvTime.setText(TimeUtil.getTime());
+        ivBack.setVisibility(View.VISIBLE);
     }
 
     /*获取客户数据*/

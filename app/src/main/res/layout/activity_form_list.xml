@@ -9,10 +9,21 @@
 
     <include layout="@layout/top_layout" />
 
+    <LinearLayout
+        android:id="@+id/ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/refresh_list"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
+        android:layout_marginTop="@dimen/dp_1"
         android:layout_weight="1" />
 
 </LinearLayout>

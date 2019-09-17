@@ -1,6 +1,7 @@
 package com.huanxin.oa.form;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,8 +12,13 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bin.david.form.core.SmartTable;
+import com.bin.david.form.data.CellInfo;
+import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
+import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
+import com.bin.david.form.data.style.FontStyle;
 import com.bin.david.form.data.table.MapTableData;
 import com.google.gson.Gson;
 import com.huanxin.oa.R;
@@ -86,6 +92,7 @@ public class FormNewActivity extends AppCompatActivity {
         menuId = intent.getStringExtra("menuid");
         tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
         ivBack.setVisibility(View.VISIBLE);
+
     }
 
     /*获取初始数据*/
@@ -129,7 +136,7 @@ public class FormNewActivity extends AppCompatActivity {
     private List<NetParams> getDataParams() {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "GetReportInfo"));
-        params.add(new NetParams("iMenuID", menuId));
+        params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("userid", userId));
         Log.e("menuid", menuId);
         return params;
@@ -182,32 +189,47 @@ public class FormNewActivity extends AppCompatActivity {
     /*设置固定筛选项*/
     private void setTab() {
         llTab.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llTab.getLayoutParams();
+        params.setMargins(0, 0, 0, 0);
+        llTab.setLayoutParams(params);
         for (int i = 0; i < fixconditions.size(); i++) {
             TabView tab = new TabView(this);
             tab.setText(fixconditions.get(i).getName());
             tab.setPosition(i);
+            if (i == 0) {
+                currenViewPos = i;
+                currentView = tab;
+            }
             tab.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Log.e("position", "position:" + position);
-                    if (currentView == null) {
-                        currenViewPos = position;
-                        currentView = (TabView) view;
-                        getFormData(position);
-                    } else if (currenViewPos == position) {
-                        currenViewPos = -1;
-                        currentView = null;
-                        getFormData(-1);
-                    } else {
+//                    if (currentView == null) {
+//                        currenViewPos = position;
+//                        currentView = (TabView) view;
+//                        getFormData(position);
+//                    } else if (currenViewPos == position) {
+//                        currenViewPos = -1;
+//                        currentView = null;
+//                        getFormData(-1);
+//                    } else {
+//                        currenViewPos = position;
+//                        currentView.setChecked(false);
+//                        currentView = (TabView) view;
+//                        getFormData(position);
+//                    }
+                    if (currenViewPos != position) {
                         currenViewPos = position;
                         currentView.setChecked(false);
                         currentView = (TabView) view;
+                        currentView.setChecked(true);
                         getFormData(position);
                     }
                 }
             });
             llTab.addView(tab);
         }
+        currentView.setChecked(true);
     }
 
     private void getFormData(int pos) {
@@ -300,7 +322,27 @@ public class FormNewActivity extends AppCompatActivity {
 
     //传入json直接形成表单
     private void setGsonData(String data) {
+        table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
+            @Override
+            public int getBackGroundColor(CellInfo cellInfo) {
+                if (cellInfo.row % 2 == 1) {
+                    return ContextCompat.getColor(FormNewActivity.this, R.color.blue1);
+
+                }
+                return ContextCompat.getColor(FormNewActivity.this, R.color.white);
+//                return TableConfig.INVALID_COLOR;
+            }
+
+        });
         table.getConfig().setShowTableTitle(false).setShowXSequence(false).setShowYSequence(false);
+        table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
+        table.getConfig().setColumnTitleStyle(new FontStyle(this, 15, getResources().getColor(R.color.white)).setAlign(Paint.Align.CENTER));
+//        table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
+        table.getConfig().setVerticalPadding(30);
+//        table.getConfig().setHorizontalPadding(30);
+        table.getConfig().setColumnTitleVerticalPadding(30);
+//        table.getConfig().setColumnTitleHorizontalPadding(30);
+
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
     }

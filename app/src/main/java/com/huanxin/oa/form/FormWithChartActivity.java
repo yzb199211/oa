@@ -463,7 +463,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "getChartReportData"));
         params.add(new NetParams("userid", userid));
-        params.add(new NetParams("iMenuID", menuid));
+        params.add(new NetParams("iFormID", menuid));
         params.add(new NetParams("filters", filter));
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));

@@ -7,8 +7,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.huanxin.oa.form.adapter.FormListAdapter;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormConditionBean;
 import com.huanxin.oa.interfaces.ResponseListener;
+import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.review.model.ReviewInfo;
 import com.huanxin.oa.review.model.ReviewStyle;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
@@ -29,6 +32,7 @@ import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
 import com.huanxin.oa.view.recycle.MyRecyclerViewDivider;
+import com.huanxin.oa.view.tab.TabView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -46,6 +50,7 @@ import butterknife.OnClick;
 
 public class FormListActivity extends AppCompatActivity {
 
+    private final static int CONDIRION_CODE = 500;
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -55,6 +60,8 @@ public class FormListActivity extends AppCompatActivity {
     TextView tvRight;
     @BindView(R.id.refresh_list)
     XRecyclerView refreshList;
+    @BindView(R.id.ll_tab)
+    LinearLayout llTab;
 
     LinearLayoutManager manager;
 
@@ -75,6 +82,9 @@ public class FormListActivity extends AppCompatActivity {
     private List<ReviewStyle> items;
 
     FormListAdapter formListAdapter;
+    TabView currentView;
+    int currenViewPos = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +124,74 @@ public class FormListActivity extends AppCompatActivity {
         getData(false, false, pagerIndex);
     }
 
+    /*设置固定筛选项*/
+    private void setTab() {
+        llTab.setVisibility(View.VISIBLE);
+        for (int i = 0; i < fixconditions.size(); i++) {
+
+            TabView tab = new TabView(this);
+            tab.setText(fixconditions.get(i).getName());
+            tab.setPosition(i);
+            if (i == 0) {
+                currenViewPos = i;
+                currentView = tab;
+            }
+            tab.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+//                    Log.e("position", "position:" + position);
+//                    if (currentView == null) {
+//                        currenViewPos = position;
+//                        currentView = (TabView) view;
+//                        filter = fixconditions.get(position).getFilters();
+//                        pagerIndex = 1;
+//                        items.clear();
+//                        if (formListAdapter != null) {
+//                            formListAdapter.notifyDataSetChanged();
+//                        }
+//                        getFormData(false, false, pagerIndex);
+//                    } else if (currenViewPos == position) {
+//                        currenViewPos = -1;
+//                        currentView = null;
+//                        filter = "";
+//                        pagerIndex = 1;
+//                        items.clear();
+//                        if (formListAdapter != null) {
+//                            formListAdapter.notifyDataSetChanged();
+//                        }
+//                        getFormData(false, false, pagerIndex);
+//                    } else {
+//                    currenViewPos = position;
+//                    currentView.setChecked(false);
+//                    currentView = (TabView) view;
+//                    filter = fixconditions.get(position).getFilters();
+//                    pagerIndex = 1;
+//                    items.clear();
+//                    if (formListAdapter != null) {
+//                        formListAdapter.notifyDataSetChanged();
+//                    }
+//                    getFormData(false, false, pagerIndex);
+//                    }
+                    if (currenViewPos != position) {
+                        currenViewPos = position;
+                        currentView.setChecked(false);
+                        currentView = (TabView) view;
+                        currentView.setChecked(true);
+                        filter = fixconditions.get(position).getFilters();
+                        pagerIndex = 1;
+                        items.clear();
+                        if (formListAdapter != null) {
+                            formListAdapter.notifyDataSetChanged();
+                        }
+                        getFormData(false, false, pagerIndex);
+                    }
+                }
+            });
+            llTab.addView(tab);
+        }
+        currentView.setChecked(true);
+    }
+
     /*获取数据*/
     private void getData(boolean isRefresh, boolean isLoadMore, int page) {
         LoadingDialog.showDialogForLoading(this);
@@ -130,6 +208,22 @@ public class FormListActivity extends AppCompatActivity {
                         List<FormBean.ReportInfoBean> reportInfoBeans = formBean.getReportInfo();
                         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
                         List<FormBean.ReportColumns2> stylebeans = formBean.getReportColumns2();
+
+                        if (reportInfoBeans.size() > 0) {
+                            FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
+                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
+                            }
+                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
+                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
+                            }
+                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
+                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
+                            }
+                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
+                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
+                            }
+                        }
 
                         if (reportInfoBeans.size() > 0) {
                             initFix(reportInfoBeans.get(0));
@@ -150,6 +244,9 @@ public class FormListActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     tvRight.setVisibility(View.VISIBLE);
+                                    if (fixconditions.size() > 0) {
+                                        setTab();
+                                    }
                                 }
                             });
                         }
@@ -294,8 +391,8 @@ public class FormListActivity extends AppCompatActivity {
 
                 @Override
                 public void onLoadMore() {
-                    Log.e("load", "loading"+pagerIndex);
-                    getFormData(false, true, pagerIndex+1);
+                    Log.e("load", "loading" + pagerIndex);
+                    getFormData(false, true, pagerIndex + 1);
                 }
             });
         } else {
@@ -330,11 +427,6 @@ public class FormListActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.iv_back)
-    public void onViewClicked() {
-        finish();
-    }
-
     /*请求关闭LoadingDialog和弹出提示*/
     private void loadFail(String message) {
         runOnUiThread(new Runnable() {
@@ -345,5 +437,48 @@ public class FormListActivity extends AppCompatActivity {
                     Toasts.showShort(FormListActivity.this, message);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (resultCode == CONDIRION_CODE) {
+                pagerIndex = 1;
+                items.clear();
+                if (formListAdapter != null) {
+                    formListAdapter.notifyDataSetChanged();
+                }
+                filter = data.getStringExtra("data");
+                currenViewPos = -1;
+                currentView.setChecked(false);
+                currentView = null;
+//                Log.e("filter", filter);
+                getFormData(false, false, pagerIndex);
+            }
+        }
+    }
+
+    @OnClick({R.id.iv_back, R.id.tv_right})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_right:
+                goCondition();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /*筛选*/
+    private void goCondition() {
+        Intent intent = new Intent();
+        intent.setClass(this, FormConditionActivity.class);
+        intent.putExtra("data", new Gson().toJson(conditions));
+        intent.putExtra("code", CONDIRION_CODE);
+        startActivityForResult(intent, CONDIRION_CODE);
     }
 }

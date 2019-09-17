@@ -39,11 +39,12 @@ public class TabView extends TextView {
         setBackgroundColor(context.getColor(R.color.white));
         setTextColor(context.getColor(R.color.default_text_color));
         setWidth(getResources().getDimensionPixelOffset(R.dimen.dp_90));
+        setHeight(context.getResources().getDimensionPixelOffset(R.dimen.dp_30));
         setPadding(getResources().getDimensionPixelOffset(R.dimen.dp_5), getResources().getDimensionPixelOffset(R.dimen.dp_5), getResources().getDimensionPixelOffset(R.dimen.dp_5), getResources().getDimensionPixelOffset(R.dimen.dp_5));
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setChecked(!isChecked);
+
                 if (onItemClickListener != null)
                     onItemClickListener.onItemClick(v, position);
             }
