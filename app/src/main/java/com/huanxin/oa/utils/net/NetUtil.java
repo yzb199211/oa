@@ -1,6 +1,5 @@
 package com.huanxin.oa.utils.net;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.huanxin.oa.application.BaseApplication;
@@ -18,7 +17,6 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import retrofit2.http.POST;
 
 public class NetUtil {
     BaseApplication application = BaseApplication.getInstance();
@@ -126,8 +124,13 @@ public class NetUtil {
         return url;
     }
 
+    public NetUtil(final String url, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
+        download(url, destFileDir, destFileName, listener);
+    }
 
     /**
+     * 文件下载
+     *
      * @param url          下载连接
      * @param destFileDir  下载的文件储存目录
      * @param destFileName 下载文件名称
@@ -135,18 +138,6 @@ public class NetUtil {
      */
 
     public void download(final String url, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        OkHttpClient client = new OkHttpClient();
-
-        try {
-            Response response = client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //异步请求
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -158,21 +149,17 @@ public class NetUtil {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
                 InputStream is = null;
                 byte[] buf = new byte[2048];
                 int len = 0;
                 FileOutputStream fos = null;
-
                 //储存下载文件的目录
                 File dir = new File(destFileDir);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 File file = new File(dir, destFileName);
-
                 try {
-
                     is = response.body().byteStream();
                     long total = response.body().contentLength();
                     fos = new FileOutputStream(file);
@@ -189,8 +176,7 @@ public class NetUtil {
                     listener.onDownloadSuccess(file);
                 } catch (Exception e) {
                     listener.onDownloadFailed(e);
-                }finally {
-
+                } finally {
                     try {
                         if (is != null) {
                             is.close();
@@ -201,7 +187,6 @@ public class NetUtil {
                     } catch (IOException e) {
 
                     }
-
                 }
 
 
@@ -210,7 +195,7 @@ public class NetUtil {
     }
 
 
-    public interface OnDownloadListener{
+    public interface OnDownloadListener {
 
         /**
          * 下载成功之后的文件
@@ -228,7 +213,6 @@ public class NetUtil {
 
         void onDownloadFailed(Exception e);
     }
-
 
 
 }

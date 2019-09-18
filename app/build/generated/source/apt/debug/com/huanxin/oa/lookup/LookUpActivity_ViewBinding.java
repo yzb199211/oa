@@ -18,7 +18,7 @@ import java.lang.Override;
 public class LookUpActivity_ViewBinding implements Unbinder {
   private LookUpActivity target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
   @UiThread
   public LookUpActivity_ViewBinding(LookUpActivity target) {
@@ -36,7 +36,7 @@ public class LookUpActivity_ViewBinding implements Unbinder {
     target.tvEmpty = Utils.findRequiredViewAsType(source, R.id.tv_empty, "field 'tvEmpty'", TextView.class);
     target.rvItem = Utils.findRequiredViewAsType(source, R.id.rv_item, "field 'rvItem'", RecyclerView.class);
     view = Utils.findRequiredView(source, R.id.iv_back, "method 'onViewClicked'");
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -58,7 +58,7 @@ public class LookUpActivity_ViewBinding implements Unbinder {
     target.tvEmpty = null;
     target.rvItem = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
   }
 }

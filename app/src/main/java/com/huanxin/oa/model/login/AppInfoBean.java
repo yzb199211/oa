@@ -7,14 +7,14 @@ public class AppInfoBean {
      * sAppApk :
      */
 
-    private String sAppVersion;
+    private int sAppVersion;
     private String sAppApk;
 
-    public String getSAppVersion() {
+    public int getSAppVersion() {
         return sAppVersion;
     }
 
-    public void setSAppVersion(String sAppVersion) {
+    public void setSAppVersion(int sAppVersion) {
         this.sAppVersion = sAppVersion;
     }
 

@@ -18,7 +18,7 @@ import java.lang.Override;
 public class MessageActivity_ViewBinding implements Unbinder {
   private MessageActivity target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
   @UiThread
   public MessageActivity_ViewBinding(MessageActivity target) {
@@ -32,7 +32,7 @@ public class MessageActivity_ViewBinding implements Unbinder {
     View view;
     view = Utils.findRequiredView(source, R.id.iv_back, "field 'ivBack' and method 'onViewClicked'");
     target.ivBack = Utils.castView(view, R.id.iv_back, "field 'ivBack'", ImageView.class);
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -56,7 +56,7 @@ public class MessageActivity_ViewBinding implements Unbinder {
     target.rlTop = null;
     target.rvMessage = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
   }
 }

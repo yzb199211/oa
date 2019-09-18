@@ -6,6 +6,10 @@
     <string name="error_fail">网络请求失败</string>
 
     <string name="empty">暂无数据，点击刷新</string>
+    <!--b版本更新dialog提示-->
+    <string name="update_latest">确认是否更新到最新版本</string>
+    <string name="update_older">确认是否退回到旧版本</string>
+
     <string name="preferenceCache">oaCache</string>
     <string name="str_login">登录</string>
     <string name="str_sweep">扫描二维码</string>

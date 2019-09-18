@@ -17,7 +17,7 @@ import java.lang.Override;
 public class FormFragment_ViewBinding implements Unbinder {
   private FormFragment target;
 
-  private View view7f080159;
+  private View view7f080160;
 
   @UiThread
   public FormFragment_ViewBinding(final FormFragment target, View source) {
@@ -29,7 +29,7 @@ public class FormFragment_ViewBinding implements Unbinder {
     target.rvForm = Utils.findRequiredViewAsType(source, R.id.rv_form, "field 'rvForm'", RecyclerView.class);
     view = Utils.findRequiredView(source, R.id.tv_empty, "field 'tvEmpty' and method 'onViewClicked'");
     target.tvEmpty = Utils.castView(view, R.id.tv_empty, "field 'tvEmpty'", TextView.class);
-    view7f080159 = view;
+    view7f080160 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -50,7 +50,7 @@ public class FormFragment_ViewBinding implements Unbinder {
     target.rvForm = null;
     target.tvEmpty = null;
 
-    view7f080159.setOnClickListener(null);
-    view7f080159 = null;
+    view7f080160.setOnClickListener(null);
+    view7f080160 = null;
   }
 }

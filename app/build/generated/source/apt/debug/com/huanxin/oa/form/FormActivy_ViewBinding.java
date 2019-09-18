@@ -17,7 +17,7 @@ import java.lang.Override;
 public class FormActivy_ViewBinding implements Unbinder {
   private FormActivy target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
   @UiThread
   public FormActivy_ViewBinding(FormActivy target) {
@@ -34,7 +34,7 @@ public class FormActivy_ViewBinding implements Unbinder {
     target.glTitle = Utils.findRequiredViewAsType(source, R.id.gl_title, "field 'glTitle'", GridLayout.class);
     target.glForm = Utils.findRequiredViewAsType(source, R.id.gl_form, "field 'glForm'", GridLayout.class);
     view = Utils.findRequiredView(source, R.id.iv_back, "method 'onViewClicked'");
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -55,7 +55,7 @@ public class FormActivy_ViewBinding implements Unbinder {
     target.glTitle = null;
     target.glForm = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
   }
 }

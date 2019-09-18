@@ -40,6 +40,15 @@
         android:testOnly="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
+            android:name="com.huanxin.oa.tencent.DisplayFileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.huanxin.oa.review.ReviewImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.huanxin.oa.form.FormWithChartActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name="com.huanxin.oa.login.LoginActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -85,12 +94,14 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.huanxin.oa.form.FormNewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.huanxin.oa.form.FormRefreshActivity"
+            android:screenOrientation="landscape" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="9ZQ7yefZOtQoilT0LzMk4kOGhlMA8hwn" />
-        <!-- 声明service组件 -->
+            android:value="9ZQ7yefZOtQoilT0LzMk4kOGhlMA8hwn" /> <!-- 声明service组件 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

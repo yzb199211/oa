@@ -307,7 +307,7 @@ public class FormNewActivity extends AppCompatActivity {
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
-                Log.e("filter", filter);
+//                Log.e("filter", filter);
                 getFormData(-2);
             }
         }

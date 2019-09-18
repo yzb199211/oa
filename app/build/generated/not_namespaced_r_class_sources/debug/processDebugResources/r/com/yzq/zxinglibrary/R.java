@@ -44,16 +44,16 @@ public final class R {
     public static final class id {
         private id() {}
 
-        public static final int albumIv = 0x7f080037;
-        public static final int albumLayout = 0x7f080038;
-        public static final int backIv = 0x7f08003f;
-        public static final int bottomLayout = 0x7f080046;
-        public static final int flashLightIv = 0x7f080083;
-        public static final int flashLightLayout = 0x7f080084;
-        public static final int flashLightTv = 0x7f080085;
-        public static final int headerLayout = 0x7f080095;
-        public static final int preview_view = 0x7f0800e5;
-        public static final int viewfinder_view = 0x7f08016f;
+        public static final int albumIv = 0x7f08003c;
+        public static final int albumLayout = 0x7f08003d;
+        public static final int backIv = 0x7f080044;
+        public static final int bottomLayout = 0x7f08004b;
+        public static final int flashLightIv = 0x7f080088;
+        public static final int flashLightLayout = 0x7f080089;
+        public static final int flashLightTv = 0x7f08008a;
+        public static final int headerLayout = 0x7f08009a;
+        public static final int preview_view = 0x7f0800e9;
+        public static final int viewfinder_view = 0x7f080178;
     }
     public static final class layout {
         private layout() {}

@@ -18,7 +18,7 @@ import java.lang.Override;
 public class ChartActivity_ViewBinding implements Unbinder {
   private ChartActivity target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
   @UiThread
   public ChartActivity_ViewBinding(ChartActivity target) {
@@ -36,7 +36,7 @@ public class ChartActivity_ViewBinding implements Unbinder {
     target.llContent = Utils.findRequiredViewAsType(source, R.id.ll_content, "field 'llContent'", LinearLayout.class);
     target.glData = Utils.findRequiredViewAsType(source, R.id.gl_data, "field 'glData'", GridLayout.class);
     view = Utils.findRequiredView(source, R.id.iv_back, "method 'onViewClicked'");
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -58,7 +58,7 @@ public class ChartActivity_ViewBinding implements Unbinder {
     target.llContent = null;
     target.glData = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
   }
 }

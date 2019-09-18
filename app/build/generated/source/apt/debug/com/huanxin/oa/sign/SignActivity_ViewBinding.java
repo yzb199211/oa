@@ -19,15 +19,15 @@ import java.lang.Override;
 public class SignActivity_ViewBinding implements Unbinder {
   private SignActivity target;
 
-  private View view7f08004a;
+  private View view7f08004f;
 
-  private View view7f08014f;
+  private View view7f080155;
 
-  private View view7f080158;
+  private View view7f08015e;
 
-  private View view7f080153;
+  private View view7f080159;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
   @UiThread
   public SignActivity_ViewBinding(SignActivity target) {
@@ -45,7 +45,7 @@ public class SignActivity_ViewBinding implements Unbinder {
     target.tvLocation = Utils.findRequiredViewAsType(source, R.id.tv_location, "field 'tvLocation'", TextView.class);
     view = Utils.findRequiredView(source, R.id.btn_camera, "field 'btnCamera' and method 'onViewClicked'");
     target.btnCamera = Utils.castView(view, R.id.btn_camera, "field 'btnCamera'", ImageView.class);
-    view7f08004a = view;
+    view7f08004f = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -56,7 +56,7 @@ public class SignActivity_ViewBinding implements Unbinder {
     target.flImg = Utils.findRequiredViewAsType(source, R.id.fl_img, "field 'flImg'", FrameLayout.class);
     view = Utils.findRequiredView(source, R.id.tv_agree, "field 'tvAgree' and method 'onViewClicked'");
     target.tvAgree = Utils.castView(view, R.id.tv_agree, "field 'tvAgree'", TextView.class);
-    view7f08014f = view;
+    view7f080155 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -65,7 +65,7 @@ public class SignActivity_ViewBinding implements Unbinder {
     });
     view = Utils.findRequiredView(source, R.id.tv_disagree, "field 'tvDisagree' and method 'onViewClicked'");
     target.tvDisagree = Utils.castView(view, R.id.tv_disagree, "field 'tvDisagree'", TextView.class);
-    view7f080158 = view;
+    view7f08015e = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -76,7 +76,7 @@ public class SignActivity_ViewBinding implements Unbinder {
     target.bottomReview = Utils.findRequiredViewAsType(source, R.id.bottom_review, "field 'bottomReview'", RelativeLayout.class);
     view = Utils.findRequiredView(source, R.id.tv_customer, "field 'tvCustomer' and method 'onViewClicked'");
     target.tvCustomer = Utils.castView(view, R.id.tv_customer, "field 'tvCustomer'", TextView.class);
-    view7f080153 = view;
+    view7f080159 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -85,8 +85,9 @@ public class SignActivity_ViewBinding implements Unbinder {
     });
     target.ivPhoto = Utils.findRequiredViewAsType(source, R.id.iv_photo, "field 'ivPhoto'", ImageView.class);
     target.etRemark = Utils.findRequiredViewAsType(source, R.id.et_remark, "field 'etRemark'", EditText.class);
-    view = Utils.findRequiredView(source, R.id.iv_back, "method 'onViewClicked'");
-    view7f0800a4 = view;
+    view = Utils.findRequiredView(source, R.id.iv_back, "field 'ivBack' and method 'onViewClicked'");
+    target.ivBack = Utils.castView(view, R.id.iv_back, "field 'ivBack'", ImageView.class);
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -116,16 +117,17 @@ public class SignActivity_ViewBinding implements Unbinder {
     target.tvCustomer = null;
     target.ivPhoto = null;
     target.etRemark = null;
+    target.ivBack = null;
 
-    view7f08004a.setOnClickListener(null);
-    view7f08004a = null;
-    view7f08014f.setOnClickListener(null);
-    view7f08014f = null;
-    view7f080158.setOnClickListener(null);
-    view7f080158 = null;
-    view7f080153.setOnClickListener(null);
-    view7f080153 = null;
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
+    view7f08004f.setOnClickListener(null);
+    view7f08004f = null;
+    view7f080155.setOnClickListener(null);
+    view7f080155 = null;
+    view7f08015e.setOnClickListener(null);
+    view7f08015e = null;
+    view7f080159.setOnClickListener(null);
+    view7f080159 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
   }
 }

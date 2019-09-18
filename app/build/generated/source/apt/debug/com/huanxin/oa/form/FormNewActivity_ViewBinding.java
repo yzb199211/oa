@@ -18,9 +18,9 @@ import java.lang.Override;
 public class FormNewActivity_ViewBinding implements Unbinder {
   private FormNewActivity target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
-  private View view7f08015f;
+  private View view7f080167;
 
   @UiThread
   public FormNewActivity_ViewBinding(FormNewActivity target) {
@@ -37,7 +37,7 @@ public class FormNewActivity_ViewBinding implements Unbinder {
     target.tvTitle = Utils.findRequiredViewAsType(source, R.id.tv_title, "field 'tvTitle'", TextView.class);
     view = Utils.findRequiredView(source, R.id.iv_back, "field 'ivBack' and method 'onViewClicked'");
     target.ivBack = Utils.castView(view, R.id.iv_back, "field 'ivBack'", ImageView.class);
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -46,7 +46,7 @@ public class FormNewActivity_ViewBinding implements Unbinder {
     });
     view = Utils.findRequiredView(source, R.id.tv_right, "field 'tvRight' and method 'onViewClicked'");
     target.tvRight = Utils.castView(view, R.id.tv_right, "field 'tvRight'", TextView.class);
-    view7f08015f = view;
+    view7f080167 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -68,9 +68,9 @@ public class FormNewActivity_ViewBinding implements Unbinder {
     target.ivBack = null;
     target.tvRight = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
-    view7f08015f.setOnClickListener(null);
-    view7f08015f = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
+    view7f080167.setOnClickListener(null);
+    view7f080167 = null;
   }
 }

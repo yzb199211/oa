@@ -19,13 +19,13 @@ import java.lang.Override;
 public class ReviewDetailActivity_ViewBinding implements Unbinder {
   private ReviewDetailActivity target;
 
-  private View view7f0800a4;
+  private View view7f0800aa;
 
-  private View view7f080159;
+  private View view7f080160;
 
-  private View view7f08014f;
+  private View view7f080155;
 
-  private View view7f080158;
+  private View view7f08015e;
 
   @UiThread
   public ReviewDetailActivity_ViewBinding(ReviewDetailActivity target) {
@@ -39,7 +39,7 @@ public class ReviewDetailActivity_ViewBinding implements Unbinder {
     View view;
     view = Utils.findRequiredView(source, R.id.iv_back, "field 'ivBack' and method 'onViewClicked'");
     target.ivBack = Utils.castView(view, R.id.iv_back, "field 'ivBack'", ImageView.class);
-    view7f0800a4 = view;
+    view7f0800aa = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -56,7 +56,7 @@ public class ReviewDetailActivity_ViewBinding implements Unbinder {
     target.scrollView = Utils.findRequiredViewAsType(source, R.id.scrolliew, "field 'scrollView'", ScrollView.class);
     view = Utils.findRequiredView(source, R.id.tv_empty, "field 'tvEmpty' and method 'onViewClicked'");
     target.tvEmpty = Utils.castView(view, R.id.tv_empty, "field 'tvEmpty'", TextView.class);
-    view7f080159 = view;
+    view7f080160 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -64,7 +64,7 @@ public class ReviewDetailActivity_ViewBinding implements Unbinder {
       }
     });
     view = Utils.findRequiredView(source, R.id.tv_agree, "method 'onViewClicked'");
-    view7f08014f = view;
+    view7f080155 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -72,7 +72,7 @@ public class ReviewDetailActivity_ViewBinding implements Unbinder {
       }
     });
     view = Utils.findRequiredView(source, R.id.tv_disagree, "method 'onViewClicked'");
-    view7f080158 = view;
+    view7f08015e = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -99,13 +99,13 @@ public class ReviewDetailActivity_ViewBinding implements Unbinder {
     target.scrollView = null;
     target.tvEmpty = null;
 
-    view7f0800a4.setOnClickListener(null);
-    view7f0800a4 = null;
-    view7f080159.setOnClickListener(null);
-    view7f080159 = null;
-    view7f08014f.setOnClickListener(null);
-    view7f08014f = null;
-    view7f080158.setOnClickListener(null);
-    view7f080158 = null;
+    view7f0800aa.setOnClickListener(null);
+    view7f0800aa = null;
+    view7f080160.setOnClickListener(null);
+    view7f080160 = null;
+    view7f080155.setOnClickListener(null);
+    view7f080155 = null;
+    view7f08015e.setOnClickListener(null);
+    view7f08015e = null;
   }
 }

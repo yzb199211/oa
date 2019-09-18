@@ -17,9 +17,9 @@ import java.lang.Override;
 public class LoginActivity_ViewBinding implements Unbinder {
   private LoginActivity target;
 
-  private View view7f08004d;
+  private View view7f080052;
 
-  private View view7f08004f;
+  private View view7f080054;
 
   @UiThread
   public LoginActivity_ViewBinding(LoginActivity target) {
@@ -36,7 +36,7 @@ public class LoginActivity_ViewBinding implements Unbinder {
     target.etPwd = Utils.findRequiredViewAsType(source, R.id.et_pwd, "field 'etPwd'", EditText.class);
     view = Utils.findRequiredView(source, R.id.btn_login, "field 'btnLogin' and method 'onViewClicked'");
     target.btnLogin = Utils.castView(view, R.id.btn_login, "field 'btnLogin'", TextView.class);
-    view7f08004d = view;
+    view7f080052 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -45,7 +45,7 @@ public class LoginActivity_ViewBinding implements Unbinder {
     });
     view = Utils.findRequiredView(source, R.id.btn_sweep, "field 'btnSweep' and method 'onViewClicked'");
     target.btnSweep = Utils.castView(view, R.id.btn_sweep, "field 'btnSweep'", TextView.class);
-    view7f08004f = view;
+    view7f080054 = view;
     view.setOnClickListener(new DebouncingOnClickListener() {
       @Override
       public void doClick(View p0) {
@@ -67,9 +67,9 @@ public class LoginActivity_ViewBinding implements Unbinder {
     target.btnLogin = null;
     target.btnSweep = null;
 
-    view7f08004d.setOnClickListener(null);
-    view7f08004d = null;
-    view7f08004f.setOnClickListener(null);
-    view7f08004f = null;
+    view7f080052.setOnClickListener(null);
+    view7f080052 = null;
+    view7f080054.setOnClickListener(null);
+    view7f080054 = null;
   }
 }

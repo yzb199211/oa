@@ -314,7 +314,7 @@ public class SignActivity extends BaseActivity {
         Intent intentToTakePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File fileDir = new File(Environment.getExternalStorageDirectory() + File.separator + "huanxinOA");
         if (!fileDir.exists()) {
-            fileDir.mkdirs();
+            fileDir.mkdir();
         }
 
         File photoFile = new File(fileDir, System.currentTimeMillis() + "huanxinoa.jpeg");
