@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.lookup.LookUpActivity;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
@@ -70,10 +72,14 @@ public class FunctionView extends LinearLayout {
     private String data;
     private String lookupName;
     private String lookupFilter;
+    private String userid;
+    private String address;
 
     private Activity mActivity;
     TimePickerView timePicker;
     TimePickerView datePicker;
+
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     public FunctionView(Context context) {
         this(context, null);
@@ -82,7 +88,8 @@ public class FunctionView extends LinearLayout {
     public FunctionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-
+        sharedPreferencesHelper = new SharedPreferencesHelper(context, context.getString(R.string.preferenceCache));
+        address = (String) sharedPreferencesHelper.getSharedPreference("address", "");
     }
 
     public FunctionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -108,7 +115,7 @@ public class FunctionView extends LinearLayout {
         tvTitle.setText(TextUtils.isEmpty(title) ? "" : title);
         tvContent.setHint(TextUtils.isEmpty(hint) ? "" : hint);
         tvContent.setText(getDefaulText(context, text));
-        this.text = getDefaulText(context,text);
+        this.text = getDefaulText(context, text);
         setView();
 
     }
@@ -207,8 +214,12 @@ public class FunctionView extends LinearLayout {
 
     /*获取数据*/
     private void getData() {
+        if (TextUtils.isEmpty(address)) {
+            Toasts.showShort(context, context.getString(R.string.address_empty));
+            return;
+        }
         LoadingDialog.showDialogForLoading(mActivity);
-        new NetUtil(getParams(), NetConfig.url + NetConfig.MobileHandler_Method, new ResponseListener() {
+        new NetUtil(getParams(), address + NetConfig.server + NetConfig.MobileHandler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e("data", string);
@@ -270,9 +281,11 @@ public class FunctionView extends LinearLayout {
     /*获取数据参数*/
     private List<NetParams> getParams() {
         List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("userid", userid));
         params.add(new NetParams("otype", "GetLookUpData"));
-        params.add(new NetParams("sLookUpFilters", ""));
+        params.add(new NetParams("filters", lookupFilter));
         params.add(new NetParams("lookUpName", lookupName));
+//        Log.e("look",lookupName);
         return params;
     }
 
@@ -510,4 +523,7 @@ public class FunctionView extends LinearLayout {
         this.mActivity = mActivity;
     }
 
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 }

@@ -33,10 +33,10 @@ import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.MainActivity;
 import com.huanxin.oa.model.login.LoginBean;
 import com.huanxin.oa.permission.PermissionListener;
-import com.huanxin.oa.tencent.DisplayFileActivity;
 import com.huanxin.oa.utils.FileUtil;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
+import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.VersionUtil;
 import com.huanxin.oa.utils.net.NetConfig;
@@ -45,6 +45,9 @@ import com.huanxin.oa.utils.net.NetUtil;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,11 +78,15 @@ public class LoginActivity extends BaseActivity {
     String userid;
     String password;
     String url;
+    String address;
 
     int versionSystem;
     String dowmloadUrl;
 
     ProgressDialog progressDialog;
+    //    Dialog loading;
+    File file;
+    boolean isTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,12 +99,18 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void inti() {
+        isTest = true;
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        if (isTest==true) {
+            preferencesHelper.put("address", NetConfig.address);
+            address = NetConfig.address;
+        }
         versionSystem = VersionUtil.getAppVersionCode(this);
-//        System.out.println("version:"+versionCode);
     }
 
     private void initView() {
         etUser.setText((String) preferencesHelper.getSharedPreference("userid", ""));
+        etPwd.setText((String) preferencesHelper.getSharedPreference("password", ""));
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) ivLoginHeader.getLayoutParams();
         params.height = PxUtil.getHeight(this);
@@ -117,10 +130,11 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_sweep:
-//                permission(intent);
-                String filePath = "/storage/emulated/0/Download/browser/031001700311-20586419.pdf";
-                String fileName = "031001700311-20586419.pdf";
-                DisplayFileActivity.openDispalyFileActivity(LoginActivity.this, filePath, fileName);
+//                Toasts.showShort(this, "暂未开放");
+                permission(intent);
+//                String filePath = "/storage/emulated/0/Download/browser/031001700311-20586419.pdf";
+//                String fileName = "031001700311-20586419.pdf";
+//                DisplayFileActivity.openDispalyFileActivity(LoginActivity.this, filePath, fileName);
                 break;
         }
     }
@@ -130,7 +144,11 @@ public class LoginActivity extends BaseActivity {
      * 判断url,用户名和密码是否为空
      */
     private void isNone() throws Exception {
-        url = NetConfig.url + NetConfig.Login_Method;
+        if (TextUtils.isEmpty(address)) {
+            Toasts.showShort(this, getString(R.string.login_url));
+            return;
+        }
+        url = address + NetConfig.server + NetConfig.Login_Method;
         userid = etUser.getText().toString();
         password = etPwd.getText().toString();
         if (TextUtils.isEmpty(url)) {
@@ -146,7 +164,6 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         getContact();
-//        NetRxUtil.doRequestByRetrofit(NetRequestBody.getMultipartBody(getParams()));
     }
 
     /**
@@ -164,7 +181,7 @@ public class LoginActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toasts.showLong(LoginActivity.this, "数据解析失败");
+                            Toasts.showLong(LoginActivity.this, "登录失败");
                             LoadingDialog.cancelDialogForLoading();
                         }
                     });
@@ -197,7 +214,7 @@ public class LoginActivity extends BaseActivity {
         return list;
     }
 
-//    JudgeDialog updateDialog;
+    JudgeDialog updateDialog;
 
     /**
      * 返回数据处理
@@ -205,16 +222,29 @@ public class LoginActivity extends BaseActivity {
      * @param response
      */
     private void initData(String response) throws Exception {
+        Log.e("data",response);
         Gson gson = new Gson();
         LoginBean model = gson.fromJson(response, LoginBean.class);
         if (model.isSuccess()) {
             dowmloadUrl = model.getTables().getAPPInfo().get(0).getSAppApk();
-            versionControl(model);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     LoadingDialog.cancelDialogForLoading();
-                    finish();
+//                    login(model);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (StringUtil.isNotEmpty(dowmloadUrl)) {
+                                versionControl(model);
+                            } else {
+                                login(model);
+                            }
+                        }
+                    });
+
+
+//                    finish();
                 }
             });
         } else
@@ -229,33 +259,42 @@ public class LoginActivity extends BaseActivity {
 
     }
 
+    /*检测版本号*/
     private void versionControl(LoginBean model) {
         int versionCurrrent = model.getTables().getAPPInfo().get(0).getSAppVersion();
-        if (versionCurrrent > versionSystem) {
-            new JudgeDialog(LoginActivity.this, R.style.JudgeDialog, getString(R.string.update_latest), new JudgeDialog.OnCloseListener() {
-                @Override
-                public void onClick(boolean confirm) {
-                    if (confirm) {
-                        updatePermission();
-                    } else {
-                        login(model);
+        try {
+            if (versionCurrrent > versionSystem) {
+                updateDialog = new JudgeDialog(LoginActivity.this, R.style.JudgeDialog, getString(R.string.update_latest), new JudgeDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(boolean confirm) {
+                        if (confirm) {
+                            updatePermission();
+                        } else {
+                            login(model);
+                        }
                     }
-                }
-            }).show();
-        } else if (versionCurrrent < versionSystem) {
-            new JudgeDialog(LoginActivity.this, R.style.JudgeDialog, getString(R.string.update_older), new JudgeDialog.OnCloseListener() {
-                @Override
-                public void onClick(boolean confirm) {
-                    if (confirm) {
-                        updatePermission();
-                    } else {
-                        login(model);
+                });
+                updateDialog.show();
+
+            } else if (versionCurrrent < versionSystem) {
+                updateDialog = new JudgeDialog(LoginActivity.this, R.style.JudgeDialog, getString(R.string.update_older), new JudgeDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(boolean confirm) {
+                        if (confirm) {
+                            updatePermission();
+                        } else {
+                            login(model);
+                        }
                     }
-                }
-            }).show();
-        } else {
-            login(model);
+                });
+                updateDialog.show();
+            } else {
+                login(model);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     /*登录*/
@@ -271,10 +310,12 @@ public class LoginActivity extends BaseActivity {
         preferencesHelper.put("userid", model.getTables().getPerson().get(0).getSCode());
         preferencesHelper.put("userName", model.getTables().getPerson().get(0).getSName());
         preferencesHelper.put("userDepartment", model.getTables().getPerson().get(0).getSClassName());
+        preferencesHelper.put("password", etPwd.getText().toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -323,14 +364,42 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
             if (data != null) {
                 String content = data.getStringExtra(Constant.CODED_CONTENT);
-                Toast.makeText(this, "扫描结果为：" + content, Toast.LENGTH_LONG);
-                btnSweep.setText("扫描结果为：" + content);
+                try {
+
+                    storageAddress(content);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toasts.showShort(this, getString(R.string.error_json));
+                }
+                Log.e(TAG, content);
+            } else {
+                Toasts.showShort(this, getString(R.string.empty_data));
             }
         }
     }
 
-    File file;
+    /*扫描数据处理*/
+    private void storageAddress(String content) throws JSONException {
+        JSONObject jsonObject = new JSONObject(content);
+        String address = jsonObject.optString("ServerAddr");
+        String addressImg = jsonObject.optString("ServerImageAddr");
+        if (StringUtil.isNotEmpty(address)) {
+            preferencesHelper.put("address", address);
+            this.address = address;
+        } else {
+            Toasts.showShort(this, getString(R.string.login_address_empty));
+        }
 
+        if (StringUtil.isNotEmpty(addressImg)) {
+            preferencesHelper.put("addressImg", address);
+        } else {
+            Toasts.showShort(this, getString(R.string.login_img_address_empty));
+        }
+    }
+
+    /*下载进度更新*/
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
@@ -350,6 +419,7 @@ public class LoginActivity extends BaseActivity {
         ;
     };
 
+    /*显示下载进度*/
     private void showPrograss() {
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -361,6 +431,7 @@ public class LoginActivity extends BaseActivity {
         progressDialog.show();
     }
 
+    /*安装apk*/
     public void installApk(File apkPath) {
         //安装跳转
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -368,7 +439,7 @@ public class LoginActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             /* Android N 写法*/
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileProvider", apkPath);
+            Uri contentUri = FileProvider.getUriForFile(LoginActivity.this, BuildConfig.APPLICATION_ID + ".fileProvider", apkPath);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(apkPath),
@@ -378,19 +449,19 @@ public class LoginActivity extends BaseActivity {
             startActivity(intent);
 
         } catch (ActivityNotFoundException exception) {
-            Toast.makeText(this, "no activity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "no activity", Toast.LENGTH_SHORT).show();
             exception.printStackTrace();
         }
 
     }
 
-    /*获取*/
+    /*获取文件下载权限*/
     private void updatePermission() {
         requestRunPermisssion(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionListener() {
             @Override
             public void onGranted() {
 //                downFile("http://wap.apk.anzhi.com/data5/apk/201812/12/com.evernote_04286100.apk");
-                downFile("http://112.124.10.153:1004/MobileServerNew/APK/app-debug.apk");
+                downFile(address + dowmloadUrl);
             }
 
             @Override
@@ -400,13 +471,14 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    /*apk下载*/
     private void downFile(String url) {
         showPrograss();
         File dirfile = FileUtil.creatDir(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "huanxinOA");
-        FileUtil.creatFile(dirfile, "huanxinoa.apk");
+        file = FileUtil.creatFile(dirfile, "huanxinoa.apk");
 
 
-        new NetUtil(url, Environment.getExternalStorageDirectory().getAbsolutePath(), "/huanxinOA/app-debug.apk", new NetUtil.OnDownloadListener() {
+        new NetUtil(url, Environment.getExternalStorageDirectory().getAbsolutePath(), "/huanxinOA/huanxinoa.apk", new NetUtil.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
                 if (progressDialog != null && progressDialog.isShowing()) {
@@ -443,5 +515,16 @@ public class LoginActivity extends BaseActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (updateDialog != null && updateDialog.isShowing()) {
+            updateDialog.dismiss();
+        }
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

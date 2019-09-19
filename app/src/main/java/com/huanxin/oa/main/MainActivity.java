@@ -44,7 +44,9 @@ public class MainActivity extends BaseActivity {
     String mainData;
     String mineData;
     String numData;
+
     String userid;
+
 
     public String getMainData() {
         return mainData;
@@ -62,6 +64,7 @@ public class MainActivity extends BaseActivity {
         return numData;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +78,15 @@ public class MainActivity extends BaseActivity {
         Intent intent = getIntent();
         initData = intent.getStringExtra("data");
         numData = intent.getStringExtra("num");
+
         TablesBean tablesBean = new Gson().fromJson(initData, TablesBean.class);
         mainData = new Gson().toJson(tablesBean.getMenu());
         mineData = new Gson().toJson(tablesBean.getPerson());
         userid = tablesBean.getPerson().get(0).getSCode();
         setViewPager();
+
     }
+
 
     private void setViewPager() {
 //        Log.e(TAG, initData);
@@ -114,4 +120,5 @@ public class MainActivity extends BaseActivity {
             tabLayout.addTab(tab);
         }
     }
+
 }

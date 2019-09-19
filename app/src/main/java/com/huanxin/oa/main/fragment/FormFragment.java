@@ -29,6 +29,7 @@ import com.huanxin.oa.model.main.FormChildMenusBean;
 import com.huanxin.oa.model.main.FormMenusBean;
 import com.huanxin.oa.model.main.FormModel;
 import com.huanxin.oa.utils.CodeUtil;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
@@ -46,10 +47,7 @@ import butterknife.OnClick;
 public class FormFragment extends Fragment {
 
     private final static String TAG = "FormFragment";
-    private String userid;
-    List<FormMenusBean> menusBeans;
-    //菜单列表，一级列表title为true，一维数组
-    List<FormChildMenusBean> menus;
+
     @BindView(R.id.rl_top)
     RelativeLayout rlTop;
     @BindView(R.id.tv_title)
@@ -58,7 +56,18 @@ public class FormFragment extends Fragment {
     RecyclerView rvForm;
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
+
     FormAdapter formAdapter;
+
+    List<FormMenusBean> menusBeans;
+    //菜单列表，一级列表title为true，一维数组
+    List<FormChildMenusBean> menus;
+
+    private String userid;
+    private String address;
+    private String url;
+
+    SharedPreferencesHelper preferencesHelper;
 
     public FormFragment() {
     }
@@ -72,6 +81,9 @@ public class FormFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferencesHelper = new SharedPreferencesHelper(getActivity(), getString(R.string.preferenceCache));
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
         menusBeans = new ArrayList<>();
         menus = new ArrayList<>();
         getData();
@@ -80,7 +92,7 @@ public class FormFragment extends Fragment {
     /*获取数据*/
     private void getData() {
         LoadingDialog.showDialogForLoading(getActivity());
-        new NetUtil(getParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {

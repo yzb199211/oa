@@ -20,7 +20,7 @@
         android:lines="1"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
-        android:text="模糊查询"
+        android:hint="模糊查询"
         android:textColor="@color/default_content_color"
         android:textSize="@dimen/sp_14" />
 

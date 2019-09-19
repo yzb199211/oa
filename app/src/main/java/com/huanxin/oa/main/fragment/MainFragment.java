@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huanxin.oa.R;
-import com.huanxin.oa.form.FormActivy;
 import com.huanxin.oa.main.MainActivity;
 import com.huanxin.oa.main.adapter.FontTextAdapter;
 import com.huanxin.oa.main.adapter.MenuAdapter;
@@ -198,8 +197,7 @@ public class MainFragment extends Fragment {
                 startActivity(intent);
                 break;
             case 4:
-                intent.setClass(getActivity(), FormActivy.class);
-                startActivity(intent);
+              Toasts.showShort(getActivity(),getString(R.string.menu_empty));
                 break;
             default:
                 break;

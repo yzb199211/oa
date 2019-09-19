@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,8 @@ public class LookUpActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
 
     @BindView(R.id.rl_top)
     RelativeLayout rlTop;
@@ -61,6 +64,7 @@ public class LookUpActivity extends AppCompatActivity {
     }
 
     private void initView() throws Exception {
+        ivBack.setVisibility(View.VISIBLE);
         showList = new ArrayList<>();
         mlist = new ArrayList<>();
         Intent intent = getIntent();

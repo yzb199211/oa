@@ -43,8 +43,11 @@ public class FormConditionActivity extends BaseActivity {
     TextView tvDisagree;
 
     SharedPreferencesHelper preferencesHelper;
+
     private String userId;
+
     int code;
+
     private List<FormBean.ReportConditionBean> conditions;
     private List<FunctionView> viewList;
 
@@ -77,7 +80,6 @@ public class FormConditionActivity extends BaseActivity {
             }.getType());
             initView();
         }
-
     }
 
     private void initView() {
@@ -92,6 +94,7 @@ public class FormConditionActivity extends BaseActivity {
                 view.setLookupName(conditions.get(i).getSLookUpName());
                 view.setLookupFilter(conditions.get(i).getSLookUpFilters());
                 view.setCode(BASE_CODE + i);
+                view.setUserid(userId);
                 view.setmActivity(this);
                 view.build(conditions.get(i).getSFieldType());
                 llContent.addView(view);

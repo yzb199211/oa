@@ -80,6 +80,8 @@ public class FormWithChartActivity extends AppCompatActivity {
     List<LineBean.Line> pieData;
 
     SharedPreferencesHelper preferencesHelper;
+
+    private String address;
     String url;
 
     @Override
@@ -95,7 +97,11 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void init() {
-        url = NetConfig.url + NetConfig.Form_Method;
+
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
+
+
 
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();

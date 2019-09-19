@@ -71,6 +71,9 @@ public class FormListActivity extends AppCompatActivity {
     private String userId;
     private String filter = "";
 
+    private String address;
+    private String url;
+
     SharedPreferencesHelper preferencesHelper;
 
     List<FormBean.ReportColumns2> styleList;
@@ -96,6 +99,9 @@ public class FormListActivity extends AppCompatActivity {
     }
 
     private void inti() {
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
+
         styleList = new ArrayList<>();
         infoBeans = new ArrayList<>();
         conditionBeans = new ArrayList<>();
@@ -195,7 +201,7 @@ public class FormListActivity extends AppCompatActivity {
     /*获取数据*/
     private void getData(boolean isRefresh, boolean isLoadMore, int page) {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -313,7 +319,7 @@ public class FormListActivity extends AppCompatActivity {
 
     private void getFormData(boolean isRefresh, boolean isLoadMore, int pager) {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getFormParams(pager), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getFormParams(pager), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {

@@ -74,6 +74,9 @@ public class FormRefreshActivity extends BaseActivity {
     private String userId;
     private String filter = "";
 
+    private String address;
+    private String url;
+
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
 
@@ -90,10 +93,24 @@ public class FormRefreshActivity extends BaseActivity {
         getData();
     }
 
+    private void init() {
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
+
+        fixconditions = new ArrayList<>();
+        conditions = new ArrayList<>();
+        userId = (String) preferencesHelper.getSharedPreference("userid", "");
+        Intent intent = getIntent();
+        menuId = intent.getStringExtra("menuid");
+        tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
+        ivBack.setVisibility(View.VISIBLE);
+
+    }
+
     /*获取初始数据*/
     private void getData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getDataParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getDataParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -136,17 +153,6 @@ public class FormRefreshActivity extends BaseActivity {
         params.add(new NetParams("pageNo", pagerIndex + ""));
         Log.e("menuid", menuId);
         return params;
-    }
-
-    private void init() {
-        fixconditions = new ArrayList<>();
-        conditions = new ArrayList<>();
-        userId = (String) preferencesHelper.getSharedPreference("userid", "");
-        Intent intent = getIntent();
-        menuId = intent.getStringExtra("menuid");
-        tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
-        ivBack.setVisibility(View.VISIBLE);
-
     }
 
 
@@ -200,7 +206,7 @@ public class FormRefreshActivity extends BaseActivity {
         }
     }
 
-    private TableParser parser;
+//    private TableParser parser;
 
     //传入json直接形成表单
     private void setGsonData(String data) {
@@ -280,7 +286,7 @@ public class FormRefreshActivity extends BaseActivity {
 
     private void getFormData(int pagerIndex) {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getFormParams(pagerIndex), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getFormParams(pagerIndex), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {

@@ -64,8 +64,10 @@ public class FormNewActivity extends AppCompatActivity {
     private String menuId;
     private String userId;
     private String filter;
-    //    private String formData;
-//    private String formInfo;
+
+    private String address;
+    private String url;
+
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
 
@@ -86,6 +88,9 @@ public class FormNewActivity extends AppCompatActivity {
 
     private void init() {
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
+
         fixconditions = new ArrayList<>();
         conditions = new ArrayList<>();
         Intent intent = getIntent();
@@ -98,7 +103,7 @@ public class FormNewActivity extends AppCompatActivity {
     /*获取初始数据*/
     private void getData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getDataParams(), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getDataParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -235,7 +240,7 @@ public class FormNewActivity extends AppCompatActivity {
 
     private void getFormData(int pos) {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getFormParams(pos), NetConfig.url + NetConfig.Form_Method, new ResponseListener() {
+        new NetUtil(getFormParams(pos), address, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {

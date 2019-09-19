@@ -124,21 +124,23 @@ public class NetUtil {
         return url;
     }
 
-    public NetUtil(final String url, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
-        download(url, destFileDir, destFileName, listener);
+    public NetUtil(final String fileUrl, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
+        download(fileUrl, destFileDir, destFileName, listener);
     }
 
     /**
      * 文件下载
      *
-     * @param url          下载连接
+     * @param fileUrl          下载连接
      * @param destFileDir  下载的文件储存目录
      * @param destFileName 下载文件名称
      * @param listener     下载监听
      */
 
-    public void download(final String url, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
-
+    public void download(final String fileUrl, final String destFileDir, final String destFileName, final OnDownloadListener listener) {
+        Request request = new Request.Builder()
+                .url(fileUrl)
+                .build();
         //异步请求
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
