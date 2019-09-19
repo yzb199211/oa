@@ -460,13 +460,14 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private void back() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getBackParams(), address+NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getBackParams(), address + NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e(TAG, string);
                 try {
                     initBack(string);
                 } catch (Exception e) {
+                    LoadingDialog.cancelDialogForLoading();
                     e.printStackTrace();
                 }
 
@@ -524,13 +525,19 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private void isPush() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getPushParams(), address+NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getPushParams(), address + NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e(TAG, string);
                 try {
                     initPush(string);
                 } catch (Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.cancelDialogForLoading();
+                        }
+                    });
                     e.printStackTrace();
                 }
             }
@@ -593,7 +600,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", Otype.ReviewPush));
         params.add(new NetParams("iRecNo", id + ""));
-        params.add(new NetParams("userid",userId));
+        params.add(new NetParams("userid", userId));
         return params;
     }
 
@@ -611,7 +618,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 }
             });
         }
-        new NetUtil(getSendParams(isPush), address +NetConfig.server+ NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getSendParams(isPush), address + NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -658,7 +665,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         params.add(new NetParams("needPush", isPush + ""));
         params.add(new NetParams("message", etRemark.getText().toString()));
         params.add(new NetParams("iRecNo", id + ""));
-        params.add(new NetParams("userid",userId));
+        params.add(new NetParams("userid", userId));
         return params;
     }
 }

@@ -240,7 +240,7 @@ public class FormNewActivity extends AppCompatActivity {
 
     private void getFormData(int pos) {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getFormParams(pos), address, new ResponseListener() {
+        new NetUtil(getFormParams(pos), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {

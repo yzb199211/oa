@@ -97,11 +97,8 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void init() {
-
         address = (String) preferencesHelper.getSharedPreference("address", "");
         url = address + NetConfig.server + NetConfig.Form_Method;
-
-
 
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();
