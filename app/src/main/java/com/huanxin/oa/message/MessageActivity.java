@@ -2,7 +2,6 @@ package com.huanxin.oa.message;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,14 +13,15 @@ import com.google.gson.Gson;
 import com.huanxin.oa.BaseActivity;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
+import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.message.adapter.MessaAdapter;
 import com.huanxin.oa.model.message.MessageBean;
 import com.huanxin.oa.model.message.MessageItem;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
+import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
-import com.huanxin.oa.utils.Toasts;
-import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.utils.net.Otype;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -43,21 +43,31 @@ public class MessageActivity extends BaseActivity {
     RelativeLayout rlTop;
     @BindView(R.id.rv_message)
     XRecyclerView rvMessage;
+
     MessaAdapter mAdapter;
     List<MessageItem> messages;
+    SharedPreferencesHelper preferencesHelper;
+
     String userid;
+    String address;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         ButterKnife.bind(this);
+
+        preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
+
         init();
         getData();
     }
 
-
     private void init() {
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Message_Method;
+
         messages = new ArrayList<>();
         ivBack.setVisibility(View.VISIBLE);
         rlTop.setBackground(getDrawable(R.color.white));
@@ -70,7 +80,7 @@ public class MessageActivity extends BaseActivity {
 
     private void getData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getParams(), NetConfig.url + NetConfig.Message_Method, new ResponseListener() {
+        new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e(TAG, string);

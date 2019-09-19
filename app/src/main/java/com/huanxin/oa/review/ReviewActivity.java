@@ -24,6 +24,7 @@ import com.huanxin.oa.model.review.ReviewingBean;
 import com.huanxin.oa.review.adapter.ReviewAdapter;
 import com.huanxin.oa.review.model.ReviewItem;
 import com.huanxin.oa.utils.CodeUtil;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.Toasts;
 import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.utils.net.NetParams;
@@ -69,16 +70,26 @@ public class ReviewActivity extends AppCompatActivity {
 
     RecyclerView.LayoutManager layoutManager;
     ReviewAdapter adapter;
-    String url = NetConfig.url + NetConfig.Review_Method;
+
+    SharedPreferencesHelper preferencesHelper;
+
+    String address;
+    String url;
+
+
     Intent intent;
     private boolean isFirst = true;
     private boolean refreshReviewed = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
+        preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
+        address = (String) preferencesHelper.getSharedPreference("address","");
+        url = address+NetConfig.server+NetConfig.Review_Method;
         init();
         setTab();
         getMessage(tabPosition, url);

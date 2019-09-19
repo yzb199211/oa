@@ -98,6 +98,7 @@ public class SignActivity extends BaseActivity {
     String customerid;
     String userid;
     String address;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,8 @@ public class SignActivity extends BaseActivity {
         ButterKnife.bind(this);
         preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
         userid = (String) preferencesHelper.getSharedPreference("userid", "");
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.MobileOA_Method;
         initView();
     }
 
@@ -150,7 +153,7 @@ public class SignActivity extends BaseActivity {
     /*获取客户数据*/
     private void getCustomer() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getCustomerParams(), NetConfig.url + NetConfig.MobileOA_Method, new ResponseListener() {
+        new NetUtil(getCustomerParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -192,6 +195,7 @@ public class SignActivity extends BaseActivity {
     private List<NetParams> getCustomerParams() {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "getProjectList"));
+        params.add(new NetParams("userid", userid));
         params.add(new NetParams("filters", ""));
         return params;
     }
@@ -242,7 +246,7 @@ public class SignActivity extends BaseActivity {
                 .build();
         //创建Request
         Request request = new Request.Builder()
-                .url(NetConfig.url + NetConfig.MobileOA_Method)
+                .url(url)
                 .post(multipartBody)
                 .build();
         //创建okHttpClient

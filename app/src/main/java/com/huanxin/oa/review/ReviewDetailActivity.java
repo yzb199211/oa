@@ -86,10 +86,14 @@ public class ReviewDetailActivity extends AppCompatActivity {
     int billId;
     int formId;
     int tab;
+    int resultCode;
+
     String userId;
     String userName;
     String userDepartment;
-    int resultCode;
+    String address;
+    String url;
+
     SharedPreferencesHelper preferencesHelper;
     EditText etRemark;
 
@@ -98,6 +102,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_detail);
         ButterKnife.bind(this);
+        preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
         init();
         setTop();
 
@@ -109,7 +114,8 @@ public class ReviewDetailActivity extends AppCompatActivity {
 
     private void init() {
         resultCode = CodeUtil.RESULT_NO;
-        preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        url = address + NetConfig.server + NetConfig.Review_Method;
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
         userName = (String) preferencesHelper.getSharedPreference("userName", "");
         userDepartment = (String) preferencesHelper.getSharedPreference("userDepartment", "");
@@ -127,7 +133,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private void getData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getParams(), NetConfig.url + NetConfig.Review_Method, new ResponseListener() {
+        new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 Log.e(TAG, string);
@@ -454,7 +460,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private void back() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getBackParams(), NetConfig.url + NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getBackParams(), address+NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e(TAG, string);
@@ -505,6 +511,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private List<NetParams> getBackParams() {
         List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("userid", userId));
         params.add(new NetParams("otype", Otype.ReviewBack));
         params.add(new NetParams("message", etRemark.getText().toString()));
         params.add(new NetParams("iRecNo", id + ""));
@@ -517,7 +524,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
      */
     private void isPush() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getPushParams(), NetConfig.url + NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getPushParams(), address+NetConfig.server + NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
 //                Log.e(TAG, string);
@@ -586,6 +593,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", Otype.ReviewPush));
         params.add(new NetParams("iRecNo", id + ""));
+        params.add(new NetParams("userid",userId));
         return params;
     }
 
@@ -603,7 +611,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 }
             });
         }
-        new NetUtil(getSendParams(isPush), NetConfig.url + NetConfig.Review_Handler_Method, new ResponseListener() {
+        new NetUtil(getSendParams(isPush), address +NetConfig.server+ NetConfig.Review_Handler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -650,6 +658,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         params.add(new NetParams("needPush", isPush + ""));
         params.add(new NetParams("message", etRemark.getText().toString()));
         params.add(new NetParams("iRecNo", id + ""));
+        params.add(new NetParams("userid",userId));
         return params;
     }
 }
