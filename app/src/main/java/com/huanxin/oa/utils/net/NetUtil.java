@@ -42,7 +42,7 @@ public class NetUtil {
     /**
      * 直接调用接口
      *
-     * @param list
+     * @param list`
      * @param url
      * @param responseListener
      */
@@ -52,6 +52,15 @@ public class NetUtil {
         this.url = url;
         params(list, url, true);
     }
+
+    public NetUtil(List<NetParams> list, String url, OkHttpClient okHttpClient, ResponseListener responseListener) {
+        this.okHttpClient = okHttpClient;
+        this.responseListener = responseListener;
+        this.list = list;
+        this.url = url;
+        params(list, url, true);
+    }
+
 
     public OkHttpClient getClient() {
         return okHttpClient;
@@ -131,7 +140,7 @@ public class NetUtil {
     /**
      * 文件下载
      *
-     * @param fileUrl          下载连接
+     * @param fileUrl      下载连接
      * @param destFileDir  下载的文件储存目录
      * @param destFileName 下载文件名称
      * @param listener     下载监听

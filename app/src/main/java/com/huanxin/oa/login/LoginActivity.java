@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.huanxin.oa.BaseActivity;
 import com.huanxin.oa.BuildConfig;
 import com.huanxin.oa.R;
+import com.huanxin.oa.application.BaseApplication;
 import com.huanxin.oa.dialog.JudgeDialog;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.interfaces.ResponseListener;
@@ -57,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
 
 public class LoginActivity extends BaseActivity {
     private final String TAG = "LoginActivity";
@@ -101,7 +103,7 @@ public class LoginActivity extends BaseActivity {
     private void inti() {
         isTest = true;
         address = (String) preferencesHelper.getSharedPreference("address", "");
-        if (isTest==true) {
+        if (isTest == true) {
             preferencesHelper.put("address", NetConfig.address);
             address = NetConfig.address;
         }
@@ -171,7 +173,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void getContact() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getParams(), url, new ResponseListener() {
+        new NetUtil(getParams(), url, new OkHttpClient(), new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 try {
@@ -222,11 +224,15 @@ public class LoginActivity extends BaseActivity {
      * @param response
      */
     private void initData(String response) throws Exception {
-        Log.e("data",response);
+        Log.e("data", response);
         Gson gson = new Gson();
         LoginBean model = gson.fromJson(response, LoginBean.class);
         if (model.isSuccess()) {
             dowmloadUrl = model.getTables().getAPPInfo().get(0).getSAppApk();
+            int readTimeout = model.getTables().getAPPInfo().get(0).getiTimeout();
+            if (readTimeout > 0) {
+                BaseApplication.getInstance().setClinet(readTimeout);
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -408,6 +414,7 @@ public class LoginActivity extends BaseActivity {
 //            System.out.println("-arg2--->" + msg.arg2);
 //            System.out.println("-what--->" + msg.what);
 //            System.out.println("-obj--->" + msg.obj);
+
             if (msg.what == 11) {
                 progressDialog.setProgress((Integer) msg.obj);
             }

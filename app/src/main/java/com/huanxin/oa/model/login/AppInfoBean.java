@@ -9,6 +9,7 @@ public class AppInfoBean {
 
     private int iAppVersion;
     private String sAppApk;
+    private int iTimeout;
 
     public int getSAppVersion() {
         return iAppVersion;
@@ -24,5 +25,13 @@ public class AppInfoBean {
 
     public void setSAppApk(String sAppApk) {
         this.sAppApk = sAppApk;
+    }
+
+    public int getiTimeout() {
+        return iTimeout;
+    }
+
+    public void setiTimeout(int iTimeout) {
+        this.iTimeout = iTimeout;
     }
 }
