@@ -42,8 +42,9 @@ public class LineBean {
     }
 
     public static class Line {
-        String xValue;
-        float yValue;
+        String xValue="";
+        float yValue=0;
+
 
         public String getxValue() {
             return xValue;

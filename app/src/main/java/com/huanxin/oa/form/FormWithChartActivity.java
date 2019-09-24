@@ -28,6 +28,8 @@ import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
 import com.huanxin.oa.utils.net.Otype;
 import com.huanxin.oa.view.chart.bar.BarCharts;
+import com.huanxin.oa.view.chart.bar.BarHorCharts;
+import com.huanxin.oa.view.chart.bar.BarStackCharts;
 import com.huanxin.oa.view.chart.line.LineBean;
 import com.huanxin.oa.view.chart.line.LineCharts;
 import com.huanxin.oa.view.chart.pie.PieCharts;
@@ -138,7 +140,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                         List<FormBean.ReportColumnsBean> column = formBean.getReportColumns();
 
 
-
 //                        Log.e("info", new Gson().toJson(info));
 //                        Log.e("condition", new Gson().toJson(condition));
 //                        Log.e("column", new Gson().toJson(column));
@@ -199,6 +200,8 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     LineCharts lineCharts;
     BarCharts barCharts;
+    BarHorCharts barHorCharts;
+    BarStackCharts barStackCharts;
 
     /*设置图表*/
     private void setView() throws Exception {
@@ -209,10 +212,15 @@ public class FormWithChartActivity extends AppCompatActivity {
                 llContent.addView(lineCharts);
                 break;
             case "1":
-                barCharts = new BarCharts(this);
-                barCharts.setData(ChartData);
-                barCharts.build();
-                llContent.addView(barCharts);
+                barStackCharts = new BarStackCharts(this);
+                barStackCharts.setData(ChartData);
+                barStackCharts.build();
+                llContent.addView(barStackCharts);
+//                barCharts = new BarCharts(this);
+//                barCharts.setData(ChartData);
+//                barCharts.build();
+//                llContent.addView(barCharts);
+
                 break;
             case "2":
                 for (int i = 0; i < ChartData.size(); i++) {
@@ -222,6 +230,12 @@ public class FormWithChartActivity extends AppCompatActivity {
                     pieCharts.build();
                     llContent.addView(pieCharts);
                 }
+                break;
+            case "3":
+                barHorCharts = new BarHorCharts(this);
+                barHorCharts.setData(ChartData);
+                barHorCharts.build();
+                llContent.addView(barHorCharts);
                 break;
             default:
                 break;
@@ -251,13 +265,20 @@ public class FormWithChartActivity extends AppCompatActivity {
         glForm.setRowCount(ChartData.get(0).getList().size() + 1);
         glForm.setColumnCount(fields.size() + 1);
         addFormChild(0, 0, "月份", true);
+        int length = ChartData.get(0).getList().size();
         for (int i = 0; i < ChartData.size(); i++) {
             addFormChild(0, i + 1, ChartData.get(i).getName(), true);
-            for (int j = 0; j < ChartData.get(0).getList().size(); j++) {
-                if (i == 0) {
-                    addFormChild(j + 1, 0, ChartData.get(0).getList().get(j).getxValue(), false);
+
+            List<LineBean.Line> datas = new ArrayList<>();
+            datas.addAll(ChartData.get(i).getList());
+            for (int j = 0; j < length; j++) {
+                if (datas.size() < length) {
+                    datas.add(new LineBean.Line());
                 }
-                addFormChild(j + 1, i + 1, ChartData.get(0).getList().get(j).getyValue() + "", false);
+                if (i == 0) {
+                    addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
+                }
+                addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
             }
         }
 
@@ -324,7 +345,6 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
         ChartData.clear();
         for (String value : fields) {
-//            Log.e("value", value);
             List<LineBean.Line> line = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (jsonArray.getJSONObject(i).optString(field).equals(value)) {
@@ -343,7 +363,17 @@ public class FormWithChartActivity extends AppCompatActivity {
             lineBean.setUnit(infoBeans.get(0).getSYAxisLabelFormatterSimple());
             ChartData.add(lineBean);
         }
-        if (ChartData.size() > 0)
+        /*数据处理为相同长度*/
+        if (ChartData.size() > 0) {
+            int length = ChartData.get(0).getList().size();
+            for (int i = 0; i < ChartData.size(); i++) {
+                if (length > ChartData.get(i).getList().size()) {
+                    for (int j = 0; j < length - ChartData.get(i).getList().size(); j++) {
+                        ChartData.get(i).getList().add(new LineBean.Line());
+                    }
+                }
+            }
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -355,7 +385,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     }
                 }
             });
-
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.huanxin.oa.view.chart.bar;
 
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.view.chart.line.LineBean;
@@ -24,7 +24,7 @@ import com.huanxin.oa.view.chart.line.LineValueFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarCharts extends FrameLayout {
+public class BarStackCharts extends FrameLayout {
     Context context;
     XAxis xAxis;
     YAxis yAxis;
@@ -38,7 +38,7 @@ public class BarCharts extends FrameLayout {
     int groupCount;
     int dataSize;
 
-    public BarCharts(@NonNull Context context) {
+    public BarStackCharts(@NonNull Context context) {
         this(context, null);
     }
 
@@ -58,7 +58,7 @@ public class BarCharts extends FrameLayout {
         }
     }
 
-    public BarCharts(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BarStackCharts(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         LayoutInflater.from(context).inflate(R.layout.chart_bar, this, true);
@@ -128,16 +128,24 @@ public class BarCharts extends FrameLayout {
         xAxis.setLabelCount(data.get(0).getList().size(), false);
         //格式化x轴标签显示字符
         xAxis.setValueFormatter(new LineValueFormatter(data.get(0).getList()));
-        xAxis.setCenterAxisLabels(true);
+        xAxis.setCenterAxisLabels(false);
         if (chart.getData() == null) {
             //保存BarDataSet集合
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            BarDataSet set;
+            List<Integer> colors = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
             for (int i = 0; i < data.size(); i++) {
-                BarDataSet set;
-                set = new BarDataSet(BarUtil.getData(data.get(i).getList()), data.get(i).getName());
-                set.setColor(StringUtil.randomColor());
-                dataSets.add(set);
+                colors.add(StringUtil.randomColor());
+                labels.add(data.get(i).getName());
             }
+
+            set = new BarDataSet(BarUtil.getBarStackData(data), "1");
+            set.setColors(colors);
+            set.setStackLabels(labels.toArray(new String[labels.size()]));
+
+            dataSets.add(set);
+//            }
 
             BarData data1 = new BarData(dataSets);
             groupCount = data.get(0).getList().size();
@@ -145,12 +153,12 @@ public class BarCharts extends FrameLayout {
             barWidth = (1 - groupSpace) / dataSize;
             chart.setData(data1);
             // specify the width each bar should have
-            chart.getBarData().setBarWidth(barWidth);
+//            chart.getBarData().setBarWidth(barWidth);
             // restrict the x-axis range
-            chart.getXAxis().setAxisMinimum(start);
+//            chart.getXAxis().setAxisMinimum(start);
             // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-            chart.getXAxis().setAxisMaximum(start + chart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-            chart.groupBars(start, groupSpace, barSpace);
+//            chart.getXAxis().setAxisMaximum(start + chart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
+//            chart.groupBars(start, groupSpace, barSpace);
 //            for (IDataSet set : chart.getData().getDataSets())
 //                set.setDrawValues(!set.isDrawValuesEnabled());
             //绘制图表
@@ -166,3 +174,4 @@ public class BarCharts extends FrameLayout {
         return chart;
     }
 }
+

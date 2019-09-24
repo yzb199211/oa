@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
@@ -43,6 +44,11 @@ public class LineCharts extends FrameLayout {
     public LineCharts setYCount(int yCount) {
         this.yCount = yCount;
         return this;
+    }
+
+    public Legend getLegend() {
+        return chart.getLegend();
+
     }
 
     public LineCharts(@NonNull Context context) {

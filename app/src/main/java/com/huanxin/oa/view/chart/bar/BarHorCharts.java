@@ -15,7 +15,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.view.chart.line.LineBean;
@@ -24,7 +23,7 @@ import com.huanxin.oa.view.chart.line.LineValueFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarCharts extends FrameLayout {
+public class BarHorCharts extends FrameLayout {
     Context context;
     XAxis xAxis;
     YAxis yAxis;
@@ -38,7 +37,7 @@ public class BarCharts extends FrameLayout {
     int groupCount;
     int dataSize;
 
-    public BarCharts(@NonNull Context context) {
+    public BarHorCharts(@NonNull Context context) {
         this(context, null);
     }
 
@@ -58,10 +57,10 @@ public class BarCharts extends FrameLayout {
         }
     }
 
-    public BarCharts(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BarHorCharts(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.chart_bar, this, true);
+        LayoutInflater.from(context).inflate(R.layout.chart_bar_hor, this, true);
         init();
     }
 
@@ -69,7 +68,7 @@ public class BarCharts extends FrameLayout {
         chart = findViewById(R.id.bar_chart);
         xAxis = chart.getXAxis();//获取x轴
         yAxis = chart.getAxisLeft();//获取y轴
-        chart.getAxisRight().setEnabled(false);//不显示右边的y轴
+        chart.getAxisLeft().setEnabled(false);//不显示右边的y轴
         initXaxis();
         initYaxis();
         initChart();
@@ -88,7 +87,7 @@ public class BarCharts extends FrameLayout {
         //设置标签文本颜色
 //        xAxis.setTextColor(Color.RED);
         //是否绘制轴线
-        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawAxisLine(false);
         //是否绘制网格线
         xAxis.setDrawGridLines(false);
         //自定义数值格式
