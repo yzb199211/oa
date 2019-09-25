@@ -11,11 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.data.RadarEntry;
 import com.huanxin.oa.R;
+import com.huanxin.oa.view.chart.ChartBean;
 import com.huanxin.oa.view.chart.bar.BarCharts;
-import com.huanxin.oa.view.chart.line.LineBean;
 import com.huanxin.oa.view.chart.line.LineCharts;
 import com.huanxin.oa.view.chart.pie.PieCharts;
-import com.huanxin.oa.view.chart.radar.RadarBean;
 import com.huanxin.oa.view.chart.radar.RadarCharts;
 import com.huanxin.oa.view.chart.table.Table;
 
@@ -54,55 +53,55 @@ public class ChartActivity extends AppCompatActivity {
         rlTop.setBackgroundColor(getColor(R.color.white));
         tvTitle.setTextColor(getColor(R.color.black));
         tvRight.setVisibility(View.VISIBLE);
-        List<LineBean> lineBeans = new ArrayList<>();
+        List<ChartBean> chartBeans = new ArrayList<>();
         for (int size = 0; size < 2; size++) {
-            List<LineBean.Line> lines = new ArrayList<>();
+            List<ChartBean.Line> lines = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                LineBean.Line line = new LineBean.Line();
+                ChartBean.Line line = new ChartBean.Line();
                 line.setxValue(i + 1 + "月");
                 line.setyValue((float) new Random().nextInt(100));
 
                 lines.add(line);
             }
-            LineBean lineBean = new LineBean();
-            lineBean.setList(lines);
-            lineBean.setName("yyy" + size + 1);
-            lineBean.setDescription("卖猪：");
-            lineBean.setUnit("只");
-            lineBeans.add(lineBean);
+            ChartBean chartBean = new ChartBean();
+            chartBean.setList(lines);
+            chartBean.setName("yyy" + size + 1);
+            chartBean.setDescription("卖猪：");
+            chartBean.setUnit("只");
+            chartBeans.add(chartBean);
         }
-        List<RadarBean> radarBeans = new ArrayList<>();
+        List<ChartBean> radarBeans = new ArrayList<>();
         for (int size = 0; size < 2; size++) {
-            List<RadarBean.Radar> radars = new ArrayList<>();
+            List<ChartBean.Line> radars = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                RadarBean.Radar radar = new RadarBean.Radar();
+                ChartBean.Line radar = new ChartBean.Line();
                 radar.setxValue(i + 1 + "月");
-                radar.setyValue((float) new Random().nextInt(100));
-
+                radar.setyValue((float) new Random().nextInt(10000));
                 radars.add(radar);
             }
-            RadarBean radarBean = new RadarBean();
+            ChartBean radarBean = new ChartBean();
             radarBean.setList(radars);
-            radarBean.setLabel("yyy" + size + 1);
+            radarBean.setName("yyy" + size + 1);
             radarBeans.add(radarBean);
         }
         LineCharts charts = new LineCharts(this);
-        charts.setData(lineBeans);
+        charts.setData(chartBeans);
 
         llContent.addView(charts);
 
         BarCharts barCharts = new BarCharts(this);
-        barCharts.setData(lineBeans);
+        barCharts.setData(chartBeans);
         barCharts.build();
         llContent.addView(barCharts);
 
         PieCharts pieCharts = new PieCharts(this);
-        pieCharts.setData(lineBeans.get(0).getList());
+        pieCharts.setData(chartBeans.get(0).getList());
         pieCharts.setCenterText("");
         pieCharts.build();
         llContent.addView(pieCharts);
         RadarCharts radarCharts = new RadarCharts(this);
         radarCharts.setData(radarBeans);
+        radarCharts.build();
         llContent.addView(radarCharts);
         addTable();
 //        setTable();

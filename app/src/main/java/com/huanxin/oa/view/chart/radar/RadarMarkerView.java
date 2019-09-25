@@ -3,7 +3,6 @@ package com.huanxin.oa.view.chart.radar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
@@ -11,6 +10,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.huanxin.oa.R;
+
 import java.text.DecimalFormat;
 
 /**
@@ -35,7 +35,8 @@ public class RadarMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setText(String.format("%s %%", format.format(e.getY())));
+//        tvContent.setText(String.format("%s %%", format.format(e.getY())));
+        tvContent.setText(e.getY() + "");
 
         super.refreshContent(e, highlight);
     }

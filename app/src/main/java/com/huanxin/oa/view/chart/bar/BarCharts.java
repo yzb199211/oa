@@ -15,10 +15,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
-import com.huanxin.oa.view.chart.line.LineBean;
+import com.huanxin.oa.view.chart.ChartBean;
 import com.huanxin.oa.view.chart.line.LineValueFormatter;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class BarCharts extends FrameLayout {
     XAxis xAxis;
     YAxis yAxis;
     BarChart chart;
-    List<LineBean> data;
+    List<ChartBean> data;
     int yCounts = 5;
     float groupSpace = 0.1f;
     float barWidth = 0.45f;
@@ -42,7 +41,7 @@ public class BarCharts extends FrameLayout {
         this(context, null);
     }
 
-    public void setData(List<LineBean> data) {
+    public void setData(List<ChartBean> data) {
         this.data = data;
     }
 

@@ -22,7 +22,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
-import com.huanxin.oa.view.chart.line.LineBean;
+import com.huanxin.oa.view.chart.ChartBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +32,13 @@ public class PieCharts extends FrameLayout implements OnChartValueSelectedListen
     Context context;
     PieChart chart;
     String centerText = "";
-    List<LineBean.Line> data;
+    List<ChartBean.Line> data;
 
     public void setCenterText(String centerText) {
         this.centerText = centerText;
     }
 
-    public void setData(List<LineBean.Line> data) {
+    public void setData(List<ChartBean.Line> data) {
         this.data = data;
     }
 

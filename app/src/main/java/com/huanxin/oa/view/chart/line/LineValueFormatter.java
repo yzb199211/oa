@@ -1,13 +1,14 @@
 package com.huanxin.oa.view.chart.line;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.huanxin.oa.view.chart.ChartBean;
 
 import java.util.List;
 
 public class LineValueFormatter extends ValueFormatter {
-    List<LineBean.Line> list;
+    List<ChartBean.Line> list;
 
-    public LineValueFormatter(List<LineBean.Line> list) {
+    public LineValueFormatter(List<ChartBean.Line> list) {
         this.list = list;
     }
 

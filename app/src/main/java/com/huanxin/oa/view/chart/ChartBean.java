@@ -1,8 +1,8 @@
-package com.huanxin.oa.view.chart.line;
+package com.huanxin.oa.view.chart;
 
 import java.util.List;
 
-public class LineBean {
+public class ChartBean {
 //    String string = "{\"name\":\"例如：业务员\",\"unit\":\"单位\",\"description\":\"支出：\",\"list\":[{\"xValue\":\"一月\",\"yValue\":1.1}}";
     String name;//数据源名称
     String unit;//单位
@@ -45,6 +45,13 @@ public class LineBean {
         String xValue="";
         float yValue=0;
 
+        public Line() {
+        }
+
+        public Line(String xValue, float yValue) {
+            this.xValue = xValue;
+            this.yValue = yValue;
+        }
 
         public String getxValue() {
             return xValue;

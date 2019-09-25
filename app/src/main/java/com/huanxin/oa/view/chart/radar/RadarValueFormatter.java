@@ -1,13 +1,14 @@
 package com.huanxin.oa.view.chart.radar;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.huanxin.oa.view.chart.ChartBean;
 
 import java.util.List;
 
 public class RadarValueFormatter extends ValueFormatter {
-    List<RadarBean.Radar> list;
+    List<ChartBean.Line> list;
 
-    public RadarValueFormatter(List<RadarBean.Radar> list) {
+    public RadarValueFormatter(List<ChartBean.Line> list) {
         this.list = list;
     }
 

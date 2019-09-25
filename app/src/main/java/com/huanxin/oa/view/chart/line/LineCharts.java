@@ -18,13 +18,14 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
+import com.huanxin.oa.view.chart.ChartBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class LineCharts extends FrameLayout {
-    List<LineBean> data;
+    List<ChartBean> data;
     Context context;
     LineChart chart;
     XAxis xAxis;
@@ -34,7 +35,7 @@ public class LineCharts extends FrameLayout {
 
 
     /*设置数据源*/
-    public LineCharts setData(List<LineBean> data) {
+    public LineCharts setData(List<ChartBean> data) {
         this.data = data;
         initData();
         return this;
