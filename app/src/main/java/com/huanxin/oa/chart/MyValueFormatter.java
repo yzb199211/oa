@@ -15,7 +15,6 @@ public class MyValueFormatter extends ValueFormatter
     public MyValueFormatter(String suffix) {
         mFormat = new DecimalFormat("###,###,###,##0.0");
         this.suffix = suffix;
-
     }
 
     @Override
