@@ -23,7 +23,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".form.FormListActivity"></activity>
+        <activity android:name=".form.FormListActivity"/>
         <activity
             android:name=".tencent.DisplayFileActivity"
             android:screenOrientation="portrait" />
@@ -63,7 +63,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".PickActivity"
             android:screenOrientation="portrait" />

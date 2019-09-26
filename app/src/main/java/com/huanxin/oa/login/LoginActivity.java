@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void inti() {
-        isTest = true;
+        isTest = false;
         address = (String) preferencesHelper.getSharedPreference("address", "");
         if (isTest == true) {
             preferencesHelper.put("address", NetConfig.address);
@@ -150,9 +150,11 @@ public class LoginActivity extends BaseActivity {
             Toasts.showShort(this, getString(R.string.login_url));
             return;
         }
+
         url = address + NetConfig.server + NetConfig.Login_Method;
         userid = etUser.getText().toString();
         password = etPwd.getText().toString();
+
         if (TextUtils.isEmpty(url)) {
             Toasts.showShort(LoginActivity.this, "请扫描二维码");
             return;

@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.CellInfo;
+import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
 import com.bin.david.form.data.style.FontStyle;
@@ -70,11 +71,13 @@ public class FormNewActivity extends AppCompatActivity {
 
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
+    private List<Integer> columnsFix;
 
     SharedPreferencesHelper preferencesHelper;
     TabView currentView;
     int currenViewPos = -1;
     int isInterval = 0;
+    List<Column> columns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,10 @@ public class FormNewActivity extends AppCompatActivity {
 
         fixconditions = new ArrayList<>();
         conditions = new ArrayList<>();
+        columns = new ArrayList<>();
+        columnsFix = new ArrayList<>();
+
+
         Intent intent = getIntent();
         menuId = intent.getStringExtra("menuid");
         tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
@@ -153,7 +160,13 @@ public class FormNewActivity extends AppCompatActivity {
         FormBean formBean = gson.fromJson(formInfo, FormBean.class);
         List<FormBean.ReportInfoBean> reportInfoBeans = formBean.getReportInfo();
         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
-//        List<FormBean.ReportColumnsBean> reportColumnsBeans = formBean.getReportColumns();
+        List<FormBean.ReportColumnsBean> reportColumnsBeans = formBean.getReportColumns();
+        for (FormBean.ReportColumnsBean columnsBean : reportColumnsBeans) {
+            if (columnsBean.getIfix() == 0) {
+                break;
+            }
+            columnsFix.add(columnsBean.getIShowOrder());
+        }
         if (reportInfoBeans.size() > 0) {
             FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
             isInterval = reportInfoBeans.get(0).getiRowAlternation();
@@ -243,6 +256,7 @@ public class FormNewActivity extends AppCompatActivity {
         new NetUtil(getFormParams(pos), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
+                Log.e("data", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.optBoolean("success");
@@ -312,8 +326,8 @@ public class FormNewActivity extends AppCompatActivity {
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
-//                Log.e("filter", filter);
-                getFormData(-2);
+                Log.e("filter", filter);
+                getFormData(currenViewPos);
             }
         }
     }
@@ -328,6 +342,24 @@ public class FormNewActivity extends AppCompatActivity {
 
     //传入json直接形成表单
     private void setGsonData(String data) {
+        setTableStyle();
+        setTableData(data);
+        setTableFix();
+//        Log.e("size", table.getTableData().getColumns().size() + "");
+    }
+
+    /*设置固定列*/
+    private void setTableFix() {
+        columns = table.getTableData().getColumns();
+        if (columns != null && columns.size() > 0) {
+            for (int i = 0; i < columnsFix.size(); i++) {
+                columns.get(i).setFixed(true);
+            }
+        }
+    }
+
+    /*设置table样式*/
+    private void setTableStyle() {
         table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
             @Override
             public int getBackGroundColor(CellInfo cellInfo) {
@@ -351,8 +383,10 @@ public class FormNewActivity extends AppCompatActivity {
         table.getConfig().setVerticalPadding(30);
 //        table.getConfig().setHorizontalPadding(30);
         table.getConfig().setColumnTitleVerticalPadding(30);
-//        table.getConfig().setColumnTitleHorizontalPadding(30);
+    }
 
+    /*传入table数据*/
+    private void setTableData(String data) {
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
     }

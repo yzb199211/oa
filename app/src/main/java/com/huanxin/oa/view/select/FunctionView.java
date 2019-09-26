@@ -222,7 +222,7 @@ public class FunctionView extends LinearLayout {
         new NetUtil(getParams(), address + NetConfig.server + NetConfig.MobileHandler_Method, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-//                Log.e("data", string);
+                Log.e("lookupdata", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.optBoolean("success");
@@ -262,7 +262,7 @@ public class FunctionView extends LinearLayout {
     /*处理Lookup数据*/
     private void initLookupData(String tables, String keyReturn, String keyShow) throws JSONException, Exception {
 
-        //Log.e("jsonArrayLength", jsonArray.length() + "");
+        Log.e("jsonArrayLength", keyReturn + ","+keyShow);
         if (tables.contains(keyReturn) && tables.contains(keyShow)) {
             this.data = getLookupData(tables, keyReturn, keyShow);
             mActivity.runOnUiThread(new Runnable() {

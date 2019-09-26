@@ -15,12 +15,13 @@ import com.huanxin.oa.permission.PermissionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * 封装动态权限
  */
 public class BaseActivity extends FragmentActivity {
-    BaseApplication baseApplication;
 
+    BaseApplication baseApplication;
 
     private PermissionListener mListener;
     private static final int PERMISSION_REQUESTCODE = 100;

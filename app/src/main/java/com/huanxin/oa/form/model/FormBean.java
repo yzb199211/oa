@@ -727,6 +727,7 @@ public class FormBean {
          * iMerge : 0
          * sAlign : left
          * iSort : 0
+         * ifix:0
          */
 
         private int iShowOrder;
@@ -737,6 +738,15 @@ public class FormBean {
         private int iMerge;
         private String sAlign;
         private int iSort;
+        private int ifix;
+
+        public int getIfix() {
+            return ifix;
+        }
+
+        public void setIfix(int ifix) {
+            this.ifix = ifix;
+        }
 
         public int getIShowOrder() {
             return iShowOrder;
