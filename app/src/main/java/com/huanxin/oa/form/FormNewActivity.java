@@ -64,7 +64,8 @@ public class FormNewActivity extends AppCompatActivity {
 
     private String menuId;
     private String userId;
-    private String filter;
+    private String filter = "";
+    private String fixfilter = "";
 
     private String address;
     private String url;
@@ -72,12 +73,13 @@ public class FormNewActivity extends AppCompatActivity {
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
     private List<Integer> columnsFix;
+    private List<Column> columns;
 
     SharedPreferencesHelper preferencesHelper;
     TabView currentView;
     int currenViewPos = -1;
     int isInterval = 0;
-    List<Column> columns;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +152,7 @@ public class FormNewActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "GetReportInfo"));
         params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("userid", userId));
-        Log.e("menuid", menuId);
+//        Log.e("menuid", menuId);
         return params;
     }
 
@@ -242,7 +244,8 @@ public class FormNewActivity extends AppCompatActivity {
                         currentView.setChecked(false);
                         currentView = (TabView) view;
                         currentView.setChecked(true);
-                        getFormData(position);
+                        fixfilter = fixconditions.get(position).getFilters();
+                        getFormData();
                     }
                 }
             });
@@ -251,9 +254,9 @@ public class FormNewActivity extends AppCompatActivity {
         currentView.setChecked(true);
     }
 
-    private void getFormData(int pos) {
+    private void getFormData() {
         LoadingDialog.showDialogForLoading(this);
-        new NetUtil(getFormParams(pos), url, new ResponseListener() {
+        new NetUtil(getFormParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
                 Log.e("data", string);
@@ -290,19 +293,17 @@ public class FormNewActivity extends AppCompatActivity {
         });
     }
 
-    private List<NetParams> getFormParams(int pos) {
+    private List<NetParams> getFormParams() {
         List<NetParams> params = new ArrayList<>();
         params.add(new NetParams("otype", "getReportData"));
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("iFormID", menuId));
-        if (pos == -1) {
-            params.add(new NetParams("filters", ""));
-        } else if (pos == -2) {
-            params.add(new NetParams("filters", filter));
-        } else {
-            params.add(new NetParams("filters", fixconditions.get(pos).getFilters()));
-        }
 
+        if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
+            params.add(new NetParams("filters", filter + " and " + fixfilter));
+        } else {
+            params.add(new NetParams("filters", filter + fixfilter));
+        }
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));
         return params;
@@ -327,7 +328,7 @@ public class FormNewActivity extends AppCompatActivity {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
                 Log.e("filter", filter);
-                getFormData(currenViewPos);
+                getFormData();
             }
         }
     }
@@ -346,16 +347,6 @@ public class FormNewActivity extends AppCompatActivity {
         setTableData(data);
         setTableFix();
 //        Log.e("size", table.getTableData().getColumns().size() + "");
-    }
-
-    /*设置固定列*/
-    private void setTableFix() {
-        columns = table.getTableData().getColumns();
-        if (columns != null && columns.size() > 0) {
-            for (int i = 0; i < columnsFix.size(); i++) {
-                columns.get(i).setFixed(true);
-            }
-        }
     }
 
     /*设置table样式*/
@@ -389,6 +380,16 @@ public class FormNewActivity extends AppCompatActivity {
     private void setTableData(String data) {
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
+    }
+
+    /*设置固定列*/
+    private void setTableFix() {
+        columns = table.getTableData().getColumns();
+        if (columns != null && columns.size() > 0) {
+            for (int i = 0; i < columnsFix.size(); i++) {
+                columns.get(i).setFixed(true);
+            }
+        }
     }
 
     /*请求关闭LoadingDialog和弹出提示*/

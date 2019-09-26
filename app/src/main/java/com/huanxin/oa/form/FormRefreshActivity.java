@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bin.david.form.core.SmartTable;
-import com.bin.david.form.core.TableParser;
 import com.bin.david.form.data.CellInfo;
+import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
 import com.bin.david.form.data.style.FontStyle;
@@ -68,17 +68,22 @@ public class FormRefreshActivity extends BaseActivity {
     SharedPreferencesHelper preferencesHelper;
 
     int pagerIndex = 1;
-    int isInterval = 1;
+
+    int isInterval = 1;//各行变色
 
     private String menuId;
     private String userId;
     private String filter = "";
+    private String fixfilter = "";
+    private String title;
 
     private String address;
     private String url;
 
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
+    private List<Integer> columnsFix;
+    private List<Column> columns;
 
     TabView currentView;
     int currenViewPos = -1;
@@ -94,17 +99,36 @@ public class FormRefreshActivity extends BaseActivity {
     }
 
     private void init() {
-        address = (String) preferencesHelper.getSharedPreference("address", "");
-        url = address + NetConfig.server + NetConfig.Form_Method;
+        initData();
+        initList();
+        initIntent();
+        initView();
 
-        fixconditions = new ArrayList<>();
-        conditions = new ArrayList<>();
-        userId = (String) preferencesHelper.getSharedPreference("userid", "");
+    }
+
+    private void initIntent() {
         Intent intent = getIntent();
         menuId = intent.getStringExtra("menuid");
-        tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
-        ivBack.setVisibility(View.VISIBLE);
+        title = intent.getStringExtra("title");
+    }
 
+
+    private void initData() {
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+        userId = (String) preferencesHelper.getSharedPreference("userid", "");
+        url = address + NetConfig.server + NetConfig.Form_Method;
+    }
+
+    private void initList() {
+        fixconditions = new ArrayList<>();
+        conditions = new ArrayList<>();
+        columns = new ArrayList<>();
+        columnsFix = new ArrayList<>();
+    }
+
+    private void initView() {
+        ivBack.setVisibility(View.VISIBLE);
+        tvTitle.setText(title);
     }
 
     /*获取初始数据*/
@@ -120,9 +144,8 @@ public class FormRefreshActivity extends BaseActivity {
                         String formData = data.optString("data");
                         String formInfo = data.getString("info");
                         initData(formData, formInfo);
-
-                        Log.e("formData", formData);
-                        Log.e("formData", formInfo);
+//                        Log.e("formData", formData);
+//                        Log.e("formData", formInfo);
                         loadFail("");
                     } else {
                         loadFail(data.optString("messages"));
@@ -166,30 +189,12 @@ public class FormRefreshActivity extends BaseActivity {
         Log.e("conditions", new Gson().toJson(reportInfoBeans));
 
         if (reportInfoBeans.size() > 0) {
-            FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
-            isInterval = reportInfoBeans.get(0).getiRowAlternation();
-            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
-                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
-            }
-            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
-                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
-            }
-            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
-                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
-            }
-            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
-                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
-            }
+            initInfo(reportInfoBeans);
         }
         if (reportConditionBeans.size() > 0) {
-            conditions.addAll(reportConditionBeans);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvRight.setVisibility(View.VISIBLE);
-                }
-            });
+            intiCondition(reportConditionBeans);
         }
+
         for (int i = 0; i < reportColumnsBeans.size(); i++) {
             formData.replaceAll(reportColumnsBeans.get(i).getSFieldsName(), reportColumnsBeans.get(i).getSFieldsdisplayName());
         }
@@ -206,10 +211,53 @@ public class FormRefreshActivity extends BaseActivity {
         }
     }
 
+
+    private void initInfo(List<FormBean.ReportInfoBean> reportInfoBeans) {
+        initInterval(reportInfoBeans);
+        initFixcondition(reportInfoBeans);
+
+
+    }
+
+    private void initInterval(List<FormBean.ReportInfoBean> reportInfoBeans) {
+        isInterval = reportInfoBeans.get(0).getiRowAlternation();
+    }
+
+    private void initFixcondition(List<FormBean.ReportInfoBean> reportInfoBeans) {
+        FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+        if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
+            fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
+        }
+        if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
+            fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
+        }
+        if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
+            fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
+        }
+        if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
+            fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
+        }
+    }
+
+    private void intiCondition(List<FormBean.ReportConditionBean> reportConditionBeans) {
+        conditions.addAll(reportConditionBeans);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvRight.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 //    private TableParser parser;
 
     //传入json直接形成表单
     private void setGsonData(String data) {
+        setTableStyle();
+        setTableData(data);
+        setTableFix();
+    }
+
+    private void setTableStyle() {
         table.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
             @Override
             public int getBackGroundColor(CellInfo cellInfo) {
@@ -232,6 +280,10 @@ public class FormRefreshActivity extends BaseActivity {
         table.getConfig().setVerticalPadding(30);
 //        table.getConfig().setHorizontalPadding(30);
         table.getConfig().setColumnTitleVerticalPadding(30);
+    }
+
+    /*传入table数据*/
+    private void setTableData(String data) {
         MapTableData tableData = MapTableData.create("", JsonHelper.jsonToMapList(data));
         table.setTableData(tableData);
     }
@@ -274,7 +326,7 @@ public class FormRefreshActivity extends BaseActivity {
                         currentView.setChecked(false);
                         currentView = (TabView) view;
                         currentView.setChecked(true);
-                        filter = fixconditions.get(position).getFilters();
+                        fixfilter = fixconditions.get(position).getFilters();
                         getFormData(1);
                     }
                 }
@@ -282,6 +334,16 @@ public class FormRefreshActivity extends BaseActivity {
             llTab.addView(tab);
         }
         currentView.setChecked(true);
+    }
+
+    /*设置固定列*/
+    private void setTableFix() {
+        columns = table.getTableData().getColumns();
+        if (columns != null && columns.size() > 0) {
+            for (int i = 0; i < columnsFix.size(); i++) {
+                columns.get(i).setFixed(true);
+            }
+        }
     }
 
     private void getFormData(int pagerIndex) {
@@ -335,7 +397,11 @@ public class FormRefreshActivity extends BaseActivity {
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("pageNo", pagerIndex + ""));
-        params.add(new NetParams("filters", filter));
+        if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
+            params.add(new NetParams("filters", filter + " and " + fixfilter));
+        } else {
+            params.add(new NetParams("filters", filter + fixfilter));
+        }
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));
         return params;
@@ -391,12 +457,13 @@ public class FormRefreshActivity extends BaseActivity {
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
-                if (currentView != null) {
-                    currenViewPos = -1;
-                    currentView.setChecked(false);
-                    currentView = null;
-                }
+//                if (currentView != null) {
+//                    currenViewPos = -1;
+//                    currentView.setChecked(false);
+//                    currentView = null;
+//                }
 //                Log.e("filter", filter);
+
                 getFormData(1);
             }
         }
