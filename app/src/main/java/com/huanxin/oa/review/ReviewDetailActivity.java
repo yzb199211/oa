@@ -93,6 +93,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
     String userDepartment;
     String address;
     String url;
+    String imgUrl;
 
     SharedPreferencesHelper preferencesHelper;
     EditText etRemark;
@@ -115,6 +116,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
     private void init() {
         resultCode = CodeUtil.RESULT_NO;
         address = (String) preferencesHelper.getSharedPreference("address", "");
+        imgUrl = (String) preferencesHelper.getSharedPreference("addressImg", "");
         url = address + NetConfig.server + NetConfig.Review_Method;
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
         userName = (String) preferencesHelper.getSharedPreference("userName", "");
@@ -376,7 +378,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(ReviewDetailActivity.this, ReviewImageActivity.class);
-                intent.putExtra("img", imgs.get(row * 4 + col));
+                intent.putExtra("img", imgUrl + imgs.get(row * 4 + col));
                 startActivity(intent);
             }
         });
@@ -393,7 +395,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         params.width = getResources().getDimensionPixelOffset(R.dimen.dp_60);
         imgLayout.addView(imageView, params);
 
-        ImageLoaderUtil.loadImg(imageView, imgs.get(row * 4 + col));
+        ImageLoaderUtil.loadImg(imageView, imgUrl + imgs.get(row * 4 + col));
     }
 
     private int getRow() {

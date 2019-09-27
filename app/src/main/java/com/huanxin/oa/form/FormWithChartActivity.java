@@ -70,6 +70,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     String menuid;
     String field = "";
     String xValue = "";
+    String xName = "";
     String yValue = "";
     String chartType;
     String filter = "";
@@ -146,21 +147,14 @@ public class FormWithChartActivity extends AppCompatActivity {
 //                        Log.e("condition", new Gson().toJson(condition));
 //                        Log.e("column", new Gson().toJson(column));
 //                        Log.e("info",new Gson().toJson(info));
-                        if (info != null && info.size() > 0) {
-                            infoBeans.addAll(info);
-                            field = infoBeans.get(0).getSSerialField();
-                            xValue = infoBeans.get(0).getSXAxisField();
-                            yValue = infoBeans.get(0).getSYAxisField();
-                            chartType = infoBeans.get(0).getSChartType();
-                            if (!TextUtils.isEmpty(chartType))
-                                chartType = chartType.split(",")[0];
-                        }
-                        if (condition != null && condition.size() > 0) {
-                            conditionBeans.addAll(condition);
-                        }
-                        if (column != null && column.size() > 0) {
-                            columnsBeans.addAll(column);
-                        }
+
+                        getAxisField(info);
+                        getCoditionData(condition);
+                        getColumnData(column);
+                        getXAxisName();
+                        initChartType();
+
+
                         if (TextUtils.isEmpty(field)) {
                             loadFail("字段类型未配置");
                         } else if (TextUtils.isEmpty(xValue)) {
@@ -191,12 +185,47 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     }
 
+    private void getXAxisName() {
+        for (FormBean.ReportColumnsBean column : columnsBeans) {
+            if (xValue.equals(column.getSFieldsName())) {
+                xName = column.getSFieldsdisplayName();
+                break;
+            }
+        }
+    }
+
+    private void getColumnData(List<FormBean.ReportColumnsBean> column) {
+
+        if (column != null && column.size() > 0) {
+            columnsBeans.addAll(column);
+        }
+    }
+
+    private void getCoditionData(List<FormBean.ReportConditionBean> condition) {
+        if (condition != null && condition.size() > 0) {
+            conditionBeans.addAll(condition);
+        }
+    }
+
+    private void getAxisField(List<FormBean.ReportInfoBean> info) {
+        if (info != null && info.size() > 0) {
+            infoBeans.addAll(info);
+            field = infoBeans.get(0).getSSerialField();
+            xValue = infoBeans.get(0).getSXAxisField();
+            yValue = infoBeans.get(0).getSYAxisField();
+            chartType = infoBeans.get(0).getSChartType();
+        }
+    }
+
+    private void initChartType() {
+        if (!TextUtils.isEmpty(chartType))
+            chartType = chartType.split(",")[0];
+    }
+
     /*数据解析*/
     private void initData(String data) throws JSONException, Exception {
         initChart(data);
 //        initForm(data);
-
-
         loadFail("");
     }
 
@@ -283,25 +312,37 @@ public class FormWithChartActivity extends AppCompatActivity {
         glForm = new GridLayout(this);
         glForm.setRowCount(ChartData.get(0).getList().size() + 1);
         glForm.setColumnCount(fields.size() + 1);
-        addFormChild(0, 0, "月份", true);
+        setFormRowName();
         int length = ChartData.get(0).getList().size();
         for (int i = 0; i < ChartData.size(); i++) {
-            addFormChild(0, i + 1, ChartData.get(i).getName(), true);
-
+            setFormColumnName(i+1);
             List<ChartBean.Line> datas = new ArrayList<>();
             datas.addAll(ChartData.get(i).getList());
-            for (int j = 0; j < length; j++) {
-                if (datas.size() < length) {
-                    datas.add(new ChartBean.Line());
-                }
-                if (i == 0) {
-                    addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
-                }
-                addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
-            }
+            setFormData(length, datas, i);
         }
 
         llContent.addView(glForm);
+    }
+
+
+    private void setFormColumnName(int i) throws JSONException, Exception {
+        addFormChild(0, i, ChartData.get(i-1).getName(), true);
+    }
+
+    private void setFormRowName() throws JSONException, Exception {
+        addFormChild(0, 0, xName, true);
+    }
+
+    private void setFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
+        for (int j = 0; j < length; j++) {
+            if (datas.size() < length) {
+                datas.add(new ChartBean.Line());
+            }
+            if (i == 0) {
+                addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
+            }
+            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
+        }
     }
 
     private void addFormChild(int row, int col, String text, boolean isTitle) throws JSONException, Exception {
@@ -326,6 +367,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.height = getResources().getDimensionPixelOffset(R.dimen.dp_30);
         glForm.addView(tvTitle, params);
+
     }
 
     /*判断Y轴数据类型是否正确*/
