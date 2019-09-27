@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.huanxin.oa.R;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.view.chart.ChartBean;
+import com.huanxin.oa.view.chart.marker.MarkerRadar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +120,9 @@ public class LineCharts extends FrameLayout {
         Description description = new Description();
         description.setEnabled(false);
         chart.setDescription(description);
+        MarkerView mv = new MarkerRadar(context);
+        mv.setChartView(chart); // For bounds control
+        chart.setMarker(mv);
     }
 
     private void initData() {

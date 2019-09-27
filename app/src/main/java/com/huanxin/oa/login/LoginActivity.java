@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void inti() {
-        isTest = false;
+        isTest = true;
         address = (String) preferencesHelper.getSharedPreference("address", "");
         if (isTest == true) {
             preferencesHelper.put("address", NetConfig.address);

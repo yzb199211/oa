@@ -200,6 +200,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 setStyleView();
                 if (imgList != null && imgList.size() > 0) {
                     imgs.addAll(imgList);
+                    Log.e(TAG, new Gson().toJson(imgList));
                     setImage();
                 }
                 setProcessView();
@@ -349,13 +350,19 @@ public class ReviewDetailActivity extends AppCompatActivity {
     /*设置图片*/
     private void setImage() {
         GridLayout imgLayout = new GridLayout(this);
-        imgLayout.setPadding(getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10));
+//        imgLayout.setPadding(getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10), getResources().getDimensionPixelOffset(R.dimen.dp_10));
         imgLayout.setColumnCount(4);
+//        imgLayout.setBackgroundColor(getColor(R.color.white));
         int row = getRow();
         imgLayout.setRowCount(row);
+        int imgSize = imgs.size();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < 4; j++) {
                 addImgChild(imgLayout, i, j);
+                imgSize--;
+                if (imgSize == 0) {
+                    break;
+                }
             }
         }
         llContent.addView(imgLayout);
@@ -363,6 +370,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
 
     private void addImgChild(GridLayout imgLayout, int row, int col) {
         ImageView imageView = new ImageView(this);
+        imageView.setBackgroundColor(getColor(R.color.white));
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -372,7 +380,6 @@ public class ReviewDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        ImageLoaderUtil.loadImg(imageView, imgs.get(row * 4 + col));
 
         GridLayout.Spec rowSpec;
         rowSpec = GridLayout.spec(row, 1.0F);     //设置它的行和列
@@ -383,7 +390,10 @@ public class ReviewDetailActivity extends AppCompatActivity {
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.height = getResources().getDimensionPixelOffset(R.dimen.dp_60);
+        params.width = getResources().getDimensionPixelOffset(R.dimen.dp_60);
         imgLayout.addView(imageView, params);
+
+        ImageLoaderUtil.loadImg(imageView, imgs.get(row * 4 + col));
     }
 
     private int getRow() {

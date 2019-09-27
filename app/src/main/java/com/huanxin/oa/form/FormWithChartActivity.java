@@ -73,6 +73,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     String yValue = "";
     String chartType;
     String filter = "";
+    private String fixfilter = "";
 
     List<FormBean.ReportInfoBean> infoBeans;
     List<FormBean.ReportConditionBean> conditionBeans;
@@ -215,14 +216,10 @@ public class FormWithChartActivity extends AppCompatActivity {
                 llContent.addView(lineCharts);
                 break;
             case "1":
-                radarCharts = new RadarCharts(this);
-                radarCharts.setData(ChartData);
-                radarCharts.build();
-                llContent.addView(radarCharts);
-//                barCharts = new BarCharts(this);
-//                barCharts.setData(ChartData);
-//                barCharts.build();
-//                llContent.addView(barCharts);
+                barCharts = new BarCharts(this);
+                barCharts.setData(ChartData);
+                barCharts.build();
+                llContent.addView(barCharts);
                 break;
             case "2":
                 for (int i = 0; i < ChartData.size(); i++) {
@@ -231,6 +228,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     pieCharts.setCenterText(TextUtils.isEmpty(ChartData.get(0).getName()) ? "" : ChartData.get(0).getName());
                     pieCharts.build();
                     llContent.addView(pieCharts);
+                    break;
                 }
                 break;
 
@@ -253,6 +251,10 @@ public class FormWithChartActivity extends AppCompatActivity {
                 llContent.addView(barStackCharts);
                 break;
             case "6":
+                radarCharts = new RadarCharts(this);
+                radarCharts.setData(ChartData);
+                radarCharts.build();
+                llContent.addView(radarCharts);
                 break;
             default:
                 break;

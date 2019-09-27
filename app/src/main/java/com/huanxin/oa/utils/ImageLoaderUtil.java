@@ -39,7 +39,10 @@ public class ImageLoaderUtil {
                 .load(url)
                 .apply(new RequestOptions()
                         .centerInside()
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.mipmap.pic_failure)
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
+
                 .into(v);
     }
 
@@ -51,7 +54,6 @@ public class ImageLoaderUtil {
                         .placeholder(placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .error(R.drawable.placeholder))
-
                 .into(v);
     }
 
