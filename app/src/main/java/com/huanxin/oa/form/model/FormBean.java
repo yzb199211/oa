@@ -53,6 +53,7 @@ public class FormBean {
          * "sValueFontSize": "",
          * "iValueFontBold": 0,
          * "iProportion":3
+         * sFieldsType
          */
 
         private int iSerial;
@@ -66,6 +67,15 @@ public class FormBean {
         private String sValueFontSize;
         private int iValueFontBold;
         private int iProportion;
+        private String sFieldsType;
+
+        public String getsFieldsType() {
+            return sFieldsType;
+        }
+
+        public void setsFieldsType(String sFieldsType) {
+            this.sFieldsType = sFieldsType;
+        }
 
         public String getsFieldsName() {
             return sFieldsName;

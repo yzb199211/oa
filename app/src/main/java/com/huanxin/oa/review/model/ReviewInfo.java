@@ -11,14 +11,23 @@ public class ReviewInfo {
     int titleColor;
     //内容颜色
     int contentColor;
+
+    int titleSize;
+
+    int contentSize;
+
     //标题是否为粗体
     boolean titleBold;
     //内容是否为粗体
     boolean contentBold;
+
     //第几行
     int row;
     //宽度占空间长度百分比，用小数
     float widthPercent;
+
+    boolean isProgress = false;
+
 
     public ReviewInfo() {
     }
@@ -117,5 +126,29 @@ public class ReviewInfo {
 
     public void setWidthPercent(float widthPercent) {
         this.widthPercent = widthPercent;
+    }
+
+    public boolean isProgress() {
+        return isProgress;
+    }
+
+    public void setProgress(boolean progress) {
+        isProgress = progress;
+    }
+
+    public int getTitleSize() {
+        return titleSize;
+    }
+
+    public void setTitleSize(int titleSize) {
+        this.titleSize = titleSize;
+    }
+
+    public int getContentSize() {
+        return contentSize;
+    }
+
+    public void setContentSize(int contentSize) {
+        this.contentSize = contentSize;
     }
 }

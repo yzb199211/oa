@@ -206,6 +206,7 @@ public class FormListActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String string) {
                 try {
+                    Log.e("data", string);
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.getBoolean("success");
                     if (isSuccess) {
@@ -281,7 +282,7 @@ public class FormListActivity extends AppCompatActivity {
 
     /*格式化数据*/
     private void initData(JSONArray jsonArray) throws Exception {
-//        Log.e("size", jsonArray.length() + "");
+        Log.e("size", new Gson().toJson(styleList) + "");
         if (jsonArray.length() > 0) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 ReviewStyle reviewStyle = new ReviewStyle();
@@ -290,6 +291,21 @@ public class FormListActivity extends AppCompatActivity {
                 for (int j = 0; j < styleList.size(); j++) {
                     String name = jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName());
                     ReviewInfo info = new ReviewInfo();
+                    if (styleList.get(j).getsFieldsType() != null && styleList.get(j).getsFieldsType().equals("progressBar")) {
+                        info.setProgress(true);
+                    }
+                    Log.e("contentsize"+j,styleList.get(j).getsNameFontSize()+"");
+                    if (StringUtil.isNotEmpty(styleList.get(j).getsNameFontSize()) && StringUtil.isInteger(styleList.get(j).getsNameFontSize())) {
+                        info.setTitleSize(Integer.parseInt(styleList.get(i).getsNameFontSize()));
+                    }else {
+                        info.setTitleSize(0);
+                    }
+                    if (StringUtil.isNotEmpty(styleList.get(j).getsValueFontSize()) && StringUtil.isInteger(styleList.get(j).getsValueFontSize())) {
+                        info.setContentSize(Integer.parseInt(styleList.get(j).getsValueFontSize()));
+                    }else {
+                        info.setContentSize(0);
+                    }
+
                     info.setTitle(styleList.get(j).getsFieldsDisplayName());
                     info.setTitleBold((styleList.get(j).getiNameFontBold() == 1) ? true : false);
                     if (StringUtil.isColor(styleList.get(j).getsNameFontColor()))

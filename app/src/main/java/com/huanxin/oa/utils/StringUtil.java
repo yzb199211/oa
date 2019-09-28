@@ -15,11 +15,22 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class StringUtil {
     public final static int DATETYPE = 1;
     final static String colorFormat = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$";
 
+    /**
+     * 判断字符串是否为整型
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
+    }
     /**
      * 判断颜色是否正确
      *

@@ -5,8 +5,11 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,6 +19,9 @@ import com.huanxin.oa.R;
 public class ReviewInfoView extends LinearLayout {
     private TextView tvTitle;
     private TextView tvContent;
+    private TextView tvProgress;
+    private ProgressBar progressBar;
+    private RelativeLayout rlProgress;
     String title;
     String content;
     int titleColor;
@@ -23,6 +29,7 @@ public class ReviewInfoView extends LinearLayout {
     boolean titleBold;
     boolean contentBold;
     boolean singleLine;
+    boolean isProgress = false;
 
 
     public ReviewInfoView(Context context) {
@@ -44,6 +51,11 @@ public class ReviewInfoView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.item_review_info, this, true);
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
+        tvProgress = findViewById(R.id.tv_progress);
+        progressBar = findViewById(R.id.progress);
+        rlProgress = findViewById(R.id.rl_progress);
+
+        progressBar.setMax(100);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.reviewInfo);
         title = array.getString(R.styleable.reviewInfo_leftText);
         titleColor = array.getColor(R.styleable.reviewInfo_leftTextColor, context.getColor(R.color.default_content_color));
@@ -56,6 +68,8 @@ public class ReviewInfoView extends LinearLayout {
     }
 
     private void setView() {
+        setGravity(Gravity.CENTER_VERTICAL);
+
         if (!TextUtils.isEmpty(title))
             tvTitle.setText(title);
         tvTitle.setTextColor(titleColor);
@@ -78,10 +92,18 @@ public class ReviewInfoView extends LinearLayout {
         tvTitle.setText(title);
     }
 
+    public void setTitleSize(int textsize) {
+        tvTitle.setTextSize(textsize);
+    }
+
     //设置内容文字
     public void setContent(String content) {
         this.content = content;
         tvContent.setText(content);
+    }
+
+    public void setContentSize(int size) {
+        tvContent.setTextSize(size);
     }
 
     //设置标题颜色
@@ -124,6 +146,19 @@ public class ReviewInfoView extends LinearLayout {
         this.singleLine = singleLine;
         if (singleLine == false)
             tvContent.setSingleLine(false);
+    }
+
+    public void setProgress(boolean isProgress, int progress) {
+        this.isProgress = isProgress;
+        if (isProgress) {
+            tvContent.setVisibility(GONE);
+            rlProgress.setVisibility(VISIBLE);
+            tvProgress.setText(progress + "%");
+            progressBar.setProgress(progress);
+        } else {
+            tvContent.setVisibility(VISIBLE);
+            rlProgress.setVisibility(GONE);
+        }
     }
 
     public String getTitle() {

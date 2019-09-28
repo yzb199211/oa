@@ -1,6 +1,8 @@
 package com.huanxin.oa.view.review.util;
 
 import android.content.Context;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.huanxin.oa.R;
 import com.huanxin.oa.review.model.ReviewInfo;
 import com.huanxin.oa.utils.PxUtil;
+import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.view.review.ReviewInfoView;
 
 import java.util.ArrayList;
@@ -56,13 +59,14 @@ public class ReviewStyleView1 extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        setPadding(0, 0, 0,  context.getResources().getDimensionPixelOffset(R.dimen.dp_10));
+        paddingleft = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
+        paddingRight = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
+        setPadding(0, 0, 0, context.getResources().getDimensionPixelOffset(R.dimen.dp_10));
         measureView();
         setBackgroundColor(context.getColor(R.color.white));
 
         screenWidth = PxUtil.getWidth(context);
-        paddingleft = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
-        paddingRight = context.getResources().getDimensionPixelOffset(R.dimen.dp_20);
+
         paddingMiddle = context.getResources().getDimensionPixelOffset(R.dimen.dp_10);
         paddingTop = context.getResources().getDimensionPixelOffset(R.dimen.dp_10);
         setTitleText();
@@ -102,6 +106,7 @@ public class ReviewStyleView1 extends FrameLayout {
         for (int i = 0; i < infoList.size(); i++) {
 
             ReviewInfo item = infoList.get(i);
+
             if (row == -1)
                 row = item.getRow();
             ReviewInfoView rivItem = setItem(item);
@@ -156,6 +161,25 @@ public class ReviewStyleView1 extends FrameLayout {
      */
     private ReviewInfoView setPaddings(ReviewInfoView rivItem, int row, int i) {
         int count = 1;
+
+//
+//        if (count == 1 && (i + 1 < infoList.size() && row == infoList.get(i + 1).getRow())) {
+//            rivItem.setPadding(0, paddingTop, 0, 0);
+//            count++;
+//        } else if (count == 1 && (i + 1 < infoList.size() && row != infoList.get(i + 1).getRow())) {
+//            rivItem.setPadding(0, paddingTop, 0, 0);
+//            count = 1;
+//        } else if (count == 1 && i + 1 == infoList.size()) {
+//            rivItem.setPadding(0, paddingTop, 0, 0);
+////            Log.e(TAG, i + "c");
+//        } else if ((i + 1 < infoList.size() && row != infoList.get(i + 1).getRow())) {
+//            rivItem.setPadding(0, paddingTop, 0, 0);
+//            count = 1;
+//        } else {
+//            rivItem.setPadding(0, paddingTop, 0, 0);
+//            count++;
+//        }
+
         if (count == 1 && (i + 1 < infoList.size() && row == infoList.get(i + 1).getRow())) {
             rivItem.setPadding(paddingleft, paddingTop, paddingMiddle, 0);
             count++;
@@ -184,7 +208,8 @@ public class ReviewStyleView1 extends FrameLayout {
     private ReviewInfoView setItem(ReviewInfo item) {
         ReviewInfoView rivItem = new ReviewInfoView(context);
         rivItem.setBackgroundColor(context.getColor(R.color.white));
-        rivItem.setTitle(item.getTitle() + "：");
+        rivItem.setTitle(TextUtils.isEmpty(item.getTitle()) ? "" : item.getTitle() + "：");
+
         if (item.getTitleColor() != 0)
             rivItem.setTitleColor(item.getTitleColor());
         if (item.isTitleBold() == true)
@@ -194,6 +219,22 @@ public class ReviewStyleView1 extends FrameLayout {
             rivItem.setContentColor(item.getContentColor());
         if (item.isContentBold() == true)
             rivItem.setContentBold(true);
+
+        if (item.getContentSize() != 0) {
+            rivItem.setContentSize(item.getContentSize());
+        }
+//        else {
+//            rivItem.setContentSize(14);
+//        }
+        if (item.getTitleSize() != 0) {
+            rivItem.setTitleSize(item.getTitleSize());
+        }
+//        else {
+//            rivItem.setTitleSize(14);
+//        }
+        if (item.isProgress() == true && StringUtil.isNotEmpty(item.getContent()) && StringUtil.isInteger(item.getContent())) {
+            rivItem.setProgress(true, Integer.parseInt(item.getContent()));
+        }
         return rivItem;
     }
 
