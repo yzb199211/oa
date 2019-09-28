@@ -70,6 +70,7 @@ public class FormListActivity extends AppCompatActivity {
     private String menuId;
     private String userId;
     private String filter = "";
+    private String fixfilter = "";
 
     private String address;
     private String url;
@@ -183,7 +184,7 @@ public class FormListActivity extends AppCompatActivity {
                         currentView.setChecked(false);
                         currentView = (TabView) view;
                         currentView.setChecked(true);
-                        filter = fixconditions.get(position).getFilters();
+                        fixfilter = fixconditions.get(position).getFilters();
                         pagerIndex = 1;
                         items.clear();
                         if (formListAdapter != null) {
@@ -373,7 +374,11 @@ public class FormListActivity extends AppCompatActivity {
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("pageNo", pagerIndex + ""));
-        params.add(new NetParams("filters", filter));
+        if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
+            params.add(new NetParams("filters", filter + " and " + fixfilter));
+        } else {
+            params.add(new NetParams("filters", filter + fixfilter));
+        }
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));
         return params;

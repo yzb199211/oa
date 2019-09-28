@@ -19,7 +19,9 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.model.FormBean;
+import com.huanxin.oa.form.model.FormConditionBean;
 import com.huanxin.oa.interfaces.ResponseListener;
+import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
 import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
@@ -35,6 +37,7 @@ import com.huanxin.oa.view.chart.line.LineCharts;
 import com.huanxin.oa.view.chart.line.LineCubicCharts;
 import com.huanxin.oa.view.chart.pie.PieCharts;
 import com.huanxin.oa.view.chart.radar.RadarCharts;
+import com.huanxin.oa.view.tab.TabView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +66,8 @@ public class FormWithChartActivity extends AppCompatActivity {
     TextView tvRight;
     @BindView(R.id.ll_content)
     LinearLayout llContent;
+    @BindView(R.id.ll_tab)
+    LinearLayout llTab;
 
     GridLayout glForm;
 
@@ -74,11 +79,16 @@ public class FormWithChartActivity extends AppCompatActivity {
     String yValue = "";
     String chartType;
     String filter = "";
-    private String fixfilter = "";
+    String title = "";
+     String fixfilter = "";
+
+    TabView currentView;
+    int currenViewPos = -1;
 
     List<FormBean.ReportInfoBean> infoBeans;
     List<FormBean.ReportConditionBean> conditionBeans;
     List<FormBean.ReportColumnsBean> columnsBeans;
+    List<FormConditionBean> fixconditions;
 
     Set<String> fields;
     List<String> titlte;
@@ -96,31 +106,48 @@ public class FormWithChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_with_chart);
         ButterKnife.bind(this);
         preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
-        userid = (String) preferencesHelper.getSharedPreference("userid", "");
         init();
 
 
     }
 
     private void init() {
-        address = (String) preferencesHelper.getSharedPreference("address", "");
+        intiList();
+        getPreferenceData();
+        getIntentData();
+        initView();
         url = address + NetConfig.server + NetConfig.Form_Method;
+        Log.e("menuid", menuid);
+        getData();
+    }
 
+
+    private void intiList() {
         infoBeans = new ArrayList<>();
         columnsBeans = new ArrayList<>();
         conditionBeans = new ArrayList<>();
+        fixconditions = new ArrayList<>();
         ChartData = new ArrayList<>();
         pieData = new ArrayList<>();
 
         fields = new HashSet<>();
+    }
 
+    private void getPreferenceData() {
+        userid = (String) preferencesHelper.getSharedPreference("userid", "");
+        address = (String) preferencesHelper.getSharedPreference("address", "");
+    }
+
+    private void getIntentData() {
         Intent intent = getIntent();
         menuid = intent.getStringExtra("menuid");
-        Log.e("menuid", menuid);
+        title = intent.getStringExtra("title");
+    }
+
+    private void initView() {
         ivBack.setVisibility(View.VISIBLE);
-        tvTitle.setText(intent.getStringExtra("title"));
-        tvRight.setVisibility(View.VISIBLE);
-        getData();
+        tvTitle.setText(title);
+
     }
 
     /*获取初始化数据*/
@@ -147,6 +174,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 //                        Log.e("condition", new Gson().toJson(condition));
 //                        Log.e("column", new Gson().toJson(column));
 //                        Log.e("info",new Gson().toJson(info));
+                        getFixconditions(info);
 
                         getAxisField(info);
                         getCoditionData(condition);
@@ -185,6 +213,72 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     }
 
+    private void getFixconditions(List<FormBean.ReportInfoBean> info) {
+        if (info.size() > 0) {
+            FormBean.ReportInfoBean fixcondition = info.get(0);
+            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
+                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
+            }
+            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
+                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
+            }
+            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
+                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
+            }
+            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
+                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
+            }
+        }
+        setFixConditions();
+    }
+
+    private void setFixConditions() {
+        if (fixconditions.size() > 0) {
+           runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   setTab();
+               }
+           });
+        }
+    }
+
+    /*设置固定筛选项*/
+    private void setTab() {
+        llTab.setVisibility(View.VISIBLE);
+        for (int i = 0; i < fixconditions.size(); i++) {
+            TabView tab = new TabView(this);
+            tab.setText(fixconditions.get(i).getName());
+            tab.setPosition(i);
+            if (i == 0) {
+                currenViewPos = i;
+                currentView = tab;
+            }
+            setTabClick(tab);
+
+            llTab.addView(tab);
+        }
+        currentView.setChecked(true);
+    }
+
+    private void setTabClick(TabView tab) {
+        tab.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                if (currenViewPos != position) {
+                    currenViewPos = position;
+                    currentView.setChecked(false);
+                    currentView = (TabView) view;
+                    currentView.setChecked(true);
+                    fixfilter = fixconditions.get(position).getFilters();
+                    llContent.removeAllViews();
+                    getFormData();
+                }
+            }
+        });
+    }
+
     private void getXAxisName() {
         for (FormBean.ReportColumnsBean column : columnsBeans) {
             if (xValue.equals(column.getSFieldsName())) {
@@ -195,7 +289,6 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void getColumnData(List<FormBean.ReportColumnsBean> column) {
-
         if (column != null && column.size() > 0) {
             columnsBeans.addAll(column);
         }
@@ -204,7 +297,17 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void getCoditionData(List<FormBean.ReportConditionBean> condition) {
         if (condition != null && condition.size() > 0) {
             conditionBeans.addAll(condition);
+          setTitleRight();
         }
+    }
+
+    private void setTitleRight() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvRight.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void getAxisField(List<FormBean.ReportInfoBean> info) {
@@ -274,17 +377,18 @@ public class FormWithChartActivity extends AppCompatActivity {
                 llContent.addView(barHorCharts);
                 break;
             case "5":
-                barStackCharts = new BarStackCharts(this);
-                barStackCharts.setData(ChartData);
-                barStackCharts.build();
-                llContent.addView(barStackCharts);
-                break;
-            case "6":
                 radarCharts = new RadarCharts(this);
                 radarCharts.setData(ChartData);
                 radarCharts.build();
                 llContent.addView(radarCharts);
                 break;
+            case "6":
+                barStackCharts = new BarStackCharts(this);
+                barStackCharts.setData(ChartData);
+                barStackCharts.build();
+                llContent.addView(barStackCharts);
+                break;
+
             default:
                 break;
         }
@@ -315,7 +419,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         setFormRowName();
         int length = ChartData.get(0).getList().size();
         for (int i = 0; i < ChartData.size(); i++) {
-            setFormColumnName(i+1);
+            setFormColumnName(i + 1);
             List<ChartBean.Line> datas = new ArrayList<>();
             datas.addAll(ChartData.get(i).getList());
             setFormData(length, datas, i);
@@ -326,7 +430,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 
 
     private void setFormColumnName(int i) throws JSONException, Exception {
-        addFormChild(0, i, ChartData.get(i-1).getName(), true);
+        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
     }
 
     private void setFormRowName() throws JSONException, Exception {
@@ -434,7 +538,7 @@ public class FormWithChartActivity extends AppCompatActivity {
             for (int i = 0; i < ChartData.size(); i++) {
                 if (length > ChartData.get(i).getList().size()) {
                     for (int j = 0; j < length - ChartData.get(i).getList().size(); j++) {
-                        ChartData.get(i).getList().add(new ChartBean.Line(ChartData.get(0).getList().get(ChartData.get(i).getList().size()).getxValue(), 1));
+                        ChartData.get(i).getList().add(new ChartBean.Line(ChartData.get(0).getList().get(ChartData.get(i).getList().size()).getxValue(), 0));
                     }
                 } else {
                     if (length < ChartData.get(i).getList().size()) {
@@ -568,7 +672,11 @@ public class FormWithChartActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "getChartReportData"));
         params.add(new NetParams("userid", userid));
         params.add(new NetParams("iFormID", menuid));
-        params.add(new NetParams("filters", filter));
+        if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
+            params.add(new NetParams("filters", filter + " and " + fixfilter));
+        } else {
+            params.add(new NetParams("filters", filter + fixfilter));
+        }
         params.add(new NetParams("sort", ""));
         params.add(new NetParams("order", "asc"));
         return params;
