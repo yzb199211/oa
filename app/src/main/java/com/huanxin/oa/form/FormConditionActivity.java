@@ -45,8 +45,9 @@ public class FormConditionActivity extends BaseActivity {
     SharedPreferencesHelper preferencesHelper;
 
     private String userId;
-
+    boolean isStore;
     int code;
+
 
     private List<FormBean.ReportConditionBean> conditions;
     private List<FunctionView> viewList;
@@ -63,6 +64,8 @@ public class FormConditionActivity extends BaseActivity {
         preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
         code = getIntent().getIntExtra("code", 0);
+        isStore = getIntent().getBooleanExtra("isStore", false);
+
         init();
     }
 
@@ -116,7 +119,7 @@ public class FormConditionActivity extends BaseActivity {
                         conditions.get(i).setSelectValue(viewList.get(i).getText());
                     }
                 }
-                String data = LookupDataUtil.getConditionData(conditions);
+                String data = LookupDataUtil.getConditionData(conditions,isStore);
                 Intent intent = new Intent();
                 intent.putExtra("data", data);
                 setResult(code, intent);

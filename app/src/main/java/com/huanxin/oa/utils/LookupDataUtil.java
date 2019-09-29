@@ -5,20 +5,31 @@ import com.huanxin.oa.form.model.FormBean;
 import java.util.List;
 
 public class LookupDataUtil {
-    public static String getConditionData(List<FormBean.ReportConditionBean> list) {
+    public static String getConditionData(List<FormBean.ReportConditionBean> list, boolean isStore) {
         String data = "";
         for (int i = 0; i < list.size(); i++) {
             if (StringUtil.isNotEmpty(list.get(i).getSelectValue())) {
-                if (StringUtil.isNotEmpty(data))
+                if (StringUtil.isNotEmpty(data) && !isStore) {
                     data = data + " and ";
+                } else if (StringUtil.isNotEmpty(data)) {
+                    data = data + "$";
+                }
                 data = data + list.get(i).getSFieldName();
-                data = data + " ";
-                data = data + list.get(i).getSOpTion().replaceAll("%", "");
-                data = data + " ";
+                if (!isStore)
+                    data = data + " ";
+                if (!isStore) {
+                    data = data + list.get(i).getSOpTion().replaceAll("%", "");
+                } else {
+                    data = data + "=";
+                }
+                if (!isStore)
+                    data = data + " ";
                 data = data + getValue(list.get(i).getSOpTion().toLowerCase(), list.get(i).getSFieldType().toUpperCase(), list.get(i).getSelectValue());
             }
         }
-
+        if (isStore) {
+            data = data.replaceAll("\\(", "").replaceAll("'", "").replaceAll("\\)", "");
+        }
         return data;
     }
 
@@ -36,10 +47,10 @@ public class LookupDataUtil {
                 value = isLike(option, data);
                 break;
             case "F":
-                value = "("+data+")";
+                value = "(" + data + ")";
                 break;
             case "B":
-                value ="(" + data +")";
+                value = "(" + data + ")";
                 break;
             default:
                 value = isLike(option, data);

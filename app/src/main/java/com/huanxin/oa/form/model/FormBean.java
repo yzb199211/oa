@@ -357,6 +357,15 @@ public class FormBean {
         private String sPieCenter;
         private String sPieRadius;
         private String sPieRoseType;
+        private int iStore;
+
+        public int getiStore() {
+            return iStore;
+        }
+
+        public void setiStore(int iStore) {
+            this.iStore = iStore;
+        }
 
         public int getiRowAlternation() {
             return iRowAlternation;

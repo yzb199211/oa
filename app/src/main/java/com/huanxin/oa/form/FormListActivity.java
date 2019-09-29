@@ -75,6 +75,8 @@ public class FormListActivity extends AppCompatActivity {
     private String address;
     private String url;
 
+    boolean isStore;
+
     SharedPreferencesHelper preferencesHelper;
 
     List<FormBean.ReportColumns2> styleList;
@@ -219,6 +221,7 @@ public class FormListActivity extends AppCompatActivity {
 
                         if (reportInfoBeans.size() > 0) {
                             FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+                            isStore = fixcondition.getiStore() == 0 ? false : true;
                             if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
                                 fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
                             }
@@ -282,27 +285,25 @@ public class FormListActivity extends AppCompatActivity {
 
     /*格式化数据*/
     private void initData(JSONArray jsonArray) throws Exception {
-        Log.e("size", new Gson().toJson(styleList) + "");
+//        Log.e("size", new Gson().toJson(styleList) + "");
         if (jsonArray.length() > 0) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 ReviewStyle reviewStyle = new ReviewStyle();
                 List<ReviewInfo> infos = new ArrayList<>();
 
                 for (int j = 0; j < styleList.size(); j++) {
-                    String name = jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName());
+//                    Log.e("")
+//                    String name = jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName());
                     ReviewInfo info = new ReviewInfo();
-                    if (styleList.get(j).getsFieldsType() != null && styleList.get(j).getsFieldsType().equals("progressBar")) {
-                        info.setProgress(true);
-                    }
-                    Log.e("contentsize"+j,styleList.get(j).getsNameFontSize()+"");
+
                     if (StringUtil.isNotEmpty(styleList.get(j).getsNameFontSize()) && StringUtil.isInteger(styleList.get(j).getsNameFontSize())) {
                         info.setTitleSize(Integer.parseInt(styleList.get(i).getsNameFontSize()));
-                    }else {
+                    } else {
                         info.setTitleSize(0);
                     }
                     if (StringUtil.isNotEmpty(styleList.get(j).getsValueFontSize()) && StringUtil.isInteger(styleList.get(j).getsValueFontSize())) {
                         info.setContentSize(Integer.parseInt(styleList.get(j).getsValueFontSize()));
-                    }else {
+                    } else {
                         info.setContentSize(0);
                     }
 
@@ -317,8 +318,10 @@ public class FormListActivity extends AppCompatActivity {
                         info.setContentColor(Color.parseColor(styleList.get(j).getsValueFontColor()));
                     info.setWidthPercent(StringUtil.isPercent(styleList.get(j).getiProportion()));
                     info.setRow(styleList.get(j).getiSerial());
-                    infos.add(info);
+                    setProgressAndAddValue(j, info, infos);
                 }
+
+
                 reviewStyle.setList(infos);
                 items.add(reviewStyle);
 //                Log.e("datas", new Gson().toJson(items));
@@ -331,6 +334,28 @@ public class FormListActivity extends AppCompatActivity {
             });
         } else {
             loadFail("无数据");
+        }
+    }
+
+    private void setProgressAndAddValue(int j, ReviewInfo info, List<ReviewInfo> infos) {
+        if (styleList.get(j).getsFieldsType().equals("progressBar") == true) {
+            info.setProgress(true);
+            String value = info.getContent();
+//                        infos.add(info);
+            if (value.contains("P") && !value.contains("PP")) {
+                String[] datas = value.split("P");
+                Log.e("datas", value + "," + datas[1] + "," + datas[2] + "," + datas.length);
+                if (StringUtil.isNotEmpty(datas[1])) {
+                    info.setTitle(datas[1]);
+                    info.setContent(datas[2].replace("{", "").replace("}", ""));
+                    infos.add(info);
+                }
+            } else if (!value.contains("PP")) {
+                infos.add(info);
+            }
+        } else {
+            Log.e("tag", styleList.get(j).getsFieldsType());
+            infos.add(info);
         }
     }
 
@@ -477,9 +502,10 @@ public class FormListActivity extends AppCompatActivity {
                     formListAdapter.notifyDataSetChanged();
                 }
                 filter = data.getStringExtra("data");
-                currenViewPos = -1;
-                currentView.setChecked(false);
-                currentView = null;
+                Log.e("filter", filter);
+//                currenViewPos = -1;
+//                currentView.setChecked(false);
+//                currentView = null;
 //                Log.e("filter", filter);
                 getFormData(false, false, pagerIndex);
             }
@@ -504,6 +530,7 @@ public class FormListActivity extends AppCompatActivity {
     private void goCondition() {
         Intent intent = new Intent();
         intent.setClass(this, FormConditionActivity.class);
+        intent.putExtra("isStore", isStore);
         intent.putExtra("data", new Gson().toJson(conditions));
         intent.putExtra("code", CONDIRION_CODE);
         startActivityForResult(intent, CONDIRION_CODE);
