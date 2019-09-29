@@ -14,13 +14,19 @@ public class LineValueFormatter extends ValueFormatter {
 
     @Override
     public String getFormattedValue(float value) {
-        int i = (int) value;
-        if (i == -1) {
+        try {
+            int i = (int) value;
+            if (i == -1) {
+                return "";
+            } else if (i < list.size())
+                return list.get(i).getxValue();
+            else
+                return "";
+        } catch (Exception e) {
+            e.printStackTrace();
             return "";
-        } else if (i < list.size())
-            return list.get(i).getxValue();
-        else
-            return "";
+        }
+
     }
 
 }

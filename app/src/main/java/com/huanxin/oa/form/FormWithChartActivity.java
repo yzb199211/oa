@@ -314,6 +314,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         if (info != null && info.size() > 0) {
             infoBeans.addAll(info);
             field = infoBeans.get(0).getSSerialField();
+
             xValue = infoBeans.get(0).getSXAxisField();
             yValue = infoBeans.get(0).getSYAxisField();
             chartType = infoBeans.get(0).getSChartType();
@@ -505,6 +506,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*获取图表数据源名字*/
     private void getChartFields(JSONArray jsonArray) throws JSONException, Exception {
         fields.clear();
+//        Log.e("fileds",jsonArray.optString(0));
         for (int i = 0; i < jsonArray.length(); i++) {
             fields.add(jsonArray.getJSONObject(i).optString(field));
         }
@@ -513,6 +515,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*获取数据源*/
     private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
         ChartData.clear();
+        Log.e("fields",new Gson().toJson(fields));
         for (String value : fields) {
             List<ChartBean.Line> line = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {

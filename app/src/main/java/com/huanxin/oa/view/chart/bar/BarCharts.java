@@ -119,6 +119,8 @@ public class BarCharts extends FrameLayout {
         Description description = new Description();
         description.setEnabled(false);
         chart.setDescription(description);
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setPinchZoom(false);
     }
 
     private void initData() throws Exception {
@@ -146,7 +148,11 @@ public class BarCharts extends FrameLayout {
             // specify the width each bar should have
             chart.getBarData().setBarWidth(barWidth);
             // restrict the x-axis range
-            chart.getXAxis().setAxisMinimum(start);
+//            chart.getXAxis().setAxisMinimum(start);
+            if (data.size() == 1)
+                chart.getXAxis().setAxisMinimum(-barWidth / 2);
+            else
+                chart.getXAxis().setAxisMinimum(start);
             // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
             chart.getXAxis().setAxisMaximum(start + chart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
             chart.groupBars(start, groupSpace, barSpace);

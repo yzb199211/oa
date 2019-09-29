@@ -123,6 +123,8 @@ public class LineCharts extends FrameLayout {
         MarkerView mv = new MarkerRadar(context);
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
     }
 
     private void initData() {

@@ -120,6 +120,8 @@ public class BarStackCharts extends FrameLayout {
         Description description = new Description();
         description.setEnabled(false);
         chart.setDescription(description);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
     }
 
     private void initData() throws Exception {

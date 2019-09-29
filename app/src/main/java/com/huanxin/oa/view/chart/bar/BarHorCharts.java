@@ -119,6 +119,8 @@ public class BarHorCharts extends FrameLayout {
         Description description = new Description();
         description.setEnabled(false);
         chart.setDescription(description);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
     }
 
     private void initData() throws Exception {
@@ -150,6 +152,7 @@ public class BarHorCharts extends FrameLayout {
             // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
             chart.getXAxis().setAxisMaximum(start + chart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
             chart.groupBars(start, groupSpace, barSpace);
+
 //            for (IDataSet set : chart.getData().getDataSets())
 //                set.setDrawValues(!set.isDrawValuesEnabled());
             //绘制图表
