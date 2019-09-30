@@ -45,9 +45,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,7 +78,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     String chartType;
     String filter = "";
     String title = "";
-     String fixfilter = "";
+    String fixfilter = "";
 
     TabView currentView;
     int currenViewPos = -1;
@@ -90,7 +88,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     List<FormBean.ReportColumnsBean> columnsBeans;
     List<FormConditionBean> fixconditions;
 
-    Set<String> fields;
+    List<String> fields;
     List<String> titlte;
     List<ChartBean> ChartData;
     List<ChartBean.Line> pieData;
@@ -130,7 +128,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         ChartData = new ArrayList<>();
         pieData = new ArrayList<>();
 
-        fields = new HashSet<>();
+        fields = new ArrayList<>();
     }
 
     private void getPreferenceData() {
@@ -234,12 +232,12 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void setFixConditions() {
         if (fixconditions.size() > 0) {
-           runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
-                   setTab();
-               }
-           });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setTab();
+                }
+            });
         }
     }
 
@@ -297,7 +295,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void getCoditionData(List<FormBean.ReportConditionBean> condition) {
         if (condition != null && condition.size() > 0) {
             conditionBeans.addAll(condition);
-          setTitleRight();
+            setTitleRight();
         }
     }
 
@@ -508,14 +506,15 @@ public class FormWithChartActivity extends AppCompatActivity {
         fields.clear();
 //        Log.e("fileds",jsonArray.optString(0));
         for (int i = 0; i < jsonArray.length(); i++) {
-            fields.add(jsonArray.getJSONObject(i).optString(field));
+            if (!fields.contains(jsonArray.getJSONObject(i).optString(field)))
+                fields.add(jsonArray.getJSONObject(i).optString(field));
         }
     }
 
     /*获取数据源*/
     private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
         ChartData.clear();
-        Log.e("fields",new Gson().toJson(fields));
+        Log.e("fields", new Gson().toJson(fields));
         for (String value : fields) {
             List<ChartBean.Line> line = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
