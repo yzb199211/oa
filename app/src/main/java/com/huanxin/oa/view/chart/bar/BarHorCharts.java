@@ -124,11 +124,14 @@ public class BarHorCharts extends FrameLayout {
     }
 
     private void initData() throws Exception {
+        groupCount = this.data.get(0).getList().size() > 10 ? 10 : this.data.get(0).getList().size();
+        List<ChartBean.Line> labels = new ArrayList<>();
 
+        labels.addAll(data.get(0).getList().size() > 10 ? data.get(0).getList().subList(0, 10) : data.get(0).getList());
         //设置x轴显示标签数量  还有一个重载方法第二个参数为布尔值强制设置数量 如果启用会导致绘制点出现偏差
-        xAxis.setLabelCount(data.get(0).getList().size(), false);
+        xAxis.setLabelCount(groupCount, false);
         //格式化x轴标签显示字符
-        xAxis.setValueFormatter(new LineValueFormatter(data.get(0).getList()));
+        xAxis.setValueFormatter(new LineValueFormatter(labels));
         xAxis.setCenterAxisLabels(true);
         if (chart.getData() == null) {
             //保存BarDataSet集合
@@ -141,7 +144,7 @@ public class BarHorCharts extends FrameLayout {
             }
 
             BarData data1 = new BarData(dataSets);
-            groupCount = data.get(0).getList().size();
+//            groupCount = data.get(0).getList().size();
             dataSize = data.size();
             barWidth = (1 - groupSpace) / dataSize;
             chart.setData(data1);

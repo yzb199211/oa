@@ -128,10 +128,16 @@ public class LineCharts extends FrameLayout {
     }
 
     private void initData() {
+
+       int groupCount = this.data.get(0).getList().size() > 10 ? 10 : this.data.get(0).getList().size();
+        List<ChartBean.Line> labels = new ArrayList<>();
+
+        labels.addAll(data.get(0).getList().size() > 10 ? data.get(0).getList().subList(0, 10) : data.get(0).getList());
+
         //设置x轴显示标签数量  还有一个重载方法第二个参数为布尔值强制设置数量 如果启用会导致绘制点出现偏差
-        xAxis.setLabelCount(data.get(0).getList().size() - 1, false);
+        xAxis.setLabelCount(groupCount-1, false);
         //格式化x轴标签显示字符
-        xAxis.setValueFormatter(new LineValueFormatter(data.get(0).getList()));
+        xAxis.setValueFormatter(new LineValueFormatter(labels));
         if (chart.getData() == null) {
             //保存LineDataSet集合
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();

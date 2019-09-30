@@ -11,6 +11,8 @@ public class LineUtil {
         List<Entry> entryList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             entryList.add(new Entry(i,list.get(i).getyValue()));
+            if (i==9)
+                break;
         }
         return entryList;
     }

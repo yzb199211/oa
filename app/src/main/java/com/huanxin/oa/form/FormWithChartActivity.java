@@ -448,7 +448,13 @@ public class FormWithChartActivity extends AppCompatActivity {
         }
     }
 
-    private void addFormChild(int row, int col, String text, boolean isTitle) throws JSONException, Exception {
+    private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
+
+        glForm.addView(getChildView(text, isTitle), getChildParam(row, col));
+
+    }
+
+    private TextView getChildView(String text, boolean isTitle) throws Exception {
         TextView tvTitle = (TextView) LayoutInflater.from(this).inflate(R.layout.item_form, glForm, false);
         tvTitle.setText(text);
         tvTitle.setGravity(Gravity.CENTER);
@@ -456,10 +462,24 @@ public class FormWithChartActivity extends AppCompatActivity {
             tvTitle.setBackgroundColor(getColor(R.color.blue));
             tvTitle.setTextColor(getColor(R.color.white));
         }
+        return tvTitle;
+    }
+
+    private GridLayout.LayoutParams getChildParam(int row, int col) throws Exception {
         GridLayout.Spec rowSpec;
         rowSpec = GridLayout.spec(row, 1.0F);     //设置它的行和列
         GridLayout.Spec columnSpec = GridLayout.spec(col, 1.0F);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
+        setChildMaring(row, params);
+        setChildHeight(params);
+        return params;
+    }
+
+    private void setChildHeight(GridLayout.LayoutParams params) {
+        params.height = getResources().getDimensionPixelOffset(R.dimen.dp_30);
+    }
+
+    private void setChildMaring(int row, GridLayout.LayoutParams params) {
         params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         if (row == 0) {
             params.topMargin = getResources().getDimensionPixelOffset(R.dimen.dp_10);
@@ -468,8 +488,6 @@ public class FormWithChartActivity extends AppCompatActivity {
         }
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         params.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
-        params.height = getResources().getDimensionPixelOffset(R.dimen.dp_30);
-        glForm.addView(tvTitle, params);
 
     }
 
@@ -515,41 +533,16 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void getChartData(JSONArray jsonArray) throws JSONException, Exception {
         ChartData.clear();
         Log.e("fields", new Gson().toJson(fields));
-        for (String value : fields) {
-            List<ChartBean.Line> line = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (jsonArray.getJSONObject(i).optString(field).equals(value)) {
-                    ChartBean.Line data = new ChartBean.Line();
-                    data.setxValue(jsonArray.getJSONObject(i).optString(xValue));
-                    Object object = jsonArray.getJSONObject(i).opt(yValue);
-                    String y = (object == null ? "" : object.toString());
-                    Float yValue = Float.parseFloat(y);
-                    data.setyValue(yValue);
-                    line.add(data);
-                }
-            }
-            ChartBean chartBean = new ChartBean();
-            chartBean.setName(value);
-            chartBean.setList(line);
-            chartBean.setUnit(infoBeans.get(0).getSYAxisLabelFormatterSimple());
-            ChartData.add(chartBean);
-        }
+        setChartData(jsonArray);
+initChartData();
+
+    }
+
+    private void initChartData() {
+
         /*数据处理为相同长度*/
         if (ChartData.size() > 0) {
-            int length = ChartData.get(0).getList().size();
-            for (int i = 0; i < ChartData.size(); i++) {
-                if (length > ChartData.get(i).getList().size()) {
-                    for (int j = 0; j < length - ChartData.get(i).getList().size(); j++) {
-                        ChartData.get(i).getList().add(new ChartBean.Line(ChartData.get(0).getList().get(ChartData.get(i).getList().size()).getxValue(), 0));
-                    }
-                } else {
-                    if (length < ChartData.get(i).getList().size()) {
-                        for (int k = 0; k < ChartData.get(i).getList().size() - length; k++) {
-                            ChartData.get(i).getList().remove(ChartData.size() - 1);
-                        }
-                    }
-                }
-            }
+            makeChartDataSameLength();
             Log.e("TAG", new Gson().toJson(ChartData));
             runOnUiThread(new Runnable() {
                 @Override
@@ -562,6 +555,63 @@ public class FormWithChartActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    private void makeChartDataSameLength() {
+        int length = ChartData.get(0).getList().size();
+        for (int i = 0; i < ChartData.size(); i++) {
+            if (length > ChartData.get(i).getList().size()) {
+                chartDataAddLength(length,i);
+
+            } else {
+                chartDataReduceLength(length,i);
+
+            }
+        }
+    }
+
+    private void chartDataAddLength(int length, int i) {
+        for (int j = 0; j < length - ChartData.get(i).getList().size(); j++) {
+            ChartData.get(i).getList().add(new ChartBean.Line(ChartData.get(0).getList().get(ChartData.get(i).getList().size()).getxValue(), 0));
+        }
+    }
+    private void chartDataReduceLength(int length, int i) {
+        if (length < ChartData.get(i).getList().size()) {
+            for (int k = 0; k < ChartData.get(i).getList().size() - length; k++) {
+                ChartData.get(i).getList().remove(ChartData.size() - 1);
+            }
+        }
+    }
+
+    private void setChartData(JSONArray jsonArray) throws JSONException, Exception {
+        for (String value : fields) {
+            List<ChartBean.Line> line = new ArrayList<>();
+            setCharChildData(jsonArray, line, value);
+            ChartDataAddValue(value, line);
+
+        }
+    }
+
+    private void ChartDataAddValue(String value, List<ChartBean.Line> line) {
+        ChartBean chartBean = new ChartBean();
+        chartBean.setName(value);
+        chartBean.setList(line);
+        chartBean.setUnit(infoBeans.get(0).getSYAxisLabelFormatterSimple());
+        ChartData.add(chartBean);
+    }
+
+    private void setCharChildData(JSONArray jsonArray, List<ChartBean.Line> line, String value) throws JSONException, Exception {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).optString(field).equals(value)) {
+                ChartBean.Line data = new ChartBean.Line();
+                data.setxValue(jsonArray.getJSONObject(i).optString(xValue));
+                Object object = jsonArray.getJSONObject(i).opt(yValue);
+                String y = (object == null ? "" : object.toString());
+                Float yValue = Float.parseFloat(y);
+                data.setyValue(yValue);
+                line.add(data);
+            }
         }
     }
 

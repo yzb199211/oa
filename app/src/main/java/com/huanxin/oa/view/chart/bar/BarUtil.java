@@ -14,6 +14,8 @@ public class BarUtil {
         List<BarEntry> entryList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             entryList.add(new BarEntry(i, list.get(i).getyValue()));
+            if (i == 9)
+                break;
         }
         return entryList;
     }

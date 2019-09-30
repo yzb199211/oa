@@ -2,6 +2,7 @@ package com.huanxin.oa.view.chart.bar;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -90,6 +91,7 @@ public class BarCharts extends FrameLayout {
         xAxis.setDrawAxisLine(true);
         //是否绘制网格线
         xAxis.setDrawGridLines(false);
+
         //自定义数值格式
 //        xAxis.setValueFormatter(new MyCustomFormatter());
         //设置轴标签的颜色
@@ -124,11 +126,14 @@ public class BarCharts extends FrameLayout {
     }
 
     private void initData() throws Exception {
+        groupCount = this.data.get(0).getList().size() > 10 ? 10 : this.data.get(0).getList().size();
+        List<ChartBean.Line> labels = new ArrayList<>();
 
+        labels.addAll(data.get(0).getList().size() > 10 ? data.get(0).getList().subList(0, 10) : data.get(0).getList());
         //设置x轴显示标签数量  还有一个重载方法第二个参数为布尔值强制设置数量 如果启用会导致绘制点出现偏差
-        xAxis.setLabelCount(data.get(0).getList().size(), false);
+        xAxis.setLabelCount(groupCount, false);
         //格式化x轴标签显示字符
-        xAxis.setValueFormatter(new LineValueFormatter(data.get(0).getList()));
+        xAxis.setValueFormatter(new LineValueFormatter(labels));
         xAxis.setCenterAxisLabels(true);
         if (chart.getData() == null) {
             //保存BarDataSet集合
@@ -141,9 +146,10 @@ public class BarCharts extends FrameLayout {
             }
 
             BarData data1 = new BarData(dataSets);
-            groupCount = data.get(0).getList().size();
+//            groupCount = data.get(0).getList().size();
             dataSize = data.size();
             barWidth = (1 - groupSpace) / dataSize;
+            Log.e("barWidth", barWidth + "");
             chart.setData(data1);
             // specify the width each bar should have
             chart.getBarData().setBarWidth(barWidth);
@@ -156,6 +162,7 @@ public class BarCharts extends FrameLayout {
             // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
             chart.getXAxis().setAxisMaximum(start + chart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
             chart.groupBars(start, groupSpace, barSpace);
+            chart.setFitBars(true);
 //            for (IDataSet set : chart.getData().getDataSets())
 //                set.setDrawValues(!set.isDrawValuesEnabled());
             //绘制图表
