@@ -122,6 +122,8 @@ public class FormConditionActivity extends BaseActivity {
                 String data = LookupDataUtil.getConditionData(conditions,isStore);
                 Intent intent = new Intent();
                 intent.putExtra("data", data);
+                intent.putExtra("isStore",LookupDataUtil.getConditionData(conditions,true));
+                intent.putExtra("noStore",LookupDataUtil.getConditionData(conditions,false));
                 setResult(code, intent);
                 finish();
                 break;

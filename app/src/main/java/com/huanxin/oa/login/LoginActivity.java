@@ -110,31 +110,23 @@ public class LoginActivity extends BaseActivity {
             address = NetConfig.address;
         }
         versionSystem = VersionUtil.getAppVersionCode(this);
-        etUser.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     private void initView() {
-        etUser.setText((String) preferencesHelper.getSharedPreference("userid", ""));
-        etPwd.setText((String) preferencesHelper.getSharedPreference("password", ""));
+        String userId=(String) preferencesHelper.getSharedPreference("userid", "");
+        String passWord =  (String) preferencesHelper.getSharedPreference("password", "");
+
+        etUser.setText(userId);
+//        etUser.setSelection(userId.length());
+        etPwd.setText(passWord);
+//        etPwd.setSelection(passWord.length());
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) ivLoginHeader.getLayoutParams();
         params.height = PxUtil.getHeight(this);
         ivLoginHeader.setLayoutParams(params);
+
     }
 
 

@@ -66,6 +66,8 @@ public class FormWithChartActivity extends AppCompatActivity {
     LinearLayout llContent;
     @BindView(R.id.ll_tab)
     LinearLayout llTab;
+    @BindView(R.id.ll_child)
+    LinearLayout llChild;
 
     GridLayout glForm;
 
@@ -80,6 +82,17 @@ public class FormWithChartActivity extends AppCompatActivity {
     String title = "";
     String fixfilter = "";
 
+    boolean haveChild;
+    boolean childIsStore;
+    boolean isShowChildChart;
+    String childLink;
+    String childField = "";
+    String childXValue = "";
+    String childYValue = "";
+    String childXName = "";
+    String childChartType;
+    String childFilter = "";
+
     TabView currentView;
     int currenViewPos = -1;
 
@@ -89,9 +102,12 @@ public class FormWithChartActivity extends AppCompatActivity {
     List<FormConditionBean> fixconditions;
 
     List<String> fields;
+    List<String> childFields;
     List<String> titlte;
     List<ChartBean> ChartData;
+    List<ChartBean> ChildChartData;
     List<ChartBean.Line> pieData;
+
 
     SharedPreferencesHelper preferencesHelper;
 
@@ -105,8 +121,6 @@ public class FormWithChartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         preferencesHelper = new SharedPreferencesHelper(this, getString(R.string.preferenceCache));
         init();
-
-
     }
 
     private void init() {
@@ -126,9 +140,11 @@ public class FormWithChartActivity extends AppCompatActivity {
         conditionBeans = new ArrayList<>();
         fixconditions = new ArrayList<>();
         ChartData = new ArrayList<>();
+        ChildChartData = new ArrayList<>();
         pieData = new ArrayList<>();
 
         fields = new ArrayList<>();
+        childFields = new ArrayList<>();
     }
 
     private void getPreferenceData() {
@@ -175,6 +191,10 @@ public class FormWithChartActivity extends AppCompatActivity {
                         getFixconditions(info);
 
                         getAxisField(info);
+                        if (info.size() > 0) {
+                            getChildInfo(info.get(0));
+                        }
+
                         getCoditionData(condition);
                         getColumnData(column);
                         getXAxisName();
@@ -209,6 +229,31 @@ public class FormWithChartActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    private void getChildInfo(FormBean.ReportInfoBean info) {
+        haveChild = info.haveChild();
+        if (!haveChild) {
+            return;
+        }
+
+        isShowChildChart = info.isShowChildChart();
+        childChartType = info.getsChildChartType();
+        childLink = getChildField(info.getsChildSerialField());
+        childField = info.getsLinkField();
+        childIsStore = info.childIsStore();
+        childXValue = info.getsChildXAxisField();
+        childYValue = info.getsChildYAxisField();
+        getChildXAxisName();
+
+    }
+
+    private String getChildField(String field) {
+        if (field.contains("=")) {
+            return field.split("=")[1];
+        }
+        return "";
     }
 
     private void getFixconditions(List<FormBean.ReportInfoBean> info) {
@@ -271,6 +316,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     currentView.setChecked(true);
                     fixfilter = fixconditions.get(position).getFilters();
                     llContent.removeAllViews();
+                    llChild.removeAllViews();
                     getFormData();
                 }
             }
@@ -279,8 +325,17 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void getXAxisName() {
         for (FormBean.ReportColumnsBean column : columnsBeans) {
-            if (xValue.equals(column.getSFieldsName())) {
+            if (xValue.equals(column.getSFieldsName()) && !column.isChild()) {
                 xName = column.getSFieldsdisplayName();
+                break;
+            }
+        }
+    }
+
+    private void getChildXAxisName() {
+        for (FormBean.ReportColumnsBean column : columnsBeans) {
+            if (childXName.equals(column.getSFieldsName()) && column.isChild()) {
+                childXName = column.getSFieldsdisplayName();
                 break;
             }
         }
@@ -411,32 +466,32 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     /*初始化表*/
-    private void initForm() throws JSONException, Exception {
-        glForm = new GridLayout(this);
-        glForm.setRowCount(ChartData.get(0).getList().size() + 1);
-        glForm.setColumnCount(fields.size() + 1);
-        setFormRowName();
-        int length = ChartData.get(0).getList().size();
-        for (int i = 0; i < ChartData.size(); i++) {
-            setFormColumnName(i + 1);
+    private void initChildForm() throws JSONException, Exception {
+        GridLayout glForm = new GridLayout(this);
+        glForm.setRowCount(ChildChartData.get(0).getList().size() + 1);
+        glForm.setColumnCount(childFields.size() + 1);
+        setChildFormRowName(glForm);
+        int length = ChildChartData.get(0).getList().size();
+        for (int i = 0; i < ChildChartData.size(); i++) {
+            setChildFormColumnName(i + 1,glForm);
             List<ChartBean.Line> datas = new ArrayList<>();
-            datas.addAll(ChartData.get(i).getList());
-            setFormData(length, datas, i);
+            datas.addAll(ChildChartData.get(i).getList());
+            setChildFormData(length, datas, i);
         }
 
-        llContent.addView(glForm);
+        llChild.addView(glForm);
     }
 
 
-    private void setFormColumnName(int i) throws JSONException, Exception {
-        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
+    private void setChildFormColumnName(int i, GridLayout glForm) throws JSONException, Exception {
+        addChildFormChild(0, i, ChildChartData.get(i - 1).getName(), true,glForm);
     }
 
-    private void setFormRowName() throws JSONException, Exception {
-        addFormChild(0, 0, xName, true);
+    private void setChildFormRowName( GridLayout glForm) throws JSONException, Exception {
+        addChildFormChild(0, 0, childXName, true,glForm);
     }
 
-    private void setFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
+    private void setChildFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
         for (int j = 0; j < length; j++) {
             if (datas.size() < length) {
                 datas.add(new ChartBean.Line());
@@ -448,11 +503,27 @@ public class FormWithChartActivity extends AppCompatActivity {
         }
     }
 
-    private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
+    private void addChildFormChild(int row, int col, String text, boolean isTitle, GridLayout glForm) throws Exception {
+        TextView textView = getChildView(text, isTitle);
 
-        glForm.addView(getChildView(text, isTitle), getChildParam(row, col));
+        glForm.addView(textView, getChildParam(row, col));
 
     }
+
+    private void judgeChild(String s) {
+
+        if (TextUtils.isEmpty(childField)) {
+            loadFail("字段类型未配置");
+        } else if (TextUtils.isEmpty(childXValue)) {
+            loadFail("x轴未配置");
+        } else if (TextUtils.isEmpty(childYValue)) {
+            loadFail("y轴未配置");
+        } else {
+            getChildData(s);
+        }
+
+    }
+
 
     private TextView getChildView(String text, boolean isTitle) throws Exception {
         TextView tvTitle = (TextView) LayoutInflater.from(this).inflate(R.layout.item_form, glForm, false);
@@ -494,7 +565,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*判断Y轴数据类型是否正确*/
     private Boolean isYTypeTrue() {
         for (int i = 0; i < columnsBeans.size(); i++) {
-            if (yValue.equals(columnsBeans.get(i).getSFieldsName())) {
+            if (yValue.equals(columnsBeans.get(i).getSFieldsName()) && !columnsBeans.get(i).isChild()) {
                 String type = columnsBeans.get(i).getSFieldsType();
                 if (type.equals("number"))
                     return true;
@@ -507,7 +578,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*判断X轴数据类型是否正确*/
     private Boolean isXTypeTrue() {
         for (int i = 0; i < columnsBeans.size(); i++) {
-            if (xValue.equals(columnsBeans.get(i).getSFieldsName())) {
+            if (xValue.equals(columnsBeans.get(i).getSFieldsName()) && !columnsBeans.get(i).isChild()) {
                 String type = columnsBeans.get(i).getSFieldsType();
                 if (!type.equals("string") && !type.equals("date") && !type.equals("datetime")) {
                     return false;
@@ -534,7 +605,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         ChartData.clear();
         Log.e("fields", new Gson().toJson(fields));
         setChartData(jsonArray);
-initChartData();
+        initChartData();
 
     }
 
@@ -562,10 +633,10 @@ initChartData();
         int length = ChartData.get(0).getList().size();
         for (int i = 0; i < ChartData.size(); i++) {
             if (length > ChartData.get(i).getList().size()) {
-                chartDataAddLength(length,i);
+                chartDataAddLength(length, i);
 
             } else {
-                chartDataReduceLength(length,i);
+                chartDataReduceLength(length, i);
 
             }
         }
@@ -576,6 +647,7 @@ initChartData();
             ChartData.get(i).getList().add(new ChartBean.Line(ChartData.get(0).getList().get(ChartData.get(i).getList().size()).getxValue(), 0));
         }
     }
+
     private void chartDataReduceLength(int length, int i) {
         if (length < ChartData.get(i).getList().size()) {
             for (int k = 0; k < ChartData.get(i).getList().size() - length; k++) {
@@ -622,6 +694,277 @@ initChartData();
         params.add(new NetParams("otype", Otype.GetChartReportInfo));
         params.add(new NetParams("userid", userid));
         params.add(new NetParams("iFormID", menuid));
+
+        return params;
+    }
+
+    /*获取关联数据*/
+    private void getChildData(String s) {
+        LoadingDialog.showDialogForLoading(this);
+        new NetUtil(getChildParams(s), url, new ResponseListener() {
+            @Override
+            public void onSuccess(String string) {
+                Log.e("Data", string);
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    boolean isSuccess = jsonObject.optBoolean("success");
+                    if (isSuccess) {
+                        String data = jsonObject.optString("data");
+                        if (StringUtil.isNotEmpty(data)) {
+                            initChildData(data);
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadFail("");
+                                    llChild.removeAllViews();
+                                }
+                            });
+                        }
+                    } else {
+                        loadFail(jsonObject.optString("message"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    loadFail("json数据解析错误");
+                } catch (Exception e) {
+                    loadFail("数据解析错误");
+                }
+            }
+
+            @Override
+            public void onFail(IOException e) {
+                e.printStackTrace();
+                loadFail("获取数据失败");
+            }
+        });
+    }
+
+    private void initChildData(String data) throws JSONException, Exception {
+        if (isChildXTypeTrue() == false) {
+            loadFail("x轴数据类型错误");
+            return;
+        }
+        if (isChildYTypeTrue() == false) {
+            loadFail("y轴数据类型错误");
+            return;
+        }
+        JSONArray jsonArray = new JSONArray(data);
+        getChildChartFields(jsonArray);
+        getChildChartData(jsonArray);
+    }
+
+    /*获取关联图表数据源名字*/
+    private void getChildChartFields(JSONArray jsonArray) throws JSONException, Exception {
+        childFields.clear();
+//        Log.e("fileds",jsonArray.optString(0));
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (!childFields.contains(jsonArray.getJSONObject(i).optString(childField)))
+                childFields.add(jsonArray.getJSONObject(i).optString(childField));
+        }
+    }/*获取数据源*/
+
+    private void getChildChartData(JSONArray jsonArray) throws JSONException, Exception {
+        ChildChartData.clear();
+        Log.e("fields", new Gson().toJson(childFields));
+        setChildChartData(jsonArray);
+        initChildChartData();
+
+    }
+
+    private void initChildChartData() {
+
+        /*数据处理为相同长度*/
+        if (ChildChartData.size() > 0) {
+            makeChildChartDataSameLength();
+            Log.e("TAG", new Gson().toJson(ChildChartData));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (isShowChildChart)
+                        setChildView();
+                        initForm();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+    /*初始化表*/
+    private void initForm() throws JSONException, Exception {
+       GridLayout glForm = new GridLayout(this);
+        glForm.setRowCount(ChartData.get(0).getList().size() + 1);
+        glForm.setColumnCount(fields.size() + 1);
+        setFormRowName();
+        int length = ChartData.get(0).getList().size();
+        for (int i = 0; i < ChartData.size(); i++) {
+            setFormColumnName(i + 1);
+            List<ChartBean.Line> datas = new ArrayList<>();
+            datas.addAll(ChartData.get(i).getList());
+            setFormData(length, datas, i);
+        }
+
+        llContent.addView(glForm);
+    }
+
+
+    private void setFormColumnName(int i) throws JSONException, Exception {
+        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
+    }
+
+    private void setFormRowName() throws JSONException, Exception {
+        addFormChild(0, 0, xName, true);
+    }
+
+    private void setFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
+        for (int j = 0; j < length; j++) {
+            if (datas.size() < length) {
+                datas.add(new ChartBean.Line());
+            }
+            if (i == 0) {
+                addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
+            }
+            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
+        }
+    }
+
+    private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
+        TextView textView = getChildView(text, isTitle);
+        if (col == 0 && isTitle == false && haveChild) {
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    judgeChild(((TextView) v).getText().toString());
+
+                }
+            });
+        }
+
+        glForm.addView(textView, getChildParam(row, col));
+
+    }
+    private void setChildView() {
+        switch (chartType) {
+            case "0":
+                LineCharts lineCharts = new LineCharts(this);
+                lineCharts.setData(ChildChartData);
+                llChild.addView(lineCharts);
+                break;
+            case "1":
+                BarCharts barCharts = new BarCharts(this);
+                barCharts.setData(ChildChartData);
+                barCharts.build();
+                llChild.addView(barCharts);
+                break;
+            case "2":
+                for (int i = 0; i < ChildChartData.size(); i++) {
+                    PieCharts pieCharts = new PieCharts(this);
+                    pieCharts.setData(ChildChartData.get(0).getList());
+                    pieCharts.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
+                    pieCharts.build();
+                    llChild.addView(pieCharts);
+                    break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void makeChildChartDataSameLength() {
+        int length = ChildChartData.get(0).getList().size();
+        for (int i = 0; i < ChildChartData.size(); i++) {
+            if (length > ChildChartData.get(i).getList().size()) {
+                childChartDataAddLength(length, i);
+
+            } else {
+                childChartDataReduceLength(length, i);
+
+            }
+        }
+    }
+
+    private void childChartDataAddLength(int length, int i) {
+        for (int j = 0; j < length - ChildChartData.get(i).getList().size(); j++) {
+            ChildChartData.get(i).getList().add(new ChartBean.Line(ChildChartData.get(0).getList().get(ChildChartData.get(i).getList().size()).getxValue(), 0));
+        }
+    }
+
+    private void childChartDataReduceLength(int length, int i) {
+        if (length < ChildChartData.get(i).getList().size()) {
+            for (int k = 0; k < ChildChartData.get(i).getList().size() - length; k++) {
+                ChildChartData.get(i).getList().remove(ChildChartData.size() - 1);
+            }
+        }
+    }
+
+    private void setChildChartData(JSONArray jsonArray) throws JSONException, Exception {
+        for (String value : childFields) {
+            List<ChartBean.Line> line = new ArrayList<>();
+            setChildCharChildData(jsonArray, line, value);
+            ChildChartDataAddValue(value, line);
+        }
+    }
+
+    private void setChildCharChildData(JSONArray jsonArray, List<ChartBean.Line> line, String value) throws JSONException, Exception {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).optString(childField).equals(value)) {
+                ChartBean.Line data = new ChartBean.Line();
+                data.setxValue(jsonArray.getJSONObject(i).optString(childXValue));
+                Object object = jsonArray.getJSONObject(i).opt(childYValue);
+                String y = (object == null ? "" : object.toString());
+                Float yValue = Float.parseFloat(y);
+                data.setyValue(yValue);
+                line.add(data);
+            }
+        }
+    }
+
+    private void ChildChartDataAddValue(String value, List<ChartBean.Line> line) {
+        ChartBean chartBean = new ChartBean();
+        chartBean.setName(value);
+        chartBean.setList(line);
+        chartBean.setUnit(infoBeans.get(0).getChildYlabel());
+        ChildChartData.add(chartBean);
+    }
+
+    /*判断Y轴数据类型是否正确*/
+    private Boolean isChildYTypeTrue() {
+        for (int i = 0; i < columnsBeans.size(); i++) {
+            if (childYValue.equals(columnsBeans.get(i).getSFieldsName()) && columnsBeans.get(i).isChild()) {
+                String type = columnsBeans.get(i).getSFieldsType();
+                if (type.equals("number"))
+                    return true;
+                else return false;
+            }
+        }
+        return false;
+    }
+
+    /*判断X轴数据类型是否正确*/
+    private Boolean isChildXTypeTrue() {
+        for (int i = 0; i < columnsBeans.size(); i++) {
+            if (childXValue.equals(columnsBeans.get(i).getSFieldsName()) && columnsBeans.get(i).isChild()) {
+                String type = columnsBeans.get(i).getSFieldsType();
+                if (!type.equals("string") && !type.equals("date") && !type.equals("datetime")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /*获取初始化数据参数*/
+    private List<NetParams> getChildParams(String s) {
+        List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("otype", Otype.GetReportChildData));
+        params.add(new NetParams("userid", userid));
+        params.add(new NetParams("iFormID", menuid));
+        params.add(new NetParams("filter", childLink + "=" + s));
         return params;
     }
 
@@ -664,8 +1007,16 @@ initChartData();
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
                 filter = data.getStringExtra("data");
+                if (haveChild) {
+                    if (childIsStore) {
+                        childFilter = data.getStringExtra("isStore");
+                    } else {
+                        childFilter = data.getStringExtra("noStore");
+                    }
+                }
                 Log.e("filter", filter);
                 llContent.removeAllViews();
+                llChild.removeAllViews();
                 getFormData();
             }
         }
@@ -692,6 +1043,7 @@ initChartData();
                                 public void run() {
                                     loadFail("");
                                     llContent.removeAllViews();
+                                    llChild.removeAllViews();
                                 }
                             });
                         }

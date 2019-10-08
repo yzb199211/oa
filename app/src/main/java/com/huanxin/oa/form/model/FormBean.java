@@ -359,6 +359,118 @@ public class FormBean {
         private String sPieRoseType;
         private int iStore;
 
+        private int iHaveChild;
+        private String sLinkField;
+        private int iChildStore;
+        private int iChildShowChart;
+        private String sChildChartType;
+        private String sChildXAxisField;
+        private String sChildYAxisField;
+        private String sChildSerialField;
+        private String sChildXAxisLabelFormatterSimple;
+        private String sChildYAxisLabelFormatterSimple;
+
+        public boolean haveChild() {
+            return getiHaveChild() == 1;
+        }
+
+        public boolean childIsStore() {
+            return getiChildStore() == 1;
+        }
+
+        public boolean isShowChildChart() {
+            return getiChildShowChart() == 1;
+        }
+
+        public String getChildXLabel() {
+            return getsChildXAxisLabelFormatterSimple();
+        }
+
+        public String getChildYlabel() {
+            return getsChildYAxisLabelFormatterSimple();
+        }
+
+        public int getiHaveChild() {
+            return iHaveChild;
+        }
+
+        public void setiHaveChild(int iHaveChild) {
+            this.iHaveChild = iHaveChild;
+        }
+
+        public String getsLinkField() {
+            return sLinkField;
+        }
+
+        public void setsLinkField(String sLinkField) {
+            this.sLinkField = sLinkField;
+        }
+
+        public int getiChildStore() {
+            return iChildStore;
+        }
+
+        public void setiChildStore(int iChildStore) {
+            this.iChildStore = iChildStore;
+        }
+
+        public int getiChildShowChart() {
+            return iChildShowChart;
+        }
+
+        public void setiChildShowChart(int iChildShowChart) {
+            this.iChildShowChart = iChildShowChart;
+        }
+
+        public String getsChildChartType() {
+            return sChildChartType;
+        }
+
+        public void setsChildChartType(String sChildChartType) {
+            this.sChildChartType = sChildChartType;
+        }
+
+        public String getsChildXAxisField() {
+            return sChildXAxisField;
+        }
+
+        public void setsChildXAxisField(String sChildXAxisField) {
+            this.sChildXAxisField = sChildXAxisField;
+        }
+
+        public String getsChildYAxisField() {
+            return sChildYAxisField;
+        }
+
+        public void setsChildYAxisField(String sChildYAxisField) {
+            this.sChildYAxisField = sChildYAxisField;
+        }
+
+        public String getsChildSerialField() {
+            return sChildSerialField;
+        }
+
+        public void setsChildSerialField(String sChildSerialField) {
+            this.sChildSerialField = sChildSerialField;
+        }
+
+        public String getsChildXAxisLabelFormatterSimple() {
+            return sChildXAxisLabelFormatterSimple;
+        }
+
+        public void setsChildXAxisLabelFormatterSimple(String sChildXAxisLabelFormatterSimple) {
+            this.sChildXAxisLabelFormatterSimple = sChildXAxisLabelFormatterSimple;
+        }
+
+        public String getsChildYAxisLabelFormatterSimple() {
+            return sChildYAxisLabelFormatterSimple;
+        }
+
+        public void setsChildYAxisLabelFormatterSimple(String sChildYAxisLabelFormatterSimple) {
+            this.sChildYAxisLabelFormatterSimple = sChildYAxisLabelFormatterSimple;
+        }
+
+
         public int getiStore() {
             return iStore;
         }
@@ -758,6 +870,15 @@ public class FormBean {
         private String sAlign;
         private int iSort;
         private int ifix;
+        private boolean isChild;
+
+        public boolean isChild() {
+            return isChild;
+        }
+
+        public void setChild(boolean child) {
+            isChild = child;
+        }
 
         public int getIfix() {
             return ifix;
