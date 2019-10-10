@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -68,7 +69,8 @@ public class FormWithChartActivity extends AppCompatActivity {
     LinearLayout llTab;
     @BindView(R.id.ll_child)
     LinearLayout llChild;
-
+    @BindView(R.id.scroll)
+    ScrollView scrollView;
     GridLayout glForm;
 
     String userid;
@@ -92,6 +94,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     String childXName = "";
     String childChartType;
     String childFilter = "";
+    int childChartHeight;
 
     TabView currentView;
     int currenViewPos = -1;
@@ -191,14 +194,14 @@ public class FormWithChartActivity extends AppCompatActivity {
                         getFixconditions(info);
 
                         getAxisField(info);
-                        if (info.size() > 0) {
-                            getChildInfo(info.get(0));
-                        }
 
                         getCoditionData(condition);
                         getColumnData(column);
                         getXAxisName();
                         initChartType();
+                        if (info.size() > 0) {
+                            getChildInfo(info.get(0));
+                        }
 
 
                         if (TextUtils.isEmpty(field)) {
@@ -240,8 +243,9 @@ public class FormWithChartActivity extends AppCompatActivity {
 
         isShowChildChart = info.isShowChildChart();
         childChartType = info.getsChildChartType();
-        childLink = getChildField(info.getsChildSerialField());
-        childField = info.getsLinkField();
+        childLink = getChildField(info.getsLinkField());
+        Log.e("link", childLink);
+        childField = info.getsChildSerialField();
         childIsStore = info.childIsStore();
         childXValue = info.getsChildXAxisField();
         childYValue = info.getsChildYAxisField();
@@ -334,8 +338,10 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void getChildXAxisName() {
         for (FormBean.ReportColumnsBean column : columnsBeans) {
-            if (childXName.equals(column.getSFieldsName()) && column.isChild()) {
+//            Log.e("xmana",column.getSFieldsName());
+            if (childXValue.equals(column.getSFieldsName()) && column.isChild()) {
                 childXName = column.getSFieldsdisplayName();
+                Log.e("chidldxmana", childXName);
                 break;
             }
         }
@@ -467,46 +473,47 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     /*初始化表*/
     private void initChildForm() throws JSONException, Exception {
-        GridLayout glForm = new GridLayout(this);
-        glForm.setRowCount(ChildChartData.get(0).getList().size() + 1);
-        glForm.setColumnCount(childFields.size() + 1);
-        setChildFormRowName(glForm);
+        GridLayout glchildForm = new GridLayout(this);
+        glchildForm.setRowCount(ChildChartData.get(0).getList().size() + 1);
+        glchildForm.setColumnCount(childFields.size() + 1);
+        setChildFormRowName(glchildForm);
         int length = ChildChartData.get(0).getList().size();
         for (int i = 0; i < ChildChartData.size(); i++) {
-            setChildFormColumnName(i + 1,glForm);
+            setChildFormColumnName(i + 1, glchildForm);
             List<ChartBean.Line> datas = new ArrayList<>();
             datas.addAll(ChildChartData.get(i).getList());
-            setChildFormData(length, datas, i);
+            setChildFormData(length, datas, i, glchildForm);
         }
 
-        llChild.addView(glForm);
+        llChild.addView(glchildForm);
+        scrollView.scrollTo(0, llContent.getHeight());
     }
 
 
-    private void setChildFormColumnName(int i, GridLayout glForm) throws JSONException, Exception {
-        addChildFormChild(0, i, ChildChartData.get(i - 1).getName(), true,glForm);
+    private void setChildFormColumnName(int i, GridLayout glchildForm) throws JSONException, Exception {
+        addChildFormChild(0, i, ChildChartData.get(i - 1).getName(), true, glchildForm);
     }
 
-    private void setChildFormRowName( GridLayout glForm) throws JSONException, Exception {
-        addChildFormChild(0, 0, childXName, true,glForm);
+    private void setChildFormRowName(GridLayout glchildForm) throws JSONException, Exception {
+        addChildFormChild(0, 0, childXName, true, glchildForm);
     }
 
-    private void setChildFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
+    private void setChildFormData(int length, List<ChartBean.Line> datas, int i, GridLayout glchildForm) throws JSONException, Exception {
         for (int j = 0; j < length; j++) {
             if (datas.size() < length) {
                 datas.add(new ChartBean.Line());
             }
             if (i == 0) {
-                addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
+                addChildFormChild(j + 1, 0, datas.get(j).getxValue(), false, glchildForm);
             }
-            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
+            addChildFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false, glchildForm);
         }
     }
 
-    private void addChildFormChild(int row, int col, String text, boolean isTitle, GridLayout glForm) throws Exception {
-        TextView textView = getChildView(text, isTitle);
+    private void addChildFormChild(int row, int col, String text, boolean isTitle, GridLayout glchildForm) throws Exception {
+        TextView textView = getChildView(text, isTitle, glchildForm);
 
-        glForm.addView(textView, getChildParam(row, col));
+        glchildForm.addView(textView, getChildParam(row, col));
 
     }
 
@@ -525,7 +532,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
 
-    private TextView getChildView(String text, boolean isTitle) throws Exception {
+    private TextView getChildView(String text, boolean isTitle, GridLayout glForm) throws Exception {
         TextView tvTitle = (TextView) LayoutInflater.from(this).inflate(R.layout.item_form, glForm, false);
         tvTitle.setText(text);
         tvTitle.setGravity(Gravity.CENTER);
@@ -712,6 +719,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                         String data = jsonObject.optString("data");
                         if (StringUtil.isNotEmpty(data)) {
                             initChildData(data);
+                            loadFail("");
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -783,8 +791,8 @@ public class FormWithChartActivity extends AppCompatActivity {
                 public void run() {
                     try {
                         if (isShowChildChart)
-                        setChildView();
-                        initForm();
+                            setChildView();
+                        initChildForm();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -792,9 +800,10 @@ public class FormWithChartActivity extends AppCompatActivity {
             });
         }
     }
+
     /*初始化表*/
     private void initForm() throws JSONException, Exception {
-       GridLayout glForm = new GridLayout(this);
+        glForm = new GridLayout(this);
         glForm.setRowCount(ChartData.get(0).getList().size() + 1);
         glForm.setColumnCount(fields.size() + 1);
         setFormRowName();
@@ -831,11 +840,12 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
-        TextView textView = getChildView(text, isTitle);
+        TextView textView = getChildView(text, isTitle, glForm);
         if (col == 0 && isTitle == false && haveChild) {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    llChild.removeAllViews();
                     judgeChild(((TextView) v).getText().toString());
 
                 }
@@ -845,18 +855,21 @@ public class FormWithChartActivity extends AppCompatActivity {
         glForm.addView(textView, getChildParam(row, col));
 
     }
+
     private void setChildView() {
-        switch (chartType) {
+        switch (childChartType) {
             case "0":
                 LineCharts lineCharts = new LineCharts(this);
                 lineCharts.setData(ChildChartData);
                 llChild.addView(lineCharts);
+
                 break;
             case "1":
                 BarCharts barCharts = new BarCharts(this);
                 barCharts.setData(ChildChartData);
                 barCharts.build();
                 llChild.addView(barCharts);
+
                 break;
             case "2":
                 for (int i = 0; i < ChildChartData.size(); i++) {
@@ -865,6 +878,7 @@ public class FormWithChartActivity extends AppCompatActivity {
                     pieCharts.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
                     pieCharts.build();
                     llChild.addView(pieCharts);
+
                     break;
                 }
                 break;
@@ -964,8 +978,28 @@ public class FormWithChartActivity extends AppCompatActivity {
         params.add(new NetParams("otype", Otype.GetReportChildData));
         params.add(new NetParams("userid", userid));
         params.add(new NetParams("iFormID", menuid));
-        params.add(new NetParams("filter", childLink + "=" + s));
+        String filters = getChildFilters(s);
+        params.add(new NetParams("filters", filters));
         return params;
+    }
+
+    private String getChildFilters(String s) {
+        String filters = childLink + "=" + s;
+        if (StringUtil.isNotEmpty(fixfilter)) {
+            if (childIsStore) {
+                filters = filters + "$" + fixfilter;
+            } else {
+                filters = filters + " and " + filters;
+            }
+        }
+        if (StringUtil.isNotEmpty(childFilter)) {
+            if (childIsStore) {
+                filters = filters + "$" + childFilter;
+            } else {
+                filters = filters + " and " + childFilter;
+            }
+        }
+        return filters;
     }
 
     /*请求关闭LoadingDialog和弹出提示*/
