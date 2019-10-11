@@ -129,7 +129,7 @@ public class FontUtil {
             case "icon-order":
                 return R.mipmap.icon_order;
             case "icon-document":
-                return R.string.icon_document;
+                return R.mipmap.icon_document;
             case "icon-finishWork":
                 return R.mipmap.icon_finishwork;
             case "icon-finance":
