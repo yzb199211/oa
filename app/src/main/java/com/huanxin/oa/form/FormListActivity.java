@@ -297,7 +297,7 @@ public class FormListActivity extends AppCompatActivity {
                     ReviewInfo info = new ReviewInfo();
 
                     if (StringUtil.isNotEmpty(styleList.get(j).getsNameFontSize()) && StringUtil.isInteger(styleList.get(j).getsNameFontSize())) {
-                        info.setTitleSize(Integer.parseInt(styleList.get(i).getsNameFontSize()));
+                        info.setTitleSize(Integer.parseInt(styleList.get(j).getsNameFontSize()));
                     } else {
                         info.setTitleSize(0);
                     }
@@ -317,6 +317,7 @@ public class FormListActivity extends AppCompatActivity {
                     if (StringUtil.isColor(styleList.get(j).getsValueFontColor()))
                         info.setContentColor(Color.parseColor(styleList.get(j).getsValueFontColor()));
                     info.setWidthPercent(StringUtil.isPercent(styleList.get(j).getiProportion()));
+//                    Log.e("per", styleList.get(j).getiProportion() + "");
                     info.setRow(styleList.get(j).getiSerial());
                     setProgressAndAddValue(j, info, infos);
                 }
@@ -344,7 +345,7 @@ public class FormListActivity extends AppCompatActivity {
 //                        infos.add(info);
             if (value.contains("P") && !value.contains("PP")) {
                 String[] datas = value.split("P");
-                Log.e("datas", value + "," + datas[1] + "," + datas[2] + "," + datas.length);
+//                Log.e("datas", value + "," + datas[1] + "," + datas[2] + "," + datas.length);
                 if (StringUtil.isNotEmpty(datas[1])) {
                     info.setTitle(datas[1]);
                     info.setContent(datas[2].replace("{", "").replace("}", ""));
@@ -354,7 +355,7 @@ public class FormListActivity extends AppCompatActivity {
                 infos.add(info);
             }
         } else {
-            Log.e("tag", styleList.get(j).getsFieldsType());
+//            Log.e("tag", styleList.get(j).getsFieldsType());
             infos.add(info);
         }
     }
@@ -443,7 +444,7 @@ public class FormListActivity extends AppCompatActivity {
 
                 @Override
                 public void onLoadMore() {
-                    Log.e("load", "loading" + pagerIndex);
+//                    Log.e("load", "loading" + pagerIndex);
                     getFormData(false, true, pagerIndex + 1);
                 }
             });
@@ -502,7 +503,7 @@ public class FormListActivity extends AppCompatActivity {
                     formListAdapter.notifyDataSetChanged();
                 }
                 filter = data.getStringExtra("data");
-                Log.e("filter", filter);
+//                Log.e("filter", filter);
 //                currenViewPos = -1;
 //                currentView.setChecked(false);
 //                currentView = null;

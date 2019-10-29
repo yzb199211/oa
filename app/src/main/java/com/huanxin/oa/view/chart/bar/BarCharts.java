@@ -79,7 +79,7 @@ public class BarCharts extends FrameLayout {
     private void initXaxis() {
 
         //X轴标签的倾斜角度
-        xAxis.setLabelRotationAngle(0f);
+        xAxis.setLabelRotationAngle(45f);
         //设置X轴标签出现位置
         //TOP、BOTTOM、BOTH_SIDED、TOP_INSIDE、BOTTOM_INSIDE
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -132,6 +132,8 @@ public class BarCharts extends FrameLayout {
         labels.addAll(data.get(0).getList().size() > 10 ? data.get(0).getList().subList(0, 10) : data.get(0).getList());
         //设置x轴显示标签数量  还有一个重载方法第二个参数为布尔值强制设置数量 如果启用会导致绘制点出现偏差
         xAxis.setLabelCount(groupCount, false);
+        //控制x轴不重复显示
+        xAxis.setGranularity(1);
         //格式化x轴标签显示字符
         xAxis.setValueFormatter(new LineValueFormatter(labels));
         xAxis.setCenterAxisLabels(true);

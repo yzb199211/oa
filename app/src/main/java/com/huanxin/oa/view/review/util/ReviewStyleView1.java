@@ -66,7 +66,7 @@ public class ReviewStyleView1 extends FrameLayout {
         setBackgroundColor(context.getColor(R.color.white));
 
         screenWidth = PxUtil.getWidth(context);
-
+        Log.e("screenWidth", screenWidth + "");
         paddingMiddle = context.getResources().getDimensionPixelOffset(R.dimen.dp_10);
         paddingTop = context.getResources().getDimensionPixelOffset(R.dimen.dp_10);
         setTitleText();
@@ -142,6 +142,7 @@ public class ReviewStyleView1 extends FrameLayout {
             addView(rivItem);
             rivItem.measure(w, h);
             width = (int) (width + itemWidth * (item.getWidthPercent()));
+//            Log.e("width", item.getWidthPercent() + "");
             if (i + 1 == infoList.size() || (i + 1 < infoList.size() && infoList.get(i + 1).getRow() != row)) {
                 height = height + rivItem.getMeasuredHeight();
                 width = 0;
