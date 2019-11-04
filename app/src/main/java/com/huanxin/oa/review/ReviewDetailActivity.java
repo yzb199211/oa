@@ -295,7 +295,9 @@ public class ReviewDetailActivity extends AppCompatActivity {
             ReviewProcess reviewProcess = new ReviewProcess();
             reviewProcess.setTitleText(opinionBean.getSName());
             reviewProcess.setContentText(opinionBean.getMesstype());
-            reviewProcess.setDateText(StringUtil.getDate(opinionBean.getDDealDate(), StringUtil.DATETYPE));
+            if (StringUtil.isNotEmpty(opinionBean.getDDealDate())) {
+                reviewProcess.setDateText(StringUtil.getDate(opinionBean.getDDealDate(), StringUtil.DATETYPE));
+            }
             reviewProcess.setTvRemarkText(opinionBean.getSCheckIdeal());
             if (StringUtil.isNotEmpty(opinionBean.getSCheckIdeal()))
                 reviewProcess.setTvRemarkVisiable(true);
@@ -575,7 +577,6 @@ public class ReviewDetailActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(message)) {
                 sendData(false, false);
             } else {
-
                 isPushDialog(message);
             }
         } else {
@@ -622,6 +623,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
      * @param isPush
      */
     private void sendData(boolean isPush, boolean isDialog) {
+
         if (isDialog == true) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -659,7 +661,8 @@ public class ReviewDetailActivity extends AppCompatActivity {
                     setResult(CodeUtil.RESULT_OK);
                     finish();
                 } else {
-                    Toasts.showShort(ReviewDetailActivity.this, message);
+                    cancelDialog(message);
+//                    Toasts.showShort(ReviewDetailActivity.this, message);
                 }
             }
         });

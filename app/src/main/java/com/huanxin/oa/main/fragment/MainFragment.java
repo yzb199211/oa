@@ -121,7 +121,7 @@ public class MainFragment extends Fragment {
         rlTop = view.findViewById(R.id.rl_top);
         rlTop.setBackgroundColor(getActivity().getColor(R.color.main_activity_top));
         tvTitle = view.findViewById(R.id.tv_title);
-        tvTitle.setText(getActivity().getString(R.string.app_name1));
+//        tvTitle.setText(getActivity().getString(R.string.app_name1));
         tvTitle.setTextColor(getActivity().getColor(R.color.white));
     }
 

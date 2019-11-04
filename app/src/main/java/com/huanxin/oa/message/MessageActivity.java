@@ -2,6 +2,7 @@ package com.huanxin.oa.message;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -83,7 +84,7 @@ public class MessageActivity extends BaseActivity {
         new NetUtil(getParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-//                Log.e(TAG, string);
+                Log.e(TAG, string);
                 initData(string);
             }
 
@@ -131,6 +132,13 @@ public class MessageActivity extends BaseActivity {
                 }
             });
 
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LoadingDialog.cancelDialogForLoading();
+                }
+            });
         }
     }
 

@@ -114,8 +114,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
-        String userId=(String) preferencesHelper.getSharedPreference("userid", "");
-        String passWord =  (String) preferencesHelper.getSharedPreference("password", "");
+        String userId = (String) preferencesHelper.getSharedPreference("userid", "");
+        String passWord = (String) preferencesHelper.getSharedPreference("password", "");
 
         etUser.setText(userId);
 //        etUser.setSelection(userId.length());
@@ -240,8 +240,11 @@ public class LoginActivity extends BaseActivity {
         Gson gson = new Gson();
         LoginBean model = gson.fromJson(response, LoginBean.class);
         if (model.isSuccess()) {
-            dowmloadUrl = model.getTables().getAPPInfo().get(0).getSAppApk();
-            int readTimeout = model.getTables().getAPPInfo().get(0).getiTimeout();
+            int readTimeout = 0;
+            if (model.getTables().getAPPInfo().size() > 0) {
+                dowmloadUrl = model.getTables().getAPPInfo().get(0).getSAppApk();
+                readTimeout = model.getTables().getAPPInfo().get(0).getiTimeout();
+            }
             if (readTimeout > 0) {
                 BaseApplication.getInstance().setClinet(readTimeout);
             }
