@@ -804,7 +804,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*初始化表*/
     private void initForm() throws JSONException, Exception {
         glForm = new GridLayout(this);
-        glForm.setRowCount(ChartData.get(0).getList().size() + 1);
+        glForm.setRowCount(ChartData.get(0).getList().size() + 2);
         glForm.setColumnCount(fields.size() + 1);
         setFormRowName();
         int length = ChartData.get(0).getList().size();
@@ -814,10 +814,20 @@ public class FormWithChartActivity extends AppCompatActivity {
             datas.addAll(ChartData.get(i).getList());
             setFormData(length, datas, i);
         }
-
+        for (int j = 0; j < ChartData.size(); j++) {
+            setFormTotaData(j + 1, ChartData.get(j).getTotal() + "");
+        }
+        setFormRowTotalName();
         llContent.addView(glForm);
     }
 
+    private void setFormTotaData(int i, String data) throws JSONException, Exception {
+        addFormChild(ChartData.get(0).getList().size() + 1, i, data, false);
+    }
+
+    private void setFormRowTotalName() throws JSONException, Exception {
+        addFormChild(ChartData.get(0).getList().size() + 1, 0, "总计", false);
+    }
 
     private void setFormColumnName(int i) throws JSONException, Exception {
         addFormChild(0, i, ChartData.get(i - 1).getName(), true);

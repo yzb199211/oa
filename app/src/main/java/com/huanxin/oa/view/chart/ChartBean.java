@@ -3,7 +3,7 @@ package com.huanxin.oa.view.chart;
 import java.util.List;
 
 public class ChartBean {
-//    String string = "{\"name\":\"例如：业务员\",\"unit\":\"单位\",\"description\":\"支出：\",\"list\":[{\"xValue\":\"一月\",\"yValue\":1.1}}";
+    //    String string = "{\"name\":\"例如：业务员\",\"unit\":\"单位\",\"description\":\"支出：\",\"list\":[{\"xValue\":\"一月\",\"yValue\":1.1}}";
     String name;//数据源名称
     String unit;//单位
     String description;//弹出描述
@@ -25,6 +25,15 @@ public class ChartBean {
         this.list = list;
     }
 
+    public float getTotal() {
+        float total = 0;
+        if (list != null)
+            for (Line line : list) {
+                total = total + line.yValue;
+            }
+        return total;
+    }
+
     public String getUnit() {
         return unit;
     }
@@ -42,8 +51,8 @@ public class ChartBean {
     }
 
     public static class Line {
-        String xValue="";
-        float yValue=0;
+        String xValue = "";
+        float yValue = 0;
 
         public Line() {
         }
