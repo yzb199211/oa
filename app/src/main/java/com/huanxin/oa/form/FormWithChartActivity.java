@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -486,7 +487,13 @@ public class FormWithChartActivity extends AppCompatActivity {
         }
 
         llChild.addView(glchildForm);
-        scrollView.scrollTo(0, llContent.getHeight());
+        glchildForm.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                scrollView.scrollTo(0, llContent.getHeight());
+            }
+        });
+
     }
 
 
@@ -851,7 +858,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
         TextView textView = getChildView(text, isTitle, glForm);
-        if (col == 0 && isTitle == false && haveChild) {
+        if (col == 0 &&row!=ChartData.get(0).getList().size() + 1&& isTitle == false && haveChild) {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

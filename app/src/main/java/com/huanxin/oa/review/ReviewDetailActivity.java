@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -344,9 +345,15 @@ public class ReviewDetailActivity extends AppCompatActivity {
             styleView.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.dp_10));
 //            styleView.setSpanCounts(styles.get(i).getSpanCounts());
             //单项设置一定要在最后，否则可能会出现样式不对的现象。
+            if (i != 0)
+                styleView.setTitleVisiable(false);
             styleView.setInfoList(styles.get(i).getList());
             styleView.setBackgroundColor(getColor(R.color.white));
             llContent.addView(styleView);
+            View view = new View(this);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+            view.setBackgroundColor(getColor(R.color.default_bg_color));
+            llContent.addView(view);
 //            Log.e(TAG, i + "");
         }
     }

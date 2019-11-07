@@ -41,6 +41,9 @@ public class ReviewStyleView1 extends FrameLayout {
     int paddingRight;
     int paddingMiddle;
     int paddingTop;
+
+    boolean isShowTitle = true;
+
     List<ReviewInfo> infoList = new ArrayList<>();
     LinearLayout.LayoutParams params;
 
@@ -283,6 +286,13 @@ public class ReviewStyleView1 extends FrameLayout {
      */
     public void setInfoList(List<ReviewInfo> infoList) {
         this.infoList = infoList;
+        setView();
+    }
+
+    public void setInfoList(List<ReviewInfo> infoList, boolean isShowTitle) {
+        this.infoList = infoList;
+        if (!isShowTitle)
+            this.isShowTitle = isShowTitle;
         setView();
     }
 

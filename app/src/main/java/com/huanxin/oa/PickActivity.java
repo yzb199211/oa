@@ -107,8 +107,7 @@ public class PickActivity extends AppCompatActivity {
         }
     }
 
-    private String getTime(Date date) {//可根据需要自行截取数据显示
-//        Log.d("getTime()", "choice date millis: " + date.getTime());
+    private String getTime(Date date) {//可根据需要自行截取数据显示s
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(date);
     }
