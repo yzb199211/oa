@@ -49,6 +49,7 @@
                     android:hint="请输入用户名"
                     android:inputType="textEmailAddress"
                     android:lines="1"
+                    android:nextFocusDown="@id/et_pwd"
                     android:paddingRight="@dimen/dp_60"
                     android:text=""
                     android:textColor="@color/default_text_color"

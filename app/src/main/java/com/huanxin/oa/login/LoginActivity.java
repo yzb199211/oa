@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -103,7 +104,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void inti() {
-        isTest = true;
+        isTest = false;
         address = (String) preferencesHelper.getSharedPreference("address", "");
         if (isTest == true) {
             preferencesHelper.put("address", NetConfig.address);
@@ -548,5 +549,13 @@ public class LoginActivity extends BaseActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

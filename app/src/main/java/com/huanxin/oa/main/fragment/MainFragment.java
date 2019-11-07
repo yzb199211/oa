@@ -27,11 +27,15 @@ import com.huanxin.oa.main.manager.NoScrollGvManager;
 import com.huanxin.oa.main.utils.Menu;
 import com.huanxin.oa.main.utils.MenuUtil;
 import com.huanxin.oa.message.MessageActivity;
+import com.huanxin.oa.model.login.AppInfoBean;
 import com.huanxin.oa.model.login.MenuBean;
 import com.huanxin.oa.model.login.NumBean;
 import com.huanxin.oa.review.ReviewActivity;
 import com.huanxin.oa.sign.SignActivity;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
+import com.huanxin.oa.utils.StringUtil;
 import com.huanxin.oa.utils.Toasts;
+import com.huanxin.oa.utils.net.NetConfig;
 import com.huanxin.oa.view.cycle.CircleBanner;
 import com.huanxin.oa.view.cycle.adapter.DataViewHolder;
 import com.huanxin.oa.view.cycle.adapter.HolderCreator;
@@ -70,7 +74,11 @@ public class MainFragment extends Fragment {
 
     private String initData;
     private String numData;
+    private String infoData;
     private String userid;
+    String address;
+
+    SharedPreferencesHelper preferencesHelper;
 
     public MainFragment() {
         // Required empty public constructor
@@ -85,13 +93,15 @@ public class MainFragment extends Fragment {
         initData = ((MainActivity) context).getMainData();
         numData = ((MainActivity) context).getNumData();
         userid = ((MainActivity) context).getUserid();
+        infoData = ((MainActivity) context).getInfoData();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent.putExtra("userid", userid);
-
+        preferencesHelper = new SharedPreferencesHelper(getActivity(), getString(R.string.preferenceCache));
+        address = (String) preferencesHelper.getSharedPreference("address", "");
     }
 
     @Override
@@ -197,7 +207,7 @@ public class MainFragment extends Fragment {
                 startActivity(intent);
                 break;
             case 4:
-              Toasts.showShort(getActivity(),getString(R.string.menu_empty));
+                Toasts.showShort(getActivity(), getString(R.string.menu_empty));
                 break;
             default:
                 break;
@@ -238,7 +248,7 @@ public class MainFragment extends Fragment {
             public void onPageClick(int position) {
                 List<DataBean> list = mViewpager.getList();
                 String describe = list.get(position).getDescribe();
-                Toasts.showShort(getActivity(), "点击了" + list.get(position).getDescribe());
+                Toasts.showShort(getActivity(), "点击了" + describe);
             }
         });
         //  设置数据
@@ -255,10 +265,14 @@ public class MainFragment extends Fragment {
      * 数据初始化
      */
     private void initData() {
-        for (int i = 0; i < picUrls.length; i++) {
-            DataBean dataBean = new DataBean(picUrls[i], "图片" + (i + 1));
-            mDataList.add(dataBean);
+        if (getImages() != null && getImages().size() > 0) {
+            setRealImg();
+        } else {
+            setDefaultImg();
+
         }
+
+
         for (int i = 1; i <= 4; i++) {
             int drawable = getResources().getIdentifier("a" + i, "drawable", getActivity().getPackageName());
             mPicResList.add(drawable);
@@ -266,6 +280,30 @@ public class MainFragment extends Fragment {
         initMenu();
         initMenuUsual();
     }
+
+    private void setDefaultImg() {
+        for (int i = 0; i < picUrls.length; i++) {
+            DataBean dataBean = new DataBean(picUrls[i], "图片" + (i + 1));
+            mDataList.add(dataBean);
+        }
+    }
+
+    private void setRealImg() {
+        for (int i = 0; i < getImages().size(); i++) {
+            DataBean dataBean = new DataBean(address + getImages().get(i), "");
+            mDataList.add(dataBean);
+        }
+    }
+
+    private List<String> getImages() {
+        List<AppInfoBean> info = new Gson().fromJson(infoData, new TypeToken<List<AppInfoBean>>() {
+        }.getType());
+        if (info.size() > 0 && info.get(0).getImages().size() > 0) {
+            return info.get(0).getImages();
+        }
+        return null;
+    }
+
 
     /**
      * 初始化固定菜单
