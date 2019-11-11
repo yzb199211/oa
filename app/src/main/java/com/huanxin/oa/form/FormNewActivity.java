@@ -259,7 +259,7 @@ public class FormNewActivity extends AppCompatActivity {
         new NetUtil(getFormParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-                Log.e("data", string);
+//                Log.e("data", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.optBoolean("success");

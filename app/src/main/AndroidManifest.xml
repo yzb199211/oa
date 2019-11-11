@@ -23,6 +23,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".form.FormMergeActivity"></activity>
         <activity android:name=".form.FormListActivity" />
         <activity
             android:name=".tencent.DisplayFileActivity"

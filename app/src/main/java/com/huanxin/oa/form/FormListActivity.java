@@ -137,7 +137,6 @@ public class FormListActivity extends AppCompatActivity {
     private void setTab() {
         llTab.setVisibility(View.VISIBLE);
         for (int i = 0; i < fixconditions.size(); i++) {
-
             TabView tab = new TabView(this);
             tab.setText(fixconditions.get(i).getName());
             tab.setPosition(i);
@@ -219,22 +218,22 @@ public class FormListActivity extends AppCompatActivity {
                         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
                         List<FormBean.ReportColumns2> stylebeans = formBean.getReportColumns2();
 
-                        if (reportInfoBeans.size() > 0) {
-                            FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
-                            isStore = fixcondition.getiStore() == 0 ? false : true;
-                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
-                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
-                            }
-                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
-                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
-                            }
-                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
-                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
-                            }
-                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
-                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
-                            }
-                        }
+//                        if (reportInfoBeans.size() > 0) {
+//                            FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
+//                            isStore = fixcondition.getiStore() == 0 ? false : true;
+//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
+//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
+//                            }
+//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
+//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
+//                            }
+//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
+//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
+//                            }
+//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
+//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
+//                            }
+//                        }
 
                         if (reportInfoBeans.size() > 0) {
                             initFix(reportInfoBeans.get(0));
@@ -248,19 +247,20 @@ public class FormListActivity extends AppCompatActivity {
                         }
 
                         initData(jsonObject.optJSONArray("data"));
-                        if (reportConditionBeans.size() > 0) {
-                            conditions.addAll(reportConditionBeans);
-                            pagerIndex = page;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (reportConditionBeans.size() > 0) {
                                     tvRight.setVisibility(View.VISIBLE);
-                                    if (fixconditions.size() > 0) {
-                                        setTab();
-                                    }
+                                    conditions.addAll(reportConditionBeans);
+                                    pagerIndex = page;
                                 }
-                            });
-                        }
+                                if (fixconditions.size() > 0) {
+                                    setTab();
+                                }
+                            }
+                        });
                         loadFail("");
 
                     } else {

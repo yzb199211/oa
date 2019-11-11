@@ -871,6 +871,24 @@ public class FormBean {
         private int iSort;
         private int ifix;
         private boolean isChild;
+        private String sSummary;
+        private int iSummryDigit;
+
+        public String getsSummary() {
+            return sSummary;
+        }
+
+        public void setsSummary(String sSummary) {
+            this.sSummary = sSummary;
+        }
+
+        public int getiSummryDigit() {
+            return iSummryDigit;
+        }
+
+        public void setiSummryDigit(int iSummryDigit) {
+            this.iSummryDigit = iSummryDigit;
+        }
 
         public boolean isChild() {
             return isChild;
