@@ -14,10 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormBean;
+import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.form.scroll.MyHorizontalScrollView;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.utils.StringUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -138,14 +144,38 @@ public class FormMerge extends LinearLayout {
         this.data = data;
     }
 
-    public void build() {
+    public void build() throws Exception {
         setTitles();
         initData();
     }
 
-    private void initData() {
+    private void initData() throws Exception {
         if (StringUtil.isNotEmpty(data)) {
-
+            JSONArray jsonArray = new JSONArray(data);
+            if (jsonArray.length() > 0) {
+                List<List<FormModel>> lists = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    lists.add(getStartData(jsonArray.getJSONObject(i), i));
+                }
+            }
         }
+    }
+
+    private List<FormModel> getStartData(JSONObject jsonObject, int row) {
+        List<FormModel> list = new ArrayList<>();
+        for (int col = 0; col < columnsTitle.size(); col++) {
+            FormBean.ReportColumnsBean columnsBean = columnsTitle.get(col);
+            FormModel column = new FormModel();
+            column.setRow(row);
+            column.setColumn(col);
+            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
+            column.setTitle(getColumnText(columnsBean, jsonObject));
+            list.add(column);
+        }
+        return list;
+    }
+
+    private String getColumnText(FormBean.ReportColumnsBean columnsBean, JSONObject jsonObject) {
+        return jsonObject.optString(columnsBean.getSFieldsName());
     }
 }

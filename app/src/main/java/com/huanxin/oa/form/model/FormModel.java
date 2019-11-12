@@ -5,8 +5,17 @@ public class FormModel {
     private int row;//行
     private int column;//列
     private String title;//内容
-    private int spanWidth;//合并行数
+    private int spanWidth = 1;//合并行数
     private int spanHeight;//合并列数
+    private boolean isParent;
+
+    public boolean isParent() {
+        return isParent;
+    }
+
+    public void setParent(boolean parent) {
+        isParent = parent;
+    }
 
     public boolean isEmpty() {
         return isEmpty;
@@ -54,5 +63,9 @@ public class FormModel {
 
     public void setSpanHeight(int spanHeight) {
         this.spanHeight = spanHeight;
+    }
+
+    public void addSpanHeight() {
+        this.spanHeight = this.spanHeight + 1;
     }
 }

@@ -167,10 +167,16 @@ public class FormMergeActivity extends AppCompatActivity {
     }
 
     private void initForm(List<FormBean.ReportColumnsBean> columns) {
-        formMerge = new FormMerge(this);
-        formMerge.setColumnsTitle(columns);
-        formMerge.build();
-        llContent.addView(formMerge);
+        try {
+            formMerge = new FormMerge(this);
+            formMerge.setColumnsTitle(columns);
+            formMerge.build();
+            llContent.addView(formMerge);
+        }catch (Exception e){
+            e.printStackTrace();
+            FinishLoading(getString(R.string.error_data));
+        }
+
     }
 
     private void setFix() {
