@@ -76,7 +76,13 @@ public class FormMergeActivity extends AppCompatActivity {
     private void init() {
         initList();
         getDefaultData();
+        initView();
         getData();
+    }
+
+    private void initView() {
+        tvTitle.setText(TextUtils.isEmpty(getIntent().getStringExtra("title")) ? "" : getIntent().getStringExtra("title"));
+        ivBack.setVisibility(View.VISIBLE);
     }
 
     private void initList() {

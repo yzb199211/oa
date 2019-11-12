@@ -3,7 +3,6 @@ package com.huanxin.oa.form;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.scroll.MyHorizontalScrollView;
 import com.huanxin.oa.utils.PxUtil;
+import com.huanxin.oa.utils.StringUtil;
 
 import java.util.List;
 
@@ -27,8 +27,9 @@ public class FormMerge extends LinearLayout {
     int width;
     int itemWidth;
 
-    List<FormBean.ReportColumnsBean> columnsTitle;
+    String data;
 
+    List<FormBean.ReportColumnsBean> columnsTitle;
 
     MyHorizontalScrollView scrollTitle;
     MyHorizontalScrollView scollForm;
@@ -98,7 +99,6 @@ public class FormMerge extends LinearLayout {
     }
 
     private void setTitles() {
-        Log.e("pos", columnsTitle.size() + "");
         for (int i = 0; i < columnsTitle.size(); i++) {
 
             if (i == 0)
@@ -131,11 +131,21 @@ public class FormMerge extends LinearLayout {
 
     public void setColumnsTitle(List<FormBean.ReportColumnsBean> columnsTitle) {
         this.columnsTitle = columnsTitle;
-        Log.d("size", columnsTitle.size() + "");
         width = columnsTitle.size() * itemWidth;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public void build() {
         setTitles();
+        initData();
+    }
+
+    private void initData() {
+        if (StringUtil.isNotEmpty(data)) {
+
+        }
     }
 }
