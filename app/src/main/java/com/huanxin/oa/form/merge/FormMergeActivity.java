@@ -1,8 +1,7 @@
-package com.huanxin.oa.form;
+package com.huanxin.oa.form.merge;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -158,21 +157,22 @@ public class FormMergeActivity extends AppCompatActivity {
                     tvRight.setVisibility(View.VISIBLE);
                 }
                 if (columns != null && columns.size() > 0 && StringUtil.isNotEmpty(data)) {
-                    Log.e("start", columns.size() + "");
-                    initForm(columns);
+//                    Log.e("start", columns.size() + "");
+                    initForm(columns, data);
                 }
                 FinishLoading(null);
             }
         });
     }
 
-    private void initForm(List<FormBean.ReportColumnsBean> columns) {
+    private void initForm(List<FormBean.ReportColumnsBean> columns, String data) {
         try {
             formMerge = new FormMerge(this);
             formMerge.setColumnsTitle(columns);
+            formMerge.setData(data);
             formMerge.build();
             llContent.addView(formMerge);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             FinishLoading(getString(R.string.error_data));
         }

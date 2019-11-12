@@ -3,7 +3,7 @@ package com.huanxin.oa.form.model;
 public class FormModel {
     private boolean isEmpty;//是否为空
     private int row;//行
-    private int column;//列
+    private int col;//列
     private String title;//内容
     private int spanWidth = 1;//合并行数
     private int spanHeight;//合并列数
@@ -33,12 +33,12 @@ public class FormModel {
         this.row = row;
     }
 
-    public int getColumn() {
-        return column;
+    public int getCol() {
+        return col;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
+    public void setCol(int column) {
+        this.col = column;
     }
 
     public String getTitle() {

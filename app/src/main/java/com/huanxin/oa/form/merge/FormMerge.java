@@ -1,8 +1,9 @@
-package com.huanxin.oa.form;
+package com.huanxin.oa.form.merge;
 
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,15 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.form.scroll.MyHorizontalScrollView;
+import com.huanxin.oa.utils.LogUtil;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.utils.StringUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -153,21 +155,27 @@ public class FormMerge extends LinearLayout {
         if (StringUtil.isNotEmpty(data)) {
             JSONArray jsonArray = new JSONArray(data);
             if (jsonArray.length() > 0) {
-                List<List<FormModel>> lists = new ArrayList<>();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    lists.add(getStartData(jsonArray.getJSONObject(i), i));
-                }
+                getStartData(jsonArray);
+//                LogUtil.e("data",new Gson().toJson(getStartData(jsonArray)));
             }
         }
     }
 
-    private List<FormModel> getStartData(JSONObject jsonObject, int row) {
+    private List<List<FormModel>> getStartData(JSONArray jsonArray) throws Exception {
+        List<List<FormModel>> lists = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            lists.add(getStartRow(jsonArray.getJSONObject(i), i));
+        }
+        return lists;
+    }
+
+    private List<FormModel> getStartRow(JSONObject jsonObject, int row) throws Exception {
         List<FormModel> list = new ArrayList<>();
         for (int col = 0; col < columnsTitle.size(); col++) {
             FormBean.ReportColumnsBean columnsBean = columnsTitle.get(col);
             FormModel column = new FormModel();
             column.setRow(row);
-            column.setColumn(col);
+            column.setCol(col);
             column.setParent(columnsBean.getIMerge() == 1 ? true : false);
             column.setTitle(getColumnText(columnsBean, jsonObject));
             list.add(column);

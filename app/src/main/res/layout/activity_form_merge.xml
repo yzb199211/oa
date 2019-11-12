@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/default_bg_color"
     android:orientation="vertical"
-    tools:context=".form.FormMergeActivity">
+    tools:context=".form.merge.FormMergeActivity">
 
     <include layout="@layout/top_layout" />
     <LinearLayout
