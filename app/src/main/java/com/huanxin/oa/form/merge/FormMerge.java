@@ -3,7 +3,6 @@ package com.huanxin.oa.form.merge;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -26,7 +26,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class FormMerge extends LinearLayout {
@@ -34,10 +36,14 @@ public class FormMerge extends LinearLayout {
 
     int width;
     int itemWidth;
+    int levels;
+
+    boolean isSerial = true;
 
     String data;
 
     List<FormBean.ReportColumnsBean> columnsTitle;
+    FormMergeAdapter formAdapter;
 
     MyHorizontalScrollView scrollTitle;
     MyHorizontalScrollView scollForm;
@@ -60,7 +66,7 @@ public class FormMerge extends LinearLayout {
     }
 
     private void init() {
-        itemWidth = PxUtil.getWidth(context) / 5;
+        itemWidth = PxUtil.getWidth(context) / 2;
         setOrientation(VERTICAL);
         setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         initView();
@@ -71,8 +77,13 @@ public class FormMerge extends LinearLayout {
         rvForm = findViewById(R.id.rv_form);
         scrollTitle = findViewById(R.id.scroll_title);
         scollForm = findViewById(R.id.scroll_form);
+        initRecycle();
         setScorll();
         initHandler();
+    }
+
+    private void initRecycle() {
+        rvForm.setLayoutManager(new LinearLayoutManager(context));
     }
 
     private void initHandler() {
@@ -155,18 +166,51 @@ public class FormMerge extends LinearLayout {
         if (StringUtil.isNotEmpty(data)) {
             JSONArray jsonArray = new JSONArray(data);
             if (jsonArray.length() > 0) {
-                getStartData(jsonArray);
-//                LogUtil.e("data",new Gson().toJson(getStartData(jsonArray)));
+//                refreshView(getStartData(jsonArray));
+//                getFormData(getStartData(jsonArray));
+
+                LogUtil.e("data", new Gson().toJson(FormMergeUtil.initFormData(jsonArray, columnsTitle)));
             }
         }
     }
 
+    private List<FormModel> getFormData(List<List<FormModel>> startData) throws Exception {
+        List<FormModel> list = new ArrayList<>();
+        for (int i = 0; i < startData.size(); i++) {
+            for (int j = 0; j < levels; j++) {
+                startData.get(i).get(j).getTitle();
+
+            }
+        }
+        return list;
+    }
+
     private List<List<FormModel>> getStartData(JSONArray jsonArray) throws Exception {
         List<List<FormModel>> lists = new ArrayList<>();
+        int num = 0;
         for (int i = 0; i < jsonArray.length(); i++) {
             lists.add(getStartRow(jsonArray.getJSONObject(i), i));
         }
         return lists;
+    }
+
+    private List<FormModel> getStartRow2(JSONObject jsonObject, int row, int num) throws Exception {
+        List<FormModel> list = new ArrayList<>();
+        for (int col = 0; col < columnsTitle.size(); col++) {
+
+            FormBean.ReportColumnsBean columnsBean = columnsTitle.get(col);
+            FormModel column = new FormModel();
+            column.setRow(row);
+            column.setCol(col);
+//            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
+            column.setTitle(getColumnText(columnsBean, jsonObject));
+            if (columnsBean.getIMerge() == 1 && isSerial == true) {
+
+                column.setParent(true);
+            }
+            list.add(column);
+        }
+        return list;
     }
 
     private List<FormModel> getStartRow(JSONObject jsonObject, int row) throws Exception {
@@ -176,8 +220,15 @@ public class FormMerge extends LinearLayout {
             FormModel column = new FormModel();
             column.setRow(row);
             column.setCol(col);
-            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
+//            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
             column.setTitle(getColumnText(columnsBean, jsonObject));
+            if (columnsBean.getIMerge() == 1 && isSerial == true) {
+                column.setId(col + 1);
+                column.setPid(col);
+                column.setParent(true);
+            } else {
+                isSerial = false;
+            }
             list.add(column);
         }
         return list;
@@ -185,5 +236,12 @@ public class FormMerge extends LinearLayout {
 
     private String getColumnText(FormBean.ReportColumnsBean columnsBean, JSONObject jsonObject) {
         return jsonObject.optString(columnsBean.getSFieldsName());
+    }
+
+    private void refreshView(List<List<FormModel>> data) {
+        if (formAdapter == null) {
+            formAdapter = new FormMergeAdapter(context, data);
+            rvForm.setAdapter(formAdapter);
+        }
     }
 }

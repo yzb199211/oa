@@ -42,8 +42,6 @@ public class FormColumnView extends TextView {
     }
 
     private void initView() {
-        setWidth(itemWidth);
-        setHeight(itemHeight);
         setTextColor(context.getColor(R.color.default_content_color));
         setBackgroundColor(context.getColor(R.color.blue1));
         setGravity(Gravity.CENTER);
@@ -51,7 +49,7 @@ public class FormColumnView extends TextView {
     }
 
     private void initSize() {
-        itemWidth = PxUtil.getWidth(context) / 5;
+        itemWidth = PxUtil.getWidth(context) / 2;
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 
@@ -63,15 +61,14 @@ public class FormColumnView extends TextView {
         initParam();
     }
 
-    private void initParam() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidth, column.getSpanHeight() * itemHeight);
+    public void initParam() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidth, column.getSpanHeight() * itemHeight - 1);
         if (col == 0)
             params.leftMargin = 1;
         params.bottomMargin = 1;
         params.rightMargin = 1;
         setLayoutParams(params);
     }
-
 
     public int getRow() {
         return row;

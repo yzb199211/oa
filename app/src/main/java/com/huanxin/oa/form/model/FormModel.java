@@ -1,13 +1,44 @@
 package com.huanxin.oa.form.model;
 
+import java.util.List;
+
 public class FormModel {
     private boolean isEmpty;//是否为空
     private int row;//行
     private int col;//列
     private String title;//内容
     private int spanWidth = 1;//合并行数
-    private int spanHeight;//合并列数
-    private boolean isParent;
+    private int spanHeight = 1;//合并列数
+    private boolean isParent = false;
+
+    private int pid=0;
+    private int id;
+
+    List<FormModel> child;
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<FormModel> getChild() {
+        return child;
+    }
+
+    public void setChild(List<FormModel> child) {
+        this.child = child;
+    }
 
     public boolean isParent() {
         return isParent;
