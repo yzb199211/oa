@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ public class FormColumnView extends TextView {
     int itemWidth;
     int itemHeight;
 
+    int marginTop;
+    int marginLeft;
 
     public FormColumnView(Context context) {
         this(context, null);
@@ -49,7 +52,7 @@ public class FormColumnView extends TextView {
     }
 
     private void initSize() {
-        itemWidth = PxUtil.getWidth(context) / 2;
+        itemWidth = PxUtil.getWidth(context) / 5;
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 
@@ -62,11 +65,9 @@ public class FormColumnView extends TextView {
     }
 
     public void initParam() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(itemWidth, column.getSpanHeight() * itemHeight - 1);
-        if (col == 0)
-            params.leftMargin = 1;
-        params.bottomMargin = 1;
-        params.rightMargin = 1;
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(itemWidth-1, column.getSpanHeight() * itemHeight - 1);
+        params.topMargin = marginTop;
+        params.leftMargin = marginLeft;
         setLayoutParams(params);
     }
 
@@ -86,9 +87,19 @@ public class FormColumnView extends TextView {
         this.col = col;
     }
 
-    public static FormColumnView Build(Context context, FormModel column) {
-        FormColumnView view = new FormColumnView(context);
-        view.setColumn(column);
-        return view;
+    public int getMarginTop() {
+        return marginTop;
+    }
+
+    public void setMarginTop(int marginTop) {
+        this.marginTop = marginTop;
+    }
+
+    public int getMarginLeft() {
+        return marginLeft;
+    }
+
+    public void setMarginLeft(int marginLeft) {
+        this.marginLeft = marginLeft;
     }
 }

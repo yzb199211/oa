@@ -5,19 +5,18 @@ import com.huanxin.oa.form.model.FormModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FormMergeUtil {
-    public static List<List<FormModel>> initFormData(JSONArray jsonArray, List<FormBean.ReportColumnsBean> titles) throws JSONException {
+
+    public static List<List<FormModel>> initFormCol(JSONArray jsonArray, List<FormBean.ReportColumnsBean> titles) throws JSONException {
         List<List<FormModel>> columns = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++) {
             List<FormModel> column = new ArrayList<>();
             FormBean.ReportColumnsBean columnTitle = titles.get(i);
             for (int j = 0; j < jsonArray.length(); j++) {
-//                JSONObject jsonObject = jsonArray.getJSONObject(j);
                 String field = jsonArray.getJSONObject(j).optString(columnTitle.getSFieldsName());
                 if (j == 0) {
                     FormModel item = new FormModel();
@@ -27,10 +26,10 @@ public class FormMergeUtil {
                     item.setTitle(field);
                     column.add(item);
                 } else {
-                    FormModel oldItem = column.get(column.size()-1);
+                    FormModel oldItem = column.get(column.size() - 1);
                     if (oldItem.getTitle().equals(field)) {
                         oldItem.addSpanHeight();
-                    }else {
+                    } else {
                         FormModel item = new FormModel();
                         item.setParent(columnTitle.getIMerge() == 1 ? true : false);
                         item.setRow(j);

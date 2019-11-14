@@ -2,10 +2,8 @@ package com.huanxin.oa.form.merge;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -34,7 +32,7 @@ public class FormMergeMultipleColumn extends LinearLayout {
     }
 
     private void initView() {
-        ViewGroup.LayoutParams params = new LayoutParams(3 * PxUtil.getWidth(context) / 2, context.getResources().getDimensionPixelOffset(R.dimen.dp_40));
+        ViewGroup.LayoutParams params = new LayoutParams(3 * PxUtil.getWidth(context) / 5, context.getResources().getDimensionPixelOffset(R.dimen.dp_40));
         setLayoutParams(params);
         setOrientation(HORIZONTAL);
         setBackgroundColor(context.getColor(R.color.white));

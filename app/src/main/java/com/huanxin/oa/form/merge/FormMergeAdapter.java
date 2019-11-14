@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.huanxin.oa.form.FormMergeView;
 import com.huanxin.oa.form.model.FormModel;
 
 import java.util.List;
@@ -25,19 +26,21 @@ public class FormMergeAdapter extends RecyclerView.Adapter<FormMergeAdapter.VH> 
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        VH vh = new VH(new FormMergeMultipleColumn(context));
+//        VH vh = new VH(new FormMergeMultipleColumn(context));
+        VH vh = new VH(new FormMergeView(context));
+
         vh.setIsRecyclable(false);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        ((FormMergeMultipleColumn) holder.itemView).setColumns(list.get(position));
+        ((FormMergeView) holder.itemView).setColumns(list);
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return 1;
     }
 
     public class VH extends RecyclerView.ViewHolder {

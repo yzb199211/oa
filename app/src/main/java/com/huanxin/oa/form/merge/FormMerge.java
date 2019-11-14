@@ -66,7 +66,7 @@ public class FormMerge extends LinearLayout {
     }
 
     private void init() {
-        itemWidth = PxUtil.getWidth(context) / 2;
+        itemWidth = PxUtil.getWidth(context) / 5;
         setOrientation(VERTICAL);
         setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         initView();
@@ -168,8 +168,8 @@ public class FormMerge extends LinearLayout {
             if (jsonArray.length() > 0) {
 //                refreshView(getStartData(jsonArray));
 //                getFormData(getStartData(jsonArray));
-
-                LogUtil.e("data", new Gson().toJson(FormMergeUtil.initFormData(jsonArray, columnsTitle)));
+                refreshView(FormMergeUtil.initFormCol(jsonArray, columnsTitle));
+//                LogUtil.e("data", new Gson().toJson(FormMergeUtil.initFormData(jsonArray, columnsTitle)));
             }
         }
     }
