@@ -66,6 +66,4 @@ public class FormMergeView extends FrameLayout {
             height = 0;
         }
     }
-
-
 }
