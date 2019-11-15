@@ -168,8 +168,9 @@ public class FormMerge extends LinearLayout {
             if (jsonArray.length() > 0) {
 //                refreshView(getStartData(jsonArray));
 //                getFormData(getStartData(jsonArray));
-                refreshView(FormMergeUtil.initFormCol(jsonArray, columnsTitle));
-//                LogUtil.e("data", new Gson().toJson(FormMergeUtil.initFormData(jsonArray, columnsTitle)));
+//                refreshView(FormMergeUtil.initFormCol(jsonArray, columnsTitle));
+                List<FormModel> item = FormMergeUtil.getFormColumns(jsonArray, columnsTitle);
+                LogUtil.e("data", FormMergeUtil.buildByRecursive(item).get(0).getSpanHeight() + "");
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.huanxin.oa.form.merge;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,9 +25,7 @@ public class FormMergeAdapter extends RecyclerView.Adapter<FormMergeAdapter.VH> 
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        VH vh = new VH(new FormMergeMultipleColumn(context));
         VH vh = new VH(new FormMergeView(context));
-
         vh.setIsRecyclable(false);
         return vh;
     }

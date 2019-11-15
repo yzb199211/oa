@@ -1,8 +1,9 @@
 package com.huanxin.oa.form.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FormModel {
+public class FormModel implements Serializable {
     private boolean isEmpty;//是否为空
     private int row;//行
     private int col;//列
@@ -11,10 +12,58 @@ public class FormModel {
     private int spanHeight = 1;//合并列数
     private boolean isParent = false;
 
-    private int pid=0;
+    private int pid = 0;
     private int id;
 
     List<FormModel> child;
+    List<List<FormModel>> rowData;
+
+    public List<List<FormModel>> getRowData() {
+        return rowData;
+    }
+
+    public void setRowData(List<List<FormModel>> rowData) {
+        this.rowData = rowData;
+    }
+
+    public FormModel() {
+    }
+
+    public FormModel(int row, int col, String title, int spanHeight, boolean isParent, int pid, int id) {
+        this.row = row;
+        this.col = col;
+        this.title = title;
+        this.spanHeight = spanHeight;
+        this.pid = pid;
+        this.id = id;
+        this.isParent = isParent;
+    }
+
+    /**
+     * @param row
+     * @param col
+     * @param title
+     * @param spanHeight
+     * @param isParent
+     */
+    public FormModel(int row, int col, String title, int spanHeight, boolean isParent) {
+        this.row = row;
+        this.col = col;
+        this.title = title;
+        this.spanHeight = spanHeight;
+        this.isParent = isParent;
+    }
+
+    public FormModel(int row, int col, String title, int spanHeight, boolean isParent, int pid, int id, List<FormModel> child) {
+        this.row = row;
+        this.col = col;
+        this.title = title;
+        this.spanHeight = spanHeight;
+        this.isParent = isParent;
+        this.pid = pid;
+        this.id = id;
+        this.child = child;
+    }
 
     public int getPid() {
         return pid;
@@ -89,7 +138,20 @@ public class FormModel {
     }
 
     public int getSpanHeight() {
-        return spanHeight;
+        if (isParent) {
+            int height = 0;
+            if (rowData != null) {
+                return rowData.size() + 1;
+            } else {
+                for (int i = 0; i < child.size(); i++) {
+                    height = height + child.get(i).getSpanHeight() + 1;
+                }
+                return height;
+            }
+        } else {
+            return spanHeight;
+        }
+
     }
 
     public void setSpanHeight(int spanHeight) {
