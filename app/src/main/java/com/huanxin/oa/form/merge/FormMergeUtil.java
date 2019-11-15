@@ -99,7 +99,7 @@ public class FormMergeUtil {
      * @return
      */
     public static List<FormModel> buildByRecursive(List<FormModel> treeNodes) {
-        List<FormModel> trees = new ArrayList<FormModel>();
+        List<FormModel> trees = new ArrayList<>();
         for (FormModel treeNode : treeNodes) {
             if (0 == (treeNode.getPid())) {
                 trees.add(findChildren(treeNode, treeNodes));
@@ -118,7 +118,7 @@ public class FormMergeUtil {
         for (FormModel it : treeNodes) {
             if (treeNode.getId() == (it.getPid())) {
                 if (treeNode.getChild() == null) {
-                    treeNode.setChild(new ArrayList<FormModel>());
+                    treeNode.setChild(new ArrayList<>());
                 }
                 treeNode.getChild().add(findChildren(it, treeNodes));
             }
