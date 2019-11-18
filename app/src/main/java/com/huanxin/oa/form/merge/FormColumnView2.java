@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,24 +14,27 @@ import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.utils.PxUtil;
 
 @SuppressLint("AppCompatCustomView")
-public class FormColumnView extends TextView {
+public class FormColumnView2 extends TextView {
 
     Context context;
     FormModel column;
 
     int row;
     int col;
+
+    int startRow;
+
     int itemWidth;
     int itemHeight;
 
     int marginTop;
     int marginLeft;
 
-    public FormColumnView(Context context) {
+    public FormColumnView2(Context context) {
         this(context, null);
     }
 
-    public FormColumnView(Context context, @Nullable AttributeSet attrs) {
+    public FormColumnView2(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
@@ -56,9 +58,10 @@ public class FormColumnView extends TextView {
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 
-    public void setColumn(FormModel column) {
+    public void setColumn(FormModel column, int startRow) {
         this.column = column;
-        marginTop = column.getRow() * itemHeight;
+        this.startRow = startRow;
+        marginTop = (column.getRow() - startRow) * itemHeight;
         marginLeft = column.getCol() * itemWidth;
         setRow(column.getRow());
         setCol(column.getCol());
@@ -67,7 +70,7 @@ public class FormColumnView extends TextView {
     }
 
     public void initParam() {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.getSpanWidth() * itemWidth - 1, column.getSpanHeight() * itemHeight - 1);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.getSpanWidth() * itemWidth - 1, column.getSpanHeightTotal() * itemHeight - 1);
         params.topMargin = marginTop;
         params.leftMargin = marginLeft;
         setLayoutParams(params);
@@ -94,7 +97,7 @@ public class FormColumnView extends TextView {
     }
 
     public void setMarginTop(int marginTop) {
-//        this.marginTop = marginTop;
+        this.marginTop = marginTop;
     }
 
     public int getMarginLeft() {
@@ -102,6 +105,6 @@ public class FormColumnView extends TextView {
     }
 
     public void setMarginLeft(int marginLeft) {
-//        this.marginLeft = marginLeft;
+        this.marginLeft = marginLeft;
     }
 }

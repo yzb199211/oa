@@ -49,6 +49,7 @@ public class FormMergeUtil {
         List<FormModel> compare = new ArrayList<>();
         List<FormModel> items = new ArrayList<>();
         int id = 1;
+        int row = 0;
         for (int i = 0; i < jsonArray.length(); i++) {
             int pid = 0;
             List<FormModel> rowData = new ArrayList<>();
@@ -57,33 +58,35 @@ public class FormMergeUtil {
                 boolean isParent = titles.get(j).getIMerge() == 1 ? true : false;
                 if (isParent) {
                     if (i == 0) {
-                        FormModel item = new FormModel(i, j, title, 1, isParent, pid, id);
+                        FormModel item = new FormModel(row, j, title, 1, isParent, pid, id);
                         compare.add(item);
                         items.add(item);
                         pid = id;
                         id = id + 1;
                     } else {
-                        for (int k = 0; k < compare.size(); k++) {
-                            FormModel compareItem = compare.get(k);
+
+                            FormModel compareItem = compare.get(j);
                             if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
                                 items.get(items.indexOf(compareItem)).addSpanHeight();
                                 pid = compareItem.getId();
                             } else {
+                                row = row + 1;
                                 FormModel item;
-                                item = new FormModel(i, j, title, 1, isParent, pid, id);
-                                compare.remove(k);
-                                compare.add(k, item);
+                                item = new FormModel(row, j, title, 1, isParent, pid, id);
+                                compare.remove(j);
+                                compare.add(j, item);
                                 items.add(item);
                                 pid = id;
                                 id += 1;
                             }
-                        }
+
                     }
                 } else {
-                    FormModel item = new FormModel(i, j, title, 1, isParent);
+                    FormModel item = new FormModel(row, j, title, 1, isParent);
                     rowData.add(item);
                 }
             }
+            row = row + 1;
             if (items.get(items.size() - 1).getRowData() == null) {
                 items.get(items.size() - 1).setRowData(new ArrayList<>());
             }

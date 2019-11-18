@@ -1,16 +1,13 @@
-package com.huanxin.oa.form;
+package com.huanxin.oa.form.merge;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.huanxin.oa.R;
-import com.huanxin.oa.form.merge.FormColumnView;
 import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.utils.PxUtil;
 

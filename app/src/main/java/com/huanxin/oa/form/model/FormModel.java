@@ -11,6 +11,8 @@ public class FormModel implements Serializable {
     private int spanWidth = 1;//合并行数
     private int spanHeight = 1;//合并列数
     private boolean isParent = false;
+    private int total;
+    private String totalTitle;
 
     private int pid = 0;
     private int id;
@@ -137,7 +139,7 @@ public class FormModel implements Serializable {
         this.spanWidth = spanWidth;
     }
 
-    public int getSpanHeight() {
+    public int getSpanHeightTotal() {
         if (isParent) {
             int height = 0;
             if (rowData != null) {
@@ -154,11 +156,31 @@ public class FormModel implements Serializable {
 
     }
 
+    public int getSpanHeight() {
+        return spanHeight;
+    }
+
     public void setSpanHeight(int spanHeight) {
         this.spanHeight = spanHeight;
     }
 
     public void addSpanHeight() {
         this.spanHeight = this.spanHeight + 1;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public String getTotalTitle() {
+        return totalTitle;
+    }
+
+    public void setTotalTitle(String totalTitle) {
+        this.totalTitle = totalTitle;
     }
 }

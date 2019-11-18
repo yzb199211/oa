@@ -43,7 +43,7 @@ public class FormMerge extends LinearLayout {
     String data;
 
     List<FormBean.ReportColumnsBean> columnsTitle;
-    FormMergeAdapter formAdapter;
+    FormMergeAdapter2 formAdapter;
 
     MyHorizontalScrollView scrollTitle;
     MyHorizontalScrollView scollForm;
@@ -170,7 +170,8 @@ public class FormMerge extends LinearLayout {
 //                getFormData(getStartData(jsonArray));
 //                refreshView(FormMergeUtil.initFormCol(jsonArray, columnsTitle));
                 List<FormModel> item = FormMergeUtil.getFormColumns(jsonArray, columnsTitle);
-                LogUtil.e("data", FormMergeUtil.buildByRecursive(item).get(0).getSpanHeight() + "");
+                refreshView((FormMergeUtil.buildByRecursive(item)));
+                LogUtil.e("data", new Gson().toJson(FormMergeUtil.buildByRecursive(item)));
             }
         }
     }
@@ -239,9 +240,15 @@ public class FormMerge extends LinearLayout {
         return jsonObject.optString(columnsBean.getSFieldsName());
     }
 
-    private void refreshView(List<List<FormModel>> data) {
+    //    private void refreshView(List<List<FormModel>> data) {
+//        if (formAdapter == null) {
+//            formAdapter = new FormMergeAdapter(context, data);
+//            rvForm.setAdapter(formAdapter);
+//        }
+//    }
+    private void refreshView(List<FormModel> data) {
         if (formAdapter == null) {
-            formAdapter = new FormMergeAdapter(context, data);
+            formAdapter = new FormMergeAdapter2(context, data);
             rvForm.setAdapter(formAdapter);
         }
     }
