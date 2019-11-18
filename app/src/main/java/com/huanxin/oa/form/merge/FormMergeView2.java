@@ -2,6 +2,7 @@ package com.huanxin.oa.form.merge;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -19,12 +20,8 @@ public class FormMergeView2 extends FrameLayout {
     int itemHeight;
     int itemWidth;
 
-    int height;
-    int width;
-
     int maxWidth;
 
-    int nextRow;
     int startRow;
 
     public FormMergeView2(@NonNull Context context) {
@@ -37,8 +34,9 @@ public class FormMergeView2 extends FrameLayout {
         init();
     }
 
-    public void setData(FormModel data) {
+    public void setData(FormModel data, int maxWidth) {
         this.data = data;
+        this.maxWidth = maxWidth;
         startRow = data.getRow();
         initView();
     }
@@ -55,6 +53,7 @@ public class FormMergeView2 extends FrameLayout {
 
     private void initView() {
         FormColumnView2 view = new FormColumnView2(context);
+        Log.e("length", data.getSpanHeightTotal() + "");
         view.setColumn(data, startRow);
         addView(view);
         setTotal(data);
@@ -102,7 +101,7 @@ public class FormMergeView2 extends FrameLayout {
             FormColumnView2 totalView = new FormColumnView2(context);
             FormModel total = new FormModel();
             total.setTitle(item.getTitle());
-            total.setRow(item.getSpanHeight());
+            total.setRow(item.getRow() - startRow + (item.getSpanHeightTotal() - 1));
             total.setCol(item.getCol() + 1);
             total.setSpanHeight(1);
             total.setSpanWidth(maxWidth - item.getCol() - 1);
@@ -111,5 +110,4 @@ public class FormMergeView2 extends FrameLayout {
             addView(totalView);
         }
     }
-
 }

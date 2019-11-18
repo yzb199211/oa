@@ -146,15 +146,15 @@ public class FormModel implements Serializable {
                 return rowData.size() + 1;
             } else {
                 for (int i = 0; i < child.size(); i++) {
-                    height = height + child.get(i).getSpanHeight() + 1;
+                    height = height + 1;
                 }
-                return height;
+                return height + 1;
             }
         } else {
             return spanHeight;
         }
-
     }
+
 
     public int getSpanHeight() {
         return spanHeight;

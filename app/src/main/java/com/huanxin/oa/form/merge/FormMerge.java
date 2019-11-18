@@ -248,7 +248,7 @@ public class FormMerge extends LinearLayout {
 //    }
     private void refreshView(List<FormModel> data) {
         if (formAdapter == null) {
-            formAdapter = new FormMergeAdapter2(context, data);
+            formAdapter = new FormMergeAdapter2(context, data, columnsTitle.size());
             rvForm.setAdapter(formAdapter);
         }
     }
