@@ -18,18 +18,17 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.form.scroll.MyHorizontalScrollView;
+import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.utils.LogUtil;
 import com.huanxin.oa.utils.PxUtil;
 import com.huanxin.oa.utils.StringUtil;
+import com.huanxin.oa.view.recycle.MyRecyclerViewDivider;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 
 public class FormMerge extends LinearLayout {
     Context context;
@@ -77,6 +76,7 @@ public class FormMerge extends LinearLayout {
         rvForm = findViewById(R.id.rv_form);
         scrollTitle = findViewById(R.id.scroll_title);
         scollForm = findViewById(R.id.scroll_form);
+        rvForm.addItemDecoration(new MyRecyclerViewDivider(context, VERTICAL));
         initRecycle();
         setScorll();
         initHandler();
@@ -166,9 +166,6 @@ public class FormMerge extends LinearLayout {
         if (StringUtil.isNotEmpty(data)) {
             JSONArray jsonArray = new JSONArray(data);
             if (jsonArray.length() > 0) {
-//                refreshView(getStartData(jsonArray));
-//                getFormData(getStartData(jsonArray));
-//                refreshView(FormMergeUtil.initFormCol(jsonArray, columnsTitle));
                 List<FormModel> item = FormMergeUtil.getFormColumns(jsonArray, columnsTitle);
                 refreshView((FormMergeUtil.buildByRecursive(item)));
                 LogUtil.e("data", new Gson().toJson(FormMergeUtil.buildByRecursive(item)));
@@ -181,7 +178,6 @@ public class FormMerge extends LinearLayout {
         for (int i = 0; i < startData.size(); i++) {
             for (int j = 0; j < levels; j++) {
                 startData.get(i).get(j).getTitle();
-
             }
         }
         return list;
@@ -240,12 +236,7 @@ public class FormMerge extends LinearLayout {
         return jsonObject.optString(columnsBean.getSFieldsName());
     }
 
-    //    private void refreshView(List<List<FormModel>> data) {
-//        if (formAdapter == null) {
-//            formAdapter = new FormMergeAdapter(context, data);
-//            rvForm.setAdapter(formAdapter);
-//        }
-//    }
+
     private void refreshView(List<FormModel> data) {
         if (formAdapter == null) {
             formAdapter = new FormMergeAdapter2(context, data, columnsTitle.size());

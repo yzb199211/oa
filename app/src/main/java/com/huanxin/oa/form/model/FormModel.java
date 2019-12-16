@@ -145,9 +145,10 @@ public class FormModel implements Serializable {
             if (rowData != null) {
                 return rowData.size() + 1;
             } else {
-                for (int i = 0; i < child.size(); i++) {
-                    height = height + 1;
-                }
+                if (child != null)
+                    for (int i = 0; i < child.size(); i++) {
+                        height = height + 1;
+                    }
                 return height + 1;
             }
         } else {

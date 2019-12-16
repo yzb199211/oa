@@ -64,21 +64,20 @@ public class FormMergeUtil {
                         pid = id;
                         id = id + 1;
                     } else {
-
-                            FormModel compareItem = compare.get(j);
-                            if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
-                                items.get(items.indexOf(compareItem)).addSpanHeight();
-                                pid = compareItem.getId();
-                            } else {
-                                row = row + 1;
-                                FormModel item;
-                                item = new FormModel(row, j, title, 1, isParent, pid, id);
-                                compare.remove(j);
-                                compare.add(j, item);
-                                items.add(item);
-                                pid = id;
-                                id += 1;
-                            }
+                        FormModel compareItem = compare.get(j);
+                        if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
+                            items.get(items.indexOf(compareItem)).addSpanHeight();
+                            pid = compareItem.getId();
+                        } else {
+                            row = row + 1;
+                            FormModel item;
+                            item = new FormModel(row, j, title, 1, isParent, pid, id);
+                            compare.remove(j);
+                            compare.add(j, item);
+                            items.add(item);
+                            pid = id;
+                            id += 1;
+                        }
 
                     }
                 } else {
@@ -103,30 +102,29 @@ public class FormMergeUtil {
      */
     public static List<FormModel> buildByRecursive(List<FormModel> treeNodes) {
         List<FormModel> trees = new ArrayList<>();
+
         for (FormModel treeNode : treeNodes) {
-            if (0 == (treeNode.getPid())) {
-                trees.add(findChildren(treeNode, treeNodes));
+            if (treeNode.getPid() == 0) {
+                trees.add(treeNode);
             }
+        }
+        for (FormModel treeNode : treeNodes) {
+            toTreeChild(trees, treeNode);
         }
         return trees;
     }
 
-    /**
-     * 递归查找子节点
-     *
-     * @param treeNodes
-     * @return
-     */
-    public static FormModel findChildren(FormModel treeNode, List<FormModel> treeNodes) {
-        for (FormModel it : treeNodes) {
-            if (treeNode.getId() == (it.getPid())) {
-                if (treeNode.getChild() == null) {
-                    treeNode.setChild(new ArrayList<>());
+    private static void toTreeChild(List<FormModel> trees, FormModel treeNode) {
+        for (FormModel node : trees) {
+            if (treeNode.getPid() == node.getId()) {
+                if (node.getChild() == null) {
+                    node.setChild(new ArrayList<>());
                 }
-                treeNode.getChild().add(findChildren(it, treeNodes));
+                node.getChild().add(treeNode);
+            }
+            if (node.getChild() != null) {
+                toTreeChild(node.getChild(), treeNode);
             }
         }
-        return treeNode;
     }
-
 }

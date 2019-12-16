@@ -82,7 +82,7 @@ public class FormListActivity extends AppCompatActivity {
     List<FormBean.ReportColumns2> styleList;
     List<FormBean.ReportInfoBean> infoBeans;
     List<FormBean.ReportConditionBean> conditionBeans;
-    //    List<FormBean.ReportColumnsBean> columnsBeans;
+
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
     private List<ReviewStyle> items;
@@ -147,39 +147,6 @@ public class FormListActivity extends AppCompatActivity {
             tab.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-//                    Log.e("position", "position:" + position);
-//                    if (currentView == null) {
-//                        currenViewPos = position;
-//                        currentView = (TabView) view;
-//                        filter = fixconditions.get(position).getFilters();
-//                        pagerIndex = 1;
-//                        items.clear();
-//                        if (formListAdapter != null) {
-//                            formListAdapter.notifyDataSetChanged();
-//                        }
-//                        getFormData(false, false, pagerIndex);
-//                    } else if (currenViewPos == position) {
-//                        currenViewPos = -1;
-//                        currentView = null;
-//                        filter = "";
-//                        pagerIndex = 1;
-//                        items.clear();
-//                        if (formListAdapter != null) {
-//                            formListAdapter.notifyDataSetChanged();
-//                        }
-//                        getFormData(false, false, pagerIndex);
-//                    } else {
-//                    currenViewPos = position;
-//                    currentView.setChecked(false);
-//                    currentView = (TabView) view;
-//                    filter = fixconditions.get(position).getFilters();
-//                    pagerIndex = 1;
-//                    items.clear();
-//                    if (formListAdapter != null) {
-//                        formListAdapter.notifyDataSetChanged();
-//                    }
-//                    getFormData(false, false, pagerIndex);
-//                    }
                     if (currenViewPos != position) {
                         currenViewPos = position;
                         currentView.setChecked(false);
@@ -207,7 +174,7 @@ public class FormListActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String string) {
                 try {
-                    Log.e("data", string);
+
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.getBoolean("success");
                     if (isSuccess) {
@@ -218,27 +185,9 @@ public class FormListActivity extends AppCompatActivity {
                         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
                         List<FormBean.ReportColumns2> stylebeans = formBean.getReportColumns2();
 
-//                        if (reportInfoBeans.size() > 0) {
-//                            FormBean.ReportInfoBean fixcondition = reportInfoBeans.get(0);
-//                            isStore = fixcondition.getiStore() == 0 ? false : true;
-//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName1())) {
-//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName1(), TextUtils.isEmpty(fixcondition.getSAppFilters1()) ? "" : fixcondition.getSAppFilters1()));
-//                            }
-//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName2())) {
-//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName2(), TextUtils.isEmpty(fixcondition.getSAppFilters2()) ? "" : fixcondition.getSAppFilters2()));
-//                            }
-//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName3())) {
-//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName3(), TextUtils.isEmpty(fixcondition.getSAppFilters3()) ? "" : fixcondition.getSAppFilters3()));
-//                            }
-//                            if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
-//                                fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
-//                            }
-//                        }
-
                         if (reportInfoBeans.size() > 0) {
                             initFix(reportInfoBeans.get(0));
                         }
-
                         if (stylebeans.size() > 0) {
                             styleList.addAll(stylebeans);
                         } else {
@@ -285,15 +234,14 @@ public class FormListActivity extends AppCompatActivity {
 
     /*格式化数据*/
     private void initData(JSONArray jsonArray) throws Exception {
-//        Log.e("size", new Gson().toJson(styleList) + "");
+
         if (jsonArray.length() > 0) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 ReviewStyle reviewStyle = new ReviewStyle();
                 List<ReviewInfo> infos = new ArrayList<>();
 
                 for (int j = 0; j < styleList.size(); j++) {
-//                    Log.e("")
-//                    String name = jsonArray.getJSONObject(i).optString(styleList.get(j).getsFieldsName());
+
                     ReviewInfo info = new ReviewInfo();
 
                     if (StringUtil.isNotEmpty(styleList.get(j).getsNameFontSize()) && StringUtil.isInteger(styleList.get(j).getsNameFontSize())) {
@@ -345,7 +293,7 @@ public class FormListActivity extends AppCompatActivity {
 //                        infos.add(info);
             if (value.contains("P") && !value.contains("PP")) {
                 String[] datas = value.split("P");
-//                Log.e("datas", value + "," + datas[1] + "," + datas[2] + "," + datas.length);
+
                 if (StringUtil.isNotEmpty(datas[1])) {
                     info.setTitle(datas[1]);
                     info.setContent(datas[2].replace("{", "").replace("}", ""));
@@ -355,7 +303,6 @@ public class FormListActivity extends AppCompatActivity {
                 infos.add(info);
             }
         } else {
-//            Log.e("tag", styleList.get(j).getsFieldsType());
             infos.add(info);
         }
     }

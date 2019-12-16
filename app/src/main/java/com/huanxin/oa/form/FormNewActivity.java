@@ -122,9 +122,6 @@ public class FormNewActivity extends AppCompatActivity {
                         String formData = data.optString("data");
                         String formInfo = data.getString("info");
                         initData(formData, formInfo);
-
-                        Log.e("formData", formData);
-                        Log.e("formData", formInfo);
                         loadFail("");
                     } else {
                         loadFail(data.optString("messages"));
@@ -152,7 +149,6 @@ public class FormNewActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "GetReportInfo"));
         params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("userid", userId));
-//        Log.e("menuid", menuId);
         return params;
     }
 
@@ -224,21 +220,6 @@ public class FormNewActivity extends AppCompatActivity {
             tab.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Log.e("position", "position:" + position);
-//                    if (currentView == null) {
-//                        currenViewPos = position;
-//                        currentView = (TabView) view;
-//                        getFormData(position);
-//                    } else if (currenViewPos == position) {
-//                        currenViewPos = -1;
-//                        currentView = null;
-//                        getFormData(-1);
-//                    } else {
-//                        currenViewPos = position;
-//                        currentView.setChecked(false);
-//                        currentView = (TabView) view;
-//                        getFormData(position);
-//                    }
                     if (currenViewPos != position) {
                         currenViewPos = position;
                         currentView.setChecked(false);
@@ -259,7 +240,6 @@ public class FormNewActivity extends AppCompatActivity {
         new NetUtil(getFormParams(), url, new ResponseListener() {
             @Override
             public void onSuccess(String string) {
-//                Log.e("data", string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     boolean isSuccess = jsonObject.optBoolean("success");
@@ -288,7 +268,6 @@ public class FormNewActivity extends AppCompatActivity {
             public void onFail(IOException e) {
                 e.printStackTrace();
                 loadFail("未获取到数据");
-
             }
         });
     }
@@ -346,7 +325,6 @@ public class FormNewActivity extends AppCompatActivity {
         setTableStyle();
         setTableData(data);
         setTableFix();
-//        Log.e("size", table.getTableData().getColumns().size() + "");
     }
 
     /*设置table样式*/
@@ -357,10 +335,8 @@ public class FormNewActivity extends AppCompatActivity {
                 if (isInterval == 1) {
                     if (cellInfo.row % 2 == 1) {
                         return ContextCompat.getColor(FormNewActivity.this, R.color.blue1);
-
                     }
                     return ContextCompat.getColor(FormNewActivity.this, R.color.white);
-//                return TableConfig.INVALID_COLOR;
                 } else {
                     return ContextCompat.getColor(FormNewActivity.this, R.color.white);
                 }
@@ -370,9 +346,7 @@ public class FormNewActivity extends AppCompatActivity {
         table.getConfig().setShowTableTitle(false).setShowXSequence(false).setShowYSequence(false);
         table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
         table.getConfig().setColumnTitleStyle(new FontStyle(this, 15, getResources().getColor(R.color.white)).setAlign(Paint.Align.CENTER));
-//        table.getConfig().setColumnTitleBackground(new BaseBackgroundFormat(getResources().getColor(R.color.blue)));
         table.getConfig().setVerticalPadding(30);
-//        table.getConfig().setHorizontalPadding(30);
         table.getConfig().setColumnTitleVerticalPadding(30);
     }
 

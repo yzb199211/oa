@@ -3,6 +3,7 @@ package com.huanxin.oa.form.merge;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -14,21 +15,21 @@ import com.huanxin.oa.utils.PxUtil;
 
 import java.util.List;
 
-public class FormMergeView2 extends FrameLayout {
+public class FormMergeView3 extends FrameLayout {
     Context context;
     FormModel data;
     int itemHeight;
     int itemWidth;
 
     int maxWidth;
-
     int startRow;
 
-    public FormMergeView2(@NonNull Context context) {
+
+    public FormMergeView3(@NonNull Context context) {
         this(context, null);
     }
 
-    public FormMergeView2(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FormMergeView3(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
@@ -52,6 +53,7 @@ public class FormMergeView2 extends FrameLayout {
     }
 
     private void initView() {
+        initParam();
         FormColumnView2 view = new FormColumnView2(context);
         view.setColumn(data, startRow);
         addView(view);
@@ -65,24 +67,24 @@ public class FormMergeView2 extends FrameLayout {
         }
     }
 
-    private void setTitle(List<FormModel> child) {
-        for (int i = 0; i < child.size(); i++) {
-            FormModel item = child.get(i);
-            FormColumnView2 view = new FormColumnView2(context);
-            view.setColumn(item, startRow);
-            addView(view);
-            setTotal(item);
-            if (item.getRowData() == null) {
-                if (item.getChild() != null) {
-                    setTitle(item.getChild());
-                }
-            } else {
-                setRowView(item);
-            }
-        }
-
+    private void initParam() {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(maxWidth * itemWidth, data.getSpanHeightTotal() * itemHeight);
+        params.leftMargin = data.getCol() * itemWidth;
+        params.topMargin = data.getRow();
+        setLayoutParams(params);
     }
 
+    private void setTitle(List<FormModel> child) {
+        int row = 0;
+        for (int i = 0; i < child.size(); i++) {
+            FormModel item = child.get(i);
+            item.setRow(row);
+            FormMergeView3 view = new FormMergeView3(context);
+            view.setData(item, maxWidth - 1);
+            addView(view);
+            row = row + item.getSpanHeightTotal();
+        }
+    }
 
     private void setRowView(FormModel data) {
         if (data.getRowData() != null)

@@ -65,7 +65,6 @@ public class FormConditionActivity extends BaseActivity {
         userId = (String) preferencesHelper.getSharedPreference("userid", "");
         code = getIntent().getIntExtra("code", 0);
         isStore = getIntent().getBooleanExtra("isStore", false);
-
         init();
     }
 

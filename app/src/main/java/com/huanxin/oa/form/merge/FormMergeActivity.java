@@ -157,7 +157,6 @@ public class FormMergeActivity extends AppCompatActivity {
                     tvRight.setVisibility(View.VISIBLE);
                 }
                 if (columns != null && columns.size() > 0 && StringUtil.isNotEmpty(data)) {
-//                    Log.e("start", columns.size() + "");
                     initForm(columns, data);
                 }
                 FinishLoading(null);
