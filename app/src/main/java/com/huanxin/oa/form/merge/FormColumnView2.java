@@ -23,12 +23,15 @@ public class FormColumnView2 extends TextView {
     int col;
 
     int startRow;
+    int startCol;
 
     int itemWidth;
     int itemHeight;
 
     int marginTop;
     int marginLeft;
+
+    boolean isDetail;
 
     public FormColumnView2(Context context) {
         this(context, null);
@@ -57,11 +60,15 @@ public class FormColumnView2 extends TextView {
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 
-    public void setColumn(FormModel column, int startRow) {
+    public void setColumn(FormModel column, int startRow, int startCol, boolean isDetail) {
         this.column = column;
         this.startRow = startRow;
-        marginTop = startRow * itemHeight;
-        marginLeft = column.getCol() * itemWidth;
+        this.isDetail = isDetail;
+        this.startRow = startCol;
+        if (isDetail) {
+            marginTop = (column.getRow() - startRow) * itemHeight;
+            marginLeft = (column.getCol() - startCol+1) * itemWidth;
+        }
         setRow(column.getRow());
         setCol(column.getCol());
         setText(column.getTitle());
@@ -69,7 +76,7 @@ public class FormColumnView2 extends TextView {
     }
 
     public void initParam() {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.getSpanWidth() * itemWidth - 1, column.getSpanHeightTotal() * itemHeight - 1);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.getSpanWidth() * itemWidth - 1, column.getSpanHeight() * itemHeight - 1);
         params.topMargin = marginTop;
         params.leftMargin = marginLeft;
         setLayoutParams(params);

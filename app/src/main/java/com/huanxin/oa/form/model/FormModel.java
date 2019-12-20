@@ -142,18 +142,38 @@ public class FormModel implements Serializable {
     public int getSpanHeightTotal() {
         if (isParent) {
             int height = 0;
-            if (rowData != null) {
-                return rowData.size() + 1;
+            if (child != null) {
+                for (int i = 0; i < child.size(); i++) {
+                    height = height + child.get(i).getSpanHeightTotal();
+                }
+                row = child.get(0).getRow();
+                spanHeight = height;
             } else {
-                if (child != null)
-                    for (int i = 0; i < child.size(); i++) {
-                        height = height + 1;
-                    }
-                return height + 1;
+                if (rowData != null) {
+                    row = rowData.get(0).get(0).getRow();
+                    spanHeight = rowData.size();
+                }
             }
-        } else {
-            return spanHeight;
+            spanHeight = spanHeight + 1;
         }
+
+        return spanHeight;
+//        if (isParent) {
+//            int height = 0;
+//            if (rowData != null) {
+//                spanHeight = rowData.size();
+//            } else {
+//                if (child != null)
+//                    for (int i = 0; i < child.size(); i++) {
+//                        height = height + child.get(i).getSpanHeightTotal();
+//                    }
+//                spanHeight = height+1;
+//            }
+//            return spanHeight;
+//        } else {
+//            return spanHeight;
+//        }
+
     }
 
 

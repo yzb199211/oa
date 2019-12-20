@@ -89,7 +89,6 @@ public class FormConditionActivity extends BaseActivity {
             bottonView.setVisibility(View.VISIBLE);
             for (int i = 0; i < conditions.size(); i++) {
                 FunctionView view = new FunctionView(this);
-//        view.setView_type("S");
                 view.setTitle(conditions.get(i).getSCaption());
                 view.setHint("请输入" + conditions.get(i).getSCaption());
                 view.setText(TextUtils.isEmpty(conditions.get(i).getSValue()) ? "" : conditions.get(i).getSValue());
@@ -118,11 +117,11 @@ public class FormConditionActivity extends BaseActivity {
                         conditions.get(i).setSelectValue(viewList.get(i).getText());
                     }
                 }
-                String data = LookupDataUtil.getConditionData(conditions,isStore);
+                String data = LookupDataUtil.getConditionData(conditions, isStore);
                 Intent intent = new Intent();
                 intent.putExtra("data", data);
-                intent.putExtra("isStore",LookupDataUtil.getConditionData(conditions,true));
-                intent.putExtra("noStore",LookupDataUtil.getConditionData(conditions,false));
+                intent.putExtra("isStore", LookupDataUtil.getConditionData(conditions, true));
+                intent.putExtra("noStore", LookupDataUtil.getConditionData(conditions, false));
                 setResult(code, intent);
                 finish();
                 break;

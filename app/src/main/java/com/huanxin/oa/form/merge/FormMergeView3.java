@@ -9,8 +9,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormModel;
+import com.huanxin.oa.utils.LogUtil;
 import com.huanxin.oa.utils.PxUtil;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class FormMergeView3 extends FrameLayout {
 
     int maxWidth;
     int startRow;
-
+    boolean isFirstParent;
 
     public FormMergeView3(@NonNull Context context) {
         this(context, null);
@@ -35,10 +37,12 @@ public class FormMergeView3 extends FrameLayout {
         init();
     }
 
-    public void setData(FormModel data, int maxWidth) {
+    public void setData(FormModel data, int maxWidth, boolean isFirstParent) {
         this.data = data;
         this.maxWidth = maxWidth;
+        this.isFirstParent = isFirstParent;
         startRow = data.getRow();
+        Log.e("data", startRow + "");
         initView();
     }
 
@@ -55,7 +59,7 @@ public class FormMergeView3 extends FrameLayout {
     private void initView() {
         initParam();
         FormColumnView2 view = new FormColumnView2(context);
-        view.setColumn(data, startRow);
+        view.setColumn(data, startRow, 0, false);
         addView(view);
         setTotal(data);
         if (data.getRowData() == null) {
@@ -68,9 +72,10 @@ public class FormMergeView3 extends FrameLayout {
     }
 
     private void initParam() {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(maxWidth * itemWidth, data.getSpanHeightTotal() * itemHeight);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(maxWidth * itemWidth, data.getSpanHeight() * itemHeight);
         params.leftMargin = data.getCol() * itemWidth;
-        params.topMargin = data.getRow();
+        if (!isFirstParent)
+            params.topMargin = (data.getRow()) * itemHeight;
         setLayoutParams(params);
     }
 
@@ -80,34 +85,39 @@ public class FormMergeView3 extends FrameLayout {
             FormModel item = child.get(i);
             item.setRow(row);
             FormMergeView3 view = new FormMergeView3(context);
-            view.setData(item, maxWidth - 1);
+            view.setData(item, maxWidth - 1, false);
             addView(view);
             row = row + item.getSpanHeightTotal();
         }
     }
 
     private void setRowView(FormModel data) {
-        if (data.getRowData() != null)
+        if (data.getRowData() != null) {
+            int startRow = data.getRowData().get(0).get(0).getRow();
+            int startCol = data.getRowData().get(0).get(0).getCol();
             for (int i = 0; i < data.getRowData().size(); i++) {
                 for (int j = 0; j < data.getRowData().get(i).size(); j++) {
                     FormColumnView2 view = new FormColumnView2(context);
-                    view.setColumn(data.getRowData().get(i).get(j), startRow);
+                    view.setColumn(data.getRowData().get(i).get(j), startRow, startCol, true);
                     addView(view);
                 }
             }
+        }
     }
 
     private void setTotal(FormModel item) {
         if (item.isParent()) {
+            Log.e("height", item.getSpanHeightTotal() + "");
+            LogUtil.e("total", new Gson().toJson(item));
             FormColumnView2 totalView = new FormColumnView2(context);
             FormModel total = new FormModel();
             total.setTitle(item.getTitle());
-            total.setRow((item.getSpanHeightTotal() - 1));
+            total.setRow((item.getSpanHeight() - 1));
             total.setCol(item.getCol() + 1);
             total.setSpanHeight(1);
             total.setSpanWidth(maxWidth - item.getCol() - 1);
             total.setTitle("总计");
-            totalView.setColumn(total, 0);
+            totalView.setColumn(total, 0, item.getCol() + 1, true);
             addView(totalView);
         }
     }

@@ -1,6 +1,5 @@
 package com.huanxin.oa.form.merge;
 
-import com.huanxin.oa.form.model.Form;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormModel;
 
@@ -111,6 +110,9 @@ public class FormMergeUtil {
         for (FormModel treeNode : treeNodes) {
             toTreeChild(trees, treeNode);
         }
+        for (FormModel treeNode : trees) {
+            treeNode.getSpanHeightTotal();
+        }
         return trees;
     }
 
@@ -120,11 +122,13 @@ public class FormMergeUtil {
                 if (node.getChild() == null) {
                     node.setChild(new ArrayList<>());
                 }
-                node.getChild().add(treeNode);
+                if (!node.getChild().contains(treeNode))
+                    node.getChild().add(treeNode);
             }
-            if (node.getChild() != null) {
+            if (node.getChild() != null && !node.getChild().contains(treeNode)) {
                 toTreeChild(node.getChild(), treeNode);
             }
         }
     }
+
 }

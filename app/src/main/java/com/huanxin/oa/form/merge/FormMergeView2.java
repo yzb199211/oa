@@ -53,7 +53,7 @@ public class FormMergeView2 extends FrameLayout {
 
     private void initView() {
         FormColumnView2 view = new FormColumnView2(context);
-        view.setColumn(data, startRow);
+        view.setColumn(data, startRow,0,true);
         addView(view);
         setTotal(data);
         if (data.getRowData() == null) {
@@ -69,7 +69,7 @@ public class FormMergeView2 extends FrameLayout {
         for (int i = 0; i < child.size(); i++) {
             FormModel item = child.get(i);
             FormColumnView2 view = new FormColumnView2(context);
-            view.setColumn(item, startRow);
+            view.setColumn(item, startRow,0,true);
             addView(view);
             setTotal(item);
             if (item.getRowData() == null) {
@@ -89,7 +89,7 @@ public class FormMergeView2 extends FrameLayout {
             for (int i = 0; i < data.getRowData().size(); i++) {
                 for (int j = 0; j < data.getRowData().get(i).size(); j++) {
                     FormColumnView2 view = new FormColumnView2(context);
-                    view.setColumn(data.getRowData().get(i).get(j), startRow);
+                    view.setColumn(data.getRowData().get(i).get(j), startRow,0,true);
                     addView(view);
                 }
             }
@@ -105,7 +105,7 @@ public class FormMergeView2 extends FrameLayout {
             total.setSpanHeight(1);
             total.setSpanWidth(maxWidth - item.getCol() - 1);
             total.setTitle("总计");
-            totalView.setColumn(total, 0);
+            totalView.setColumn(total, 0,0,true);
             addView(totalView);
         }
     }
