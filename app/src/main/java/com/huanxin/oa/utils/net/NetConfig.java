@@ -1,7 +1,7 @@
 package com.huanxin.oa.utils.net;
 
 public class NetConfig {
-    //    public final static String address = "http://59.110.155.165:8008";
+//        public final static String address = "http://59.110.155.165:8008";
     //    public final static String address = "http://36.22.187.30:8008";
 //    public final static String address = "http://192.168.1.32:57385";
     public final static String address = "http://112.124.10.153:1004";
