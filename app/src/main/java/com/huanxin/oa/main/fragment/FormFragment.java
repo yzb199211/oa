@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.FormListActivity;
+import com.huanxin.oa.form.FormWithChartActivity;
 import com.huanxin.oa.form.merge.FormMergeActivity;
 import com.huanxin.oa.form.FormNewActivity;
 import com.huanxin.oa.form.FormRefreshActivity;
@@ -229,6 +230,8 @@ public class FormFragment extends Fragment {
                                 intent.setClass(getActivity(), FormListActivity.class);
                             } else if (isPage == 0)
                                 intent.setClass(getActivity(), FormNewActivity.class);
+                                //合并列表
+//                                intent.setClass(getActivity(), FormMergeActivity.class);
                             else
                                 intent.setClass(getActivity(), FormRefreshActivity.class);
                             intent.putExtra("menuid", menuId + "");
@@ -236,8 +239,8 @@ public class FormFragment extends Fragment {
                             startActivity(intent);
                         } else if (isUnion == 0 && isChart == 1) {
                             Intent intent = new Intent();
-                            intent.setClass(getActivity(), FormMergeActivity.class);
-//                            intent.setClass(getActivity(), FormWithChartActivity.class);
+//                            intent.setClass(getActivity(), FormMergeActivity.class);
+                            intent.setClass(getActivity(), FormWithChartActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);
