@@ -203,7 +203,6 @@ public class FormMerge extends LinearLayout {
 //            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
             column.setTitle(getColumnText(columnsBean, jsonObject));
             if (columnsBean.getIMerge() == 1 && isSerial == true) {
-
                 column.setParent(true);
             }
             list.add(column);
@@ -218,7 +217,6 @@ public class FormMerge extends LinearLayout {
             FormModel column = new FormModel();
             column.setRow(row);
             column.setCol(col);
-//            column.setParent(columnsBean.getIMerge() == 1 ? true : false);
             column.setTitle(getColumnText(columnsBean, jsonObject));
             if (columnsBean.getIMerge() == 1 && isSerial == true) {
                 column.setId(col + 1);
@@ -235,7 +233,6 @@ public class FormMerge extends LinearLayout {
     private String getColumnText(FormBean.ReportColumnsBean columnsBean, JSONObject jsonObject) {
         return jsonObject.optString(columnsBean.getSFieldsName());
     }
-
 
     private void refreshView(List<FormModel> data) {
         if (formAdapter == null) {
