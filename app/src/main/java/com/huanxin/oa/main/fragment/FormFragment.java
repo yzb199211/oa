@@ -229,7 +229,7 @@ public class FormFragment extends Fragment {
                             if (isAppStyle.equals("列表")) {
                                 intent.setClass(getActivity(), FormListActivity.class);
                             } else if (isPage == 0)
-                                intent.setClass(getActivity(), FormNewActivity.class);
+                                intent.setClass(getActivity(), FormMergeActivity.class);
                                 //合并列表
 //                                intent.setClass(getActivity(), FormMergeActivity.class);
                             else
@@ -239,8 +239,10 @@ public class FormFragment extends Fragment {
                             startActivity(intent);
                         } else if (isUnion == 0 && isChart == 1) {
                             Intent intent = new Intent();
-//                            intent.setClass(getActivity(), FormMergeActivity.class);
-                            intent.setClass(getActivity(), FormWithChartActivity.class);
+//                            if (address.equals(NetConfig.addressLocal))
+                                intent.setClass(getActivity(), FormMergeActivity.class);
+//                            else
+//                                intent.setClass(getActivity(), FormWithChartActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);

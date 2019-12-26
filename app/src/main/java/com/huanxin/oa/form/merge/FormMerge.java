@@ -36,6 +36,7 @@ public class FormMerge extends LinearLayout {
     int width;
     int itemWidth;
     int levels;
+    int sumPos;
 
     boolean isSerial = true;
 
@@ -118,12 +119,18 @@ public class FormMerge extends LinearLayout {
     }
 
     private void setTitles() {
+        int pos = 0;
         for (int i = 0; i < columnsTitle.size(); i++) {
-
             if (i == 0)
                 llTitlte.addView(getTitleView(columnsTitle.get(i).getSFieldsdisplayName(), true));
             else
                 llTitlte.addView(getTitleView(columnsTitle.get(i).getSFieldsdisplayName(), false));
+            if (pos == 0 && columnsTitle.get(i).getIMerge() == 0) {
+                pos = i;
+            }
+            if (sumPos == 0 && columnsTitle.get(i).getsSummary().equals("sum")) {
+                sumPos = i-pos;
+            }
         }
     }
 
@@ -167,8 +174,8 @@ public class FormMerge extends LinearLayout {
             JSONArray jsonArray = new JSONArray(data);
             if (jsonArray.length() > 0) {
                 List<FormModel> item = FormMergeUtil.getFormColumns(jsonArray, columnsTitle);
-                refreshView((FormMergeUtil.buildByRecursive(item)));
-                LogUtil.e("data", new Gson().toJson(FormMergeUtil.buildByRecursive(item)));
+                refreshView((FormMergeUtil.buildByRecursive(item, sumPos)));
+                LogUtil.e("data", new Gson().toJson(FormMergeUtil.buildByRecursive(item, sumPos)));
             }
         }
     }

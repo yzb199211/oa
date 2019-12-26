@@ -143,8 +143,14 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_sweep:
-//                Toasts.showShort(this, "暂未开放");
+//                if (isTest == true) {
+//                    preferencesHelper.put("address", NetConfig.addressLocal);
+//                    address = NetConfig.addressLocal;
+//                }
                 permission(intent);
+
+
+
 //                String filePath = "/storage/emulated/0/Download/browser/031001700311-20586419.pdf";
 //                String fileName = "031001700311-20586419.pdf";
 //                DisplayFileActivity.openDispalyFileActivity(LoginActivity.this, filePath, fileName);

@@ -1,17 +1,22 @@
 package com.huanxin.oa.form.merge;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
+import com.huanxin.oa.form.FormConditionActivity;
+import com.huanxin.oa.form.FormNewActivity;
 import com.huanxin.oa.form.model.FormBean;
 import com.huanxin.oa.form.model.FormConditionBean;
 import com.huanxin.oa.interfaces.ResponseListener;
@@ -54,13 +59,15 @@ public class FormMergeActivity extends AppCompatActivity {
     String url;
     String userid;
     String formid;
-    String filters;
+    String filter;
+    private String fixfilter = "";
+
 
     boolean isStore;
 
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
-
+    private List<FormBean.ReportColumnsBean> columnsBeans;
     FormMerge formMerge;
 
     @Override
@@ -87,6 +94,7 @@ public class FormMergeActivity extends AppCompatActivity {
     private void initList() {
         fixconditions = new ArrayList<>();
         conditions = new ArrayList<>();
+        columnsBeans = new ArrayList<>();
     }
 
 
@@ -140,6 +148,8 @@ public class FormMergeActivity extends AppCompatActivity {
         List<FormBean.ReportColumnsBean> columns = formBean.getReportColumns();
         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
         List<FormBean.ReportInfoBean> reportInfoBeans = formBean.getReportInfo();
+        columnsBeans.addAll(columns);
+        Log.e("cloums", new Gson().toJson(columns));
         initFix(reportInfoBeans.get(0));
         initCondition(reportConditionBeans);
         setView(columns, data);
@@ -166,6 +176,7 @@ public class FormMergeActivity extends AppCompatActivity {
 
     private void initForm(List<FormBean.ReportColumnsBean> columns, String data) {
         try {
+
             formMerge = new FormMerge(this);
             formMerge.setColumnsTitle(columns);
             formMerge.setData(data);
@@ -186,6 +197,10 @@ public class FormMergeActivity extends AppCompatActivity {
         }
     }
 
+    TabView currentView;
+    int currenViewPos = -1;
+
+
     private TabView getTabView(int pos) {
         TabView tab = new TabView(this);
         tab.setText(fixconditions.get(pos).getName());
@@ -193,10 +208,75 @@ public class FormMergeActivity extends AppCompatActivity {
         tab.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                if (currenViewPos != position) {
+                    currenViewPos = position;
+                    currentView.setChecked(false);
+                    currentView = (TabView) view;
+                    currentView.setChecked(true);
+                    fixfilter = fixconditions.get(position).getFilters();
+                    getFormData();
+                }
             }
         });
         return tab;
+    }
+
+    private void getFormData() {
+        if (formMerge != null) {
+            llContent.removeView(formMerge);
+            formMerge = null;
+        }
+        LoadingDialog.showDialogForLoading(this);
+        new NetUtil(getFormParams(), url, new ResponseListener() {
+            @Override
+            public void onSuccess(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    boolean isSuccess = jsonObject.optBoolean("success");
+                    if (isSuccess) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initForm(columnsBeans, jsonObject.optString("data"));
+//                                setGsonData(jsonObject.optString("data"));
+                                loadFail("");
+                            }
+                        });
+
+                    } else {
+                        loadFail(jsonObject.getString("message"));
+                    }
+                } catch (JSONException e) {
+                    loadFail("json解析错误");
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    loadFail("数据解析错误");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(IOException e) {
+                e.printStackTrace();
+                loadFail("未获取到数据");
+            }
+        });
+    }
+
+    private List<NetParams> getFormParams() {
+        List<NetParams> params = new ArrayList<>();
+        params.add(new NetParams("otype", "getReportData"));
+        params.add(new NetParams("userid", userid));
+        params.add(new NetParams("iFormID", formid));
+
+        if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
+            params.add(new NetParams("filters", filter + " and " + fixfilter));
+        } else {
+            params.add(new NetParams("filters", filter + fixfilter));
+        }
+        params.add(new NetParams("sort", ""));
+        params.add(new NetParams("order", "asc"));
+        return params;
     }
 
     private void initCondition(List<FormBean.ReportConditionBean> reportConditionBeans) {
@@ -229,11 +309,46 @@ public class FormMergeActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.tv_right:
+                goCondition();
                 break;
         }
     }
 
+    private final static int CONDIRION_CODE = 500;
+
+    private void goCondition() {
+        Intent intent = new Intent();
+        intent.setClass(this, FormConditionActivity.class);
+        intent.putExtra("data", new Gson().toJson(conditions));
+        intent.putExtra("code", CONDIRION_CODE);
+        startActivityForResult(intent, CONDIRION_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (resultCode == CONDIRION_CODE) {
+                filter = data.getStringExtra("data");
+                Log.e("filter", filter);
+                getFormData();
+            }
+        }
+    }
+
     private void FinishLoading(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LoadingDialog.cancelDialogForLoading();
+                if (StringUtil.isNotEmpty(message))
+                    Toasts.showShort(FormMergeActivity.this, message);
+            }
+        });
+    }
+
+    /*请求关闭LoadingDialog和弹出提示*/
+    private void loadFail(String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -99,7 +99,7 @@ public class FormMergeUtil {
      * @param treeNodes
      * @return
      */
-    public static List<FormModel> buildByRecursive(List<FormModel> treeNodes) {
+    public static List<FormModel> buildByRecursive(List<FormModel> treeNodes,int pos) {
         List<FormModel> trees = new ArrayList<>();
 
         for (FormModel treeNode : treeNodes) {
@@ -112,6 +112,7 @@ public class FormMergeUtil {
         }
         for (FormModel treeNode : trees) {
             treeNode.getSpanHeightTotal();
+            treeNode.sum(pos);
         }
         return trees;
     }

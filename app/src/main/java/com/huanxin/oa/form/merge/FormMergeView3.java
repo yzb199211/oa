@@ -116,7 +116,7 @@ public class FormMergeView3 extends FrameLayout {
             total.setCol(item.getCol() + 1);
             total.setSpanHeight(1);
             total.setSpanWidth(maxWidth - item.getCol() - 1);
-            total.setTitle("总计");
+            total.setTitle("总计:"+item.getTotal());
             totalView.setColumn(total, 0, item.getCol() + 1, true);
             addView(totalView);
         }

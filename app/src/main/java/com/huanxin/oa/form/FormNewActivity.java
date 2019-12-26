@@ -101,7 +101,6 @@ public class FormNewActivity extends AppCompatActivity {
         columns = new ArrayList<>();
         columnsFix = new ArrayList<>();
 
-
         Intent intent = getIntent();
         menuId = intent.getStringExtra("menuid");
         tvTitle.setText(TextUtils.isEmpty(intent.getStringExtra("title")) ? "" : intent.getStringExtra("title"));
