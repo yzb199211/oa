@@ -1,5 +1,7 @@
 package com.huanxin.oa.form.model;
 
+import com.huanxin.oa.utils.StringUtil;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class FormModel implements Serializable {
     private int spanWidth = 1;//合并行数
     private int spanHeight = 1;//合并列数
     private boolean isParent = false;
-    private int total;
+    private double total;
     private String totalTitle;
 
     private int pid = 0;
@@ -160,18 +162,18 @@ public class FormModel implements Serializable {
         return spanHeight;
     }
 
-    public int sum(int pos) {
+    public double sum(int pos) {
         if (isParent) {
-            int count = 0;
+            double count = 0;
             if (child != null) {
                 for (int i = 0; i < child.size(); i++) {
-                    count = count + child.get(i).sum(pos);
+                    count = StringUtil.add(count, child.get(i).sum(pos));
                 }
                 total = count;
             } else {
                 if (rowData != null) {
                     for (List<FormModel> item : rowData) {
-                        count = count + Integer.parseInt(item.get(pos).getTitle());
+                        count = StringUtil.add(count, Double.parseDouble(item.get(pos).getTitle()));
                     }
                     total = count;
                 }
@@ -193,7 +195,7 @@ public class FormModel implements Serializable {
         this.spanHeight = this.spanHeight + 1;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 

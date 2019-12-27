@@ -56,7 +56,7 @@ public class FormColumnView2 extends TextView {
     }
 
     private void initSize() {
-        itemWidth = PxUtil.getWidth(context) / 5;
+        itemWidth = PxUtil.getWidth(context) / 4;
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 

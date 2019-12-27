@@ -66,7 +66,7 @@ public class FormMerge extends LinearLayout {
     }
 
     private void init() {
-        itemWidth = PxUtil.getWidth(context) / 5;
+        itemWidth = PxUtil.getWidth(context) / 4;
         setOrientation(VERTICAL);
         setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         initView();

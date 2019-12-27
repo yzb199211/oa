@@ -42,7 +42,7 @@ public class FormMergeView3 extends FrameLayout {
         this.maxWidth = maxWidth;
         this.isFirstParent = isFirstParent;
         startRow = data.getRow();
-        Log.e("data", startRow + "");
+//        Log.e("data", startRow + "");
         initView();
     }
 
@@ -53,7 +53,7 @@ public class FormMergeView3 extends FrameLayout {
 
     private void initData() {
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
-        itemWidth = PxUtil.getWidth(context) / 5;
+        itemWidth = PxUtil.getWidth(context) / 4;
     }
 
     private void initView() {
@@ -107,8 +107,8 @@ public class FormMergeView3 extends FrameLayout {
 
     private void setTotal(FormModel item) {
         if (item.isParent()) {
-            Log.e("height", item.getSpanHeightTotal() + "");
-            LogUtil.e("total", new Gson().toJson(item));
+//            Log.e("height", item.getSpanHeightTotal() + "");
+//            LogUtil.e("total", new Gson().toJson(item));
             FormColumnView2 totalView = new FormColumnView2(context);
             FormModel total = new FormModel();
             total.setTitle(item.getTitle());

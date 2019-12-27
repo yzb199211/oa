@@ -53,35 +53,37 @@ public class FormMergeUtil {
             int pid = 0;
             List<FormModel> rowData = new ArrayList<>();
             for (int j = 0; j < titles.size(); j++) {
-                String title = jsonArray.getJSONObject(i).getString(titles.get(j).getSFieldsName());
-                boolean isParent = titles.get(j).getIMerge() == 1 ? true : false;
-                if (isParent) {
-                    if (i == 0) {
-                        FormModel item = new FormModel(row, j, title, 1, isParent, pid, id);
-                        compare.add(item);
-                        items.add(item);
-                        pid = id;
-                        id = id + 1;
-                    } else {
-                        FormModel compareItem = compare.get(j);
-                        if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
-                            items.get(items.indexOf(compareItem)).addSpanHeight();
-                            pid = compareItem.getId();
-                        } else {
-                            row = row + 1;
-                            FormModel item;
-                            item = new FormModel(row, j, title, 1, isParent, pid, id);
-                            compare.remove(j);
-                            compare.add(j, item);
+                if (!titles.get(j).isChild()) {
+                    String title = jsonArray.getJSONObject(i).getString(titles.get(j).getSFieldsName());
+                    boolean isParent = titles.get(j).getIMerge() == 1 ? true : false;
+                    if (isParent) {
+                        if (i == 0) {
+                            FormModel item = new FormModel(row, j, title, 1, isParent, pid, id);
+                            compare.add(item);
                             items.add(item);
                             pid = id;
-                            id += 1;
-                        }
+                            id = id + 1;
+                        } else {
+                            FormModel compareItem = compare.get(j);
+                            if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
+                                items.get(items.indexOf(compareItem)).addSpanHeight();
+                                pid = compareItem.getId();
+                            } else {
+                                row = row + 1;
+                                FormModel item;
+                                item = new FormModel(row, j, title, 1, isParent, pid, id);
+                                compare.remove(j);
+                                compare.add(j, item);
+                                items.add(item);
+                                pid = id;
+                                id += 1;
+                            }
 
+                        }
+                    } else {
+                        FormModel item = new FormModel(row, j, title, 1, isParent);
+                        rowData.add(item);
                     }
-                } else {
-                    FormModel item = new FormModel(row, j, title, 1, isParent);
-                    rowData.add(item);
                 }
             }
             row = row + 1;
@@ -99,7 +101,7 @@ public class FormMergeUtil {
      * @param treeNodes
      * @return
      */
-    public static List<FormModel> buildByRecursive(List<FormModel> treeNodes,int pos) {
+    public static List<FormModel> buildByRecursive(List<FormModel> treeNodes, int pos) {
         List<FormModel> trees = new ArrayList<>();
 
         for (FormModel treeNode : treeNodes) {

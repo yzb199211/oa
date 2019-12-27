@@ -859,6 +859,7 @@ public class FormBean {
          * sAlign : left
          * iSort : 0
          * ifix:0
+         * isChild
          */
 
         private int iShowOrder;
@@ -873,6 +874,7 @@ public class FormBean {
         private boolean isChild;
         private String sSummary;
         private int iSummryDigit;
+
 
         public String getsSummary() {
             return sSummary;

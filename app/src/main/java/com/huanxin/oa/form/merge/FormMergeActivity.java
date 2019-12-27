@@ -149,7 +149,8 @@ public class FormMergeActivity extends AppCompatActivity {
         List<FormBean.ReportConditionBean> reportConditionBeans = formBean.getReportCondition();
         List<FormBean.ReportInfoBean> reportInfoBeans = formBean.getReportInfo();
         columnsBeans.addAll(columns);
-        Log.e("cloums", new Gson().toJson(columns));
+//        Log.e("cloums", new Gson().toJson(columns));
+        Log.e("cloums", s);
         initFix(reportInfoBeans.get(0));
         initCondition(reportConditionBeans);
         setView(columns, data);
@@ -178,7 +179,7 @@ public class FormMergeActivity extends AppCompatActivity {
         try {
 
             formMerge = new FormMerge(this);
-            formMerge.setColumnsTitle(columns);
+            formMerge.setColumnsTitle(getParentColumns(columns));
             formMerge.setData(data);
             formMerge.build();
             llContent.addView(formMerge);
@@ -187,6 +188,16 @@ public class FormMergeActivity extends AppCompatActivity {
             FinishLoading(getString(R.string.error_data));
         }
 
+    }
+
+    private List<FormBean.ReportColumnsBean> getParentColumns(List<FormBean.ReportColumnsBean> columns) {
+        List<FormBean.ReportColumnsBean> list = new ArrayList<>();
+        for (FormBean.ReportColumnsBean item : columns) {
+            if (!item.isChild()) {
+                list.add(item);
+            }
+        }
+        return list;
     }
 
     private void setFix() {

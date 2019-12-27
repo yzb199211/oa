@@ -213,6 +213,7 @@ public class FormFragment extends Fragment {
      */
     private void setList() {
         if (formAdapter == null) {
+            Log.e("menus", new Gson().toJson(menus));
             formAdapter = new FormAdapter(menus, getActivity());
             formAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -228,11 +229,11 @@ public class FormFragment extends Fragment {
                             Intent intent = new Intent();
                             if (isAppStyle.equals("列表")) {
                                 intent.setClass(getActivity(), FormListActivity.class);
-                            } else if (isPage == 0)
+                            } else if (isAppStyle.equals("表格") && isPage == 0) {
                                 intent.setClass(getActivity(), FormMergeActivity.class);
-                                //合并列表
-//                                intent.setClass(getActivity(), FormMergeActivity.class);
-                            else
+                            } else if (isPage == 0) {
+                                intent.setClass(getActivity(), FormNewActivity.class);
+                            } else
                                 intent.setClass(getActivity(), FormRefreshActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
@@ -240,9 +241,9 @@ public class FormFragment extends Fragment {
                         } else if (isUnion == 0 && isChart == 1) {
                             Intent intent = new Intent();
 //                            if (address.equals(NetConfig.addressLocal))
-                                intent.setClass(getActivity(), FormMergeActivity.class);
+//                            intent.setClass(getActivity(), FormMergeActivity.class);
 //                            else
-//                                intent.setClass(getActivity(), FormWithChartActivity.class);
+                            intent.setClass(getActivity(), FormWithChartActivity.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);
