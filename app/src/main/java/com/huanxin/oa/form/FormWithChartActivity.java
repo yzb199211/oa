@@ -1,6 +1,7 @@
 package com.huanxin.oa.form;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +23,9 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.model.FormBean;
+import com.huanxin.oa.form.model.FormChartBean;
 import com.huanxin.oa.form.model.FormConditionBean;
+import com.huanxin.oa.form.utils.FormUtil;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
@@ -499,6 +503,7 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void setChildFormColumnName(int i, GridLayout glchildForm) throws JSONException, Exception {
         addChildFormChild(0, i, ChildChartData.get(i - 1).getName(), true, glchildForm);
+
     }
 
     private void setChildFormRowName(GridLayout glchildForm) throws JSONException, Exception {
@@ -519,7 +524,6 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void addChildFormChild(int row, int col, String text, boolean isTitle, GridLayout glchildForm) throws Exception {
         TextView textView = getChildView(text, isTitle, glchildForm);
-
         glchildForm.addView(textView, getChildParam(row, col));
 
     }
@@ -567,7 +571,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     private void setChildMaring(int row, GridLayout.LayoutParams params) {
         params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         if (row == 0) {
-            params.topMargin = getResources().getDimensionPixelOffset(R.dimen.dp_10);
+            params.topMargin = 0;
         } else {
             params.topMargin = getResources().getDimensionPixelOffset(R.dimen.dp_1);
         }
@@ -811,6 +815,7 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*初始化表*/
     private void initForm() throws JSONException, Exception {
         glForm = new GridLayout(this);
+        glForm.setBackgroundColor(getColor(R.color.form_menu_bg));
         glForm.setRowCount(ChartData.get(0).getList().size() + 2);
         glForm.setColumnCount(fields.size() + 1);
         setFormRowName();
@@ -829,19 +834,24 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void setFormTotaData(int i, String data) throws JSONException, Exception {
-        addFormChild(ChartData.get(0).getList().size() + 1, i, data, false);
+        addFormTotalChild(ChartData.get(0).getList().size() + 1, i, data, false, R.color.form_menu_total);
     }
 
     private void setFormRowTotalName() throws JSONException, Exception {
-        addFormChild(ChartData.get(0).getList().size() + 1, 0, "总计", false);
+        addFormTotalChild(ChartData.get(0).getList().size() + 1, 0, "总计", false, R.color.form_menu_total);
     }
 
     private void setFormColumnName(int i) throws JSONException, Exception {
-        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
+//        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
+        FormChartBean style = new FormChartBean().setRow(0).setCol(i).setText(ChartData.get(i - 1).getName()).setTextColor(R.color.white).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL);
+        glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, i));
     }
 
     private void setFormRowName() throws JSONException, Exception {
-        addFormChild(0, 0, xName, true);
+//        addFormChild(0, 0, xName, true);
+
+        FormChartBean style = new FormChartBean().setRow(0).setCol(0).setText(xName).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.white);
+        glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, 0));
     }
 
     private void setFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
@@ -850,15 +860,19 @@ public class FormWithChartActivity extends AppCompatActivity {
                 datas.add(new ChartBean.Line());
             }
             if (i == 0) {
-                addFormChild(j + 1, 0, datas.get(j).getxValue(), false);
+                FormChartBean style = new FormChartBean().setRow(j + 1).setCol(0).setText(datas.get(j).getxValue()).setBackgroundColor(R.color.form_menu_item).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.form_menu_title);
+                glForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, 0));
+//                addFormTotalChild(j + 1, 0, datas.get(j).getxValue(), false, R.color.form_menu_item);
             }
-            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
+//            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
+            FormChartBean style = new FormChartBean().setRow(j + 1).setCol(i + 1).setText(String.valueOf(datas.get(j).getyValue())).setBackgroundColor(R.color.form_menu_white).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.default_content_color);
+            glForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, i + 1));
         }
     }
 
     private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
         TextView textView = getChildView(text, isTitle, glForm);
-        if (col == 0 &&row!=ChartData.get(0).getList().size() + 1&& isTitle == false && haveChild) {
+        if (col == 0 && row != ChartData.get(0).getList().size() + 1 && isTitle == false && haveChild) {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -871,6 +885,18 @@ public class FormWithChartActivity extends AppCompatActivity {
 
         glForm.addView(textView, getChildParam(row, col));
 
+    }
+
+    private void addFormTotalChild(int row, int col, String text, boolean isTitle, @ColorRes int color) throws Exception {
+        TextView textView = getChildView(text, isTitle, glForm);
+        textView.setBackgroundColor(getColor(color));
+        glForm.addView(textView, getChildParam(row, col));
+    }
+
+    private TextView getChild() {
+        TextView textView = new TextView(this);
+        textView.setTypeface(Typeface.DEFAULT_BOLD);
+        return textView;
     }
 
     private void setChildView() {
@@ -1006,7 +1032,7 @@ public class FormWithChartActivity extends AppCompatActivity {
             if (childIsStore) {
                 filters = filters + "$" + fixfilter;
             } else {
-                filters = filters + " and " + filters;
+                filters = filters + " and " + fixfilter;
             }
         }
         if (StringUtil.isNotEmpty(childFilter)) {
@@ -1057,15 +1083,16 @@ public class FormWithChartActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             if (resultCode == CONDIRION_CODE) {
-                filter = data.getStringExtra("data");
                 if (haveChild) {
-                    if (childIsStore) {
+                    if (childIsStore == true) {
                         childFilter = data.getStringExtra("isStore");
+
                     } else {
                         childFilter = data.getStringExtra("noStore");
                     }
                 }
-                Log.e("filter", filter);
+                filter = childFilter;
+//                Log.e("filter", filter);
                 llContent.removeAllViews();
                 llChild.removeAllViews();
                 getFormData();
@@ -1128,7 +1155,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         params.add(new NetParams("userid", userid));
         params.add(new NetParams("iFormID", menuid));
         if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
-            params.add(new NetParams("filters", filter + " and " + fixfilter));
+            params.add(new NetParams("filters", filter + (childIsStore ? "$" : "and") + fixfilter));
         } else {
             params.add(new NetParams("filters", filter + fixfilter));
         }
