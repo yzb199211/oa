@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -21,6 +22,14 @@ import java.util.regex.Pattern;
 public class StringUtil {
     public final static int DATETYPE = 1;
     final static String colorFormat = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$";
+
+
+    public static String float2Str(float d) {
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return (nf.format(d));
+    }
+
 
     /**
      * 判断字符串是否为整型
@@ -32,6 +41,7 @@ public class StringUtil {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
+
     /**
      * 判断颜色是否正确
      *
@@ -191,7 +201,9 @@ public class StringUtil {
 
         return b1.subtract(b2).doubleValue();
 
-    }  public static Double add(Double v1, Double v2) {
+    }
+
+    public static Double add(Double v1, Double v2) {
 
         BigDecimal b1 = new BigDecimal(v1.toString());
 
