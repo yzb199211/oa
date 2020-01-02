@@ -16,8 +16,13 @@ public class FormModel implements Serializable {
     private double total;
     private String totalTitle;
 
+    private int columnWidth;
+    private int totalWidth;
+    private int marginLeft;
+
     private int pid = 0;
     private int id;
+
 
     List<FormModel> child;
     List<List<FormModel>> rowData;
@@ -67,6 +72,30 @@ public class FormModel implements Serializable {
         this.pid = pid;
         this.id = id;
         this.child = child;
+    }
+
+    public int getMarginLeft() {
+        return marginLeft;
+    }
+
+    public void setMarginLeft(int marginLeft) {
+        this.marginLeft = marginLeft;
+    }
+
+    public int getTotalWidth() {
+        return totalWidth;
+    }
+
+    public void setTotalWidth(int totalWidth) {
+        this.totalWidth = totalWidth;
+    }
+
+    public int getColumnWidth() {
+        return columnWidth;
+    }
+
+    public void setColumnWidth(int columnWidth) {
+        this.columnWidth = columnWidth;
     }
 
     public int getPid() {

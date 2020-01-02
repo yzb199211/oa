@@ -112,6 +112,7 @@ public class FormMergeView3 extends FrameLayout {
             FormColumnView2 totalView = new FormColumnView2(context);
             FormModel total = new FormModel();
             total.setTitle(item.getTitle());
+            total.setColumnWidth(item.getTotalWidth());
             total.setRow((item.getSpanHeight() - 1));
             total.setCol(item.getCol() + 1);
             total.setSpanHeight(1);

@@ -16,6 +16,7 @@ public class FormMergeUtil {
         for (int i = 0; i < titles.size(); i++) {
             List<FormModel> column = new ArrayList<>();
             FormBean.ReportColumnsBean columnTitle = titles.get(i);
+            int width = titles.get(i).getIWidth();
             for (int j = 0; j < jsonArray.length(); j++) {
                 String field = jsonArray.getJSONObject(j).optString(columnTitle.getSFieldsName());
                 if (j == 0) {
@@ -24,6 +25,7 @@ public class FormMergeUtil {
                     item.setRow(j);
                     item.setCol(i);
                     item.setTitle(field);
+                    item.setColumnWidth(width);
                     column.add(item);
                 } else {
                     FormModel oldItem = column.get(column.size() - 1);
@@ -35,6 +37,7 @@ public class FormMergeUtil {
                         item.setRow(j);
                         item.setCol(i);
                         item.setTitle(field);
+                        item.setColumnWidth(width);
                         column.add(item);
                     }
                 }
@@ -49,8 +52,11 @@ public class FormMergeUtil {
         List<FormModel> items = new ArrayList<>();
         int id = 1;
         int row = 0;
+        int widthTotal = getTotalWidth(titles);
+        int widthUsed = 0;
         for (int i = 0; i < jsonArray.length(); i++) {
             int pid = 0;
+            int marginLeft = 0;
             List<FormModel> rowData = new ArrayList<>();
             for (int j = 0; j < titles.size(); j++) {
                 if (!titles.get(j).isChild()) {
@@ -59,10 +65,14 @@ public class FormMergeUtil {
                     if (isParent) {
                         if (i == 0) {
                             FormModel item = new FormModel(row, j, title, 1, isParent, pid, id);
+                            widthUsed = titles.get(j).getIWidth();
+                            item.setTotalWidth(widthTotal - widthUsed);
+                            item.setColumnWidth(widthUsed);
                             compare.add(item);
                             items.add(item);
                             pid = id;
                             id = id + 1;
+                            marginLeft = titles.get(j).getIWidth();
                         } else {
                             FormModel compareItem = compare.get(j);
                             if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
@@ -72,16 +82,22 @@ public class FormMergeUtil {
                                 row = row + 1;
                                 FormModel item;
                                 item = new FormModel(row, j, title, 1, isParent, pid, id);
+                                widthUsed = j == 0 ? titles.get(j).getIWidth() : widthUsed + titles.get(j).getIWidth();
+                                item.setTotalWidth(widthTotal - widthUsed);
+                                item.setColumnWidth(titles.get(j).getIWidth());
                                 compare.remove(j);
                                 compare.add(j, item);
                                 items.add(item);
                                 pid = id;
                                 id += 1;
+                                marginLeft = titles.get(j).getIWidth();
                             }
-
                         }
                     } else {
                         FormModel item = new FormModel(row, j, title, 1, isParent);
+                        item.setColumnWidth(titles.get(j).getIWidth());
+                        item.setMarginLeft(marginLeft);
+                        marginLeft = marginLeft + titles.get(j).getIWidth();
                         rowData.add(item);
                     }
                 }
@@ -93,6 +109,14 @@ public class FormMergeUtil {
             items.get(items.size() - 1).getRowData().add(rowData);
         }
         return items;
+    }
+
+    private static int getTotalWidth(List<FormBean.ReportColumnsBean> titles) {
+        int width = 0;
+        for (FormBean.ReportColumnsBean item : titles) {
+            width = width + item.getIWidth();
+        }
+        return width;
     }
 
     /**
@@ -133,5 +157,4 @@ public class FormMergeUtil {
             }
         }
     }
-
 }
