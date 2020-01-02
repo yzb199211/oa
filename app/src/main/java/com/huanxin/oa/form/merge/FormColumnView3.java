@@ -44,7 +44,7 @@ public class FormColumnView3 extends TextView {
     }
 
     private void init() {
-        initSize();
+//        initSize();
         initView();
     }
 
@@ -56,7 +56,8 @@ public class FormColumnView3 extends TextView {
     }
 
     private void initSize() {
-        itemWidth = PxUtil.getWidth(context) * (column.getColumnWidth() / 100);
+        int width = PxUtil.getWidth(context);
+        itemWidth = PxUtil.getWidth(context) * column.getColumnWidth() / 100;
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
 
@@ -65,9 +66,10 @@ public class FormColumnView3 extends TextView {
         this.startRow = startRow;
         this.isDetail = isDetail;
         this.startRow = startCol;
+        initSize();
         if (isDetail) {
             marginTop = (column.getRow() - startRow) * itemHeight;
-            marginLeft = (column.getMarginLeft()/100) * itemWidth;
+            marginLeft = (column.getMarginLeft() / 100) * itemWidth;
         }
         if (startCol == 0) {
             setTextColor(context.getColor(R.color.form_menu_title));
@@ -80,7 +82,7 @@ public class FormColumnView3 extends TextView {
     }
 
     public void initParam() {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams( itemWidth - 1, column.getSpanHeight() * itemHeight - 1);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(itemWidth - 1, column.getSpanHeight() * itemHeight - 1);
         params.topMargin = marginTop;
         params.leftMargin = marginLeft;
         setLayoutParams(params);

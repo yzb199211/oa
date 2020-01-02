@@ -68,11 +68,12 @@ public class FormMergeUtil {
                             widthUsed = titles.get(j).getIWidth();
                             item.setTotalWidth(widthTotal - widthUsed);
                             item.setColumnWidth(widthUsed);
+                            item.setMarginLeft(marginLeft);
+                            marginLeft = titles.get(j).getIWidth();
                             compare.add(item);
                             items.add(item);
                             pid = id;
                             id = id + 1;
-                            marginLeft = titles.get(j).getIWidth();
                         } else {
                             FormModel compareItem = compare.get(j);
                             if (title.equals(compareItem.getTitle()) && pid == compareItem.getPid()) {
@@ -85,12 +86,14 @@ public class FormMergeUtil {
                                 widthUsed = j == 0 ? titles.get(j).getIWidth() : widthUsed + titles.get(j).getIWidth();
                                 item.setTotalWidth(widthTotal - widthUsed);
                                 item.setColumnWidth(titles.get(j).getIWidth());
+                                item.setMarginLeft(marginLeft);
+                                marginLeft = titles.get(j).getIWidth();
                                 compare.remove(j);
                                 compare.add(j, item);
                                 items.add(item);
                                 pid = id;
                                 id += 1;
-                                marginLeft = titles.get(j).getIWidth();
+
                             }
                         }
                     } else {
