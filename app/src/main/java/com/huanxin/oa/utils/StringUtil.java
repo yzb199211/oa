@@ -30,6 +30,11 @@ public class StringUtil {
         return (nf.format(d));
     }
 
+    public static String double2Str(double d) {
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return (nf.format(d));
+    }
 
     /**
      * 判断字符串是否为整型

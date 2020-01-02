@@ -50,7 +50,7 @@ public class FormColumnView2 extends TextView {
 
     private void initView() {
         setTextColor(context.getColor(R.color.default_content_color));
-        setBackgroundColor(context.getColor(R.color.blue1));
+        setBackgroundColor(context.getColor(R.color.form_menu_white));
         setGravity(Gravity.CENTER);
         setSingleLine();
     }
@@ -68,6 +68,10 @@ public class FormColumnView2 extends TextView {
         if (isDetail) {
             marginTop = (column.getRow() - startRow) * itemHeight;
             marginLeft = (column.getCol() - startCol + 1) * itemWidth;
+        }
+        if (startCol == 0) {
+            setTextColor(context.getColor(R.color.form_menu_title));
+            setBackgroundColor(context.getColor(R.color.form_menu_item));
         }
         setRow(column.getRow());
         setCol(column.getCol());

@@ -1,6 +1,7 @@
 package com.huanxin.oa.form.merge;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.form.model.FormModel;
 import com.huanxin.oa.utils.LogUtil;
 import com.huanxin.oa.utils.PxUtil;
+import com.huanxin.oa.utils.StringUtil;
 
 import java.util.List;
 
@@ -48,7 +50,7 @@ public class FormMergeView3 extends FrameLayout {
 
     private void init() {
         initData();
-        setBackgroundColor(context.getColor(R.color.white));
+        setBackgroundColor(context.getColor(R.color.form_menu_bg));
     }
 
     private void initData() {
@@ -107,8 +109,6 @@ public class FormMergeView3 extends FrameLayout {
 
     private void setTotal(FormModel item) {
         if (item.isParent()) {
-//            Log.e("height", item.getSpanHeightTotal() + "");
-//            LogUtil.e("total", new Gson().toJson(item));
             FormColumnView2 totalView = new FormColumnView2(context);
             FormModel total = new FormModel();
             total.setTitle(item.getTitle());
@@ -116,8 +116,11 @@ public class FormMergeView3 extends FrameLayout {
             total.setCol(item.getCol() + 1);
             total.setSpanHeight(1);
             total.setSpanWidth(maxWidth - item.getCol() - 1);
-            total.setTitle("总计:"+item.getTotal());
+            total.setTitle("总计:" + StringUtil.double2Str(item.getTotal()));
             totalView.setColumn(total, 0, item.getCol() + 1, true);
+            totalView.setBackgroundColor(context.getColor(R.color.form_menu_total));
+            totalView.setTextColor(context.getColor(R.color.default_text_color));
+            totalView.setTypeface(Typeface.DEFAULT_BOLD);
             addView(totalView);
         }
     }

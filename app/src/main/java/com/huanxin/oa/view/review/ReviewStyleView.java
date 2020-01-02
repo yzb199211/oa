@@ -32,7 +32,7 @@ public class ReviewStyleView extends FrameLayout {
     int spanCounts = 3;
     float textSize;
     List<ReviewInfo> infoList = new ArrayList<>();
-    LinearLayout.LayoutParams params;
+    FrameLayout.LayoutParams params;
 
     public ReviewStyleView(Context context) {
         this(context, null);
@@ -153,9 +153,9 @@ public class ReviewStyleView extends FrameLayout {
                 if (count % spanCounts == 1) {
                     count++;
                     if (i + 1 == infoList.size() || (i + 1 < infoList.size() && infoList.get(i + 1).isSingleLine() == true))
-                        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     else
-                        params = new LinearLayout.LayoutParams((int) (itemWidth * (item.getWidthPercent())), ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params = new FrameLayout.LayoutParams((int) (itemWidth * (item.getWidthPercent())), ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, height, 0, 0);
                     rivItem.setLayoutParams(params);
                     rivItem.setPadding(0, (int) context.getResources().getDimension(R.dimen.dp_10), 0, 0);
@@ -168,7 +168,7 @@ public class ReviewStyleView extends FrameLayout {
                 //该项为最后一项时，高度自动加上本行，Width置0,。
                 else if (count == spanCounts) {
                     count = 1;
-                    params = new LinearLayout.LayoutParams((int) (screenWidth - width), ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params = new FrameLayout.LayoutParams((int) (screenWidth - width), ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(width, height, 0, 0);
                     rivItem.setLayoutParams(params);
                     rivItem.setPadding(10, (int) context.getResources().getDimension(R.dimen.dp_10), 0, 0);
@@ -182,9 +182,9 @@ public class ReviewStyleView extends FrameLayout {
 
                     count++;
                     if (i + 1 == infoList.size() || (i + 1 < infoList.size() && infoList.get(i + 1).isSingleLine() == true))
-                        params = new LinearLayout.LayoutParams((int) (itemWidth - width), ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params = new FrameLayout.LayoutParams((int) (itemWidth - width), ViewGroup.LayoutParams.WRAP_CONTENT);
                     else
-                        params = new LinearLayout.LayoutParams((int) (itemWidth * (item.getWidthPercent())), ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params = new FrameLayout.LayoutParams((int) (itemWidth * (item.getWidthPercent())), ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(width, height, 0, 0);
                     rivItem.setLayoutParams(params);
                     rivItem.setPadding(10, (int) context.getResources().getDimension(R.dimen.dp_10), 0, 0);
@@ -199,7 +199,7 @@ public class ReviewStyleView extends FrameLayout {
             else {
                 count = 1;
                 width = 0;
-                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, height, 0, 0);
                 rivItem.setLayoutParams(params);
                 rivItem.setPadding(0, (int) context.getResources().getDimension(R.dimen.dp_10), 0, 0);
