@@ -68,7 +68,7 @@ public class FormMergeActivity extends AppCompatActivity {
     private List<FormConditionBean> fixconditions;
     private List<FormBean.ReportConditionBean> conditions;
     private List<FormBean.ReportColumnsBean> columnsBeans;
-    FormMerge formMerge;
+    FormMergetest formMerge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +178,7 @@ public class FormMergeActivity extends AppCompatActivity {
     private void initForm(List<FormBean.ReportColumnsBean> columns, String data) {
         try {
 
-            formMerge = new FormMerge(this);
+            formMerge = new FormMergetest(this);
             formMerge.setColumnsTitle(getParentColumns(columns));
             formMerge.setData(data);
             formMerge.build();

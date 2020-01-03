@@ -25,12 +25,12 @@ public class FormMergeAdapter2 extends RecyclerView.Adapter<FormMergeAdapter2.VH
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new VH(new FormMergeView3(context));
+        return new VH(new FormMergeView2(context));
     }
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        ((FormMergeView3) holder.itemView).setData(list.get(position), colCount,true);
+        ((FormMergeView2) holder.itemView).setData(list.get(position), colCount,true);
         holder.setIsRecyclable(false);
     }
 

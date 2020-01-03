@@ -56,7 +56,6 @@ public class FormColumnView3 extends TextView {
     }
 
     private void initSize() {
-        int width = PxUtil.getWidth(context);
         itemWidth = PxUtil.getWidth(context) * column.getColumnWidth() / 100;
         itemHeight = context.getResources().getDimensionPixelOffset(R.dimen.dp_40);
     }
@@ -69,7 +68,7 @@ public class FormColumnView3 extends TextView {
         initSize();
         if (isDetail) {
             marginTop = (column.getRow() - startRow) * itemHeight;
-            marginLeft = (column.getMarginLeft() / 100) * itemWidth;
+            marginLeft = column.getMarginLeft() * PxUtil.getWidth(context)  / 100;
         }
         if (startCol == 0) {
             setTextColor(context.getColor(R.color.form_menu_title));
