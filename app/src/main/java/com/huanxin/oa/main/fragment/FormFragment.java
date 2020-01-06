@@ -19,6 +19,7 @@ import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.FormListActivity;
 import com.huanxin.oa.form.FormWithChartActivity;
+import com.huanxin.oa.form.FormWithChartActivitytest;
 import com.huanxin.oa.form.merge.FormMergeActivity;
 import com.huanxin.oa.form.FormNewActivity;
 import com.huanxin.oa.form.FormRefreshActivity;
@@ -243,7 +244,8 @@ public class FormFragment extends Fragment {
 //                            if (address.equals(NetConfig.addressLocal))
 //                            intent.setClass(getActivity(), FormMergeActivity.class);
 //                            else
-                            intent.setClass(getActivity(), FormWithChartActivity.class);
+//                            intent.setClass(getActivity(), FormWithChartActivity.class);
+                            intent.setClass(getActivity(), FormWithChartActivitytest.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);

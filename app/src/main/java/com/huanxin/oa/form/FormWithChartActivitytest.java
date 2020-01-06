@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,7 +56,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FormWithChartActivity extends AppCompatActivity {
+public class FormWithChartActivitytest extends AppCompatActivity {
     private final static String TAG = "FormWithChartActivity";
 
     private final static int CONDIRION_CODE = 500;
@@ -137,7 +136,6 @@ public class FormWithChartActivity extends AppCompatActivity {
         getIntentData();
         initView();
         url = address + NetConfig.server + NetConfig.Form_Method;
-        Log.e("menuid", menuid);
         getData();
     }
 
@@ -183,7 +181,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                     boolean isSuccess = jsonObject.getBoolean("success");
                     if (isSuccess) {
                         String table = jsonObject.optString("info");
-//                        Log.e("tabledata", table);
                         String data = jsonObject.optString("olddata");
 
                         Gson gson = new Gson();
@@ -191,11 +188,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                         List<FormBean.ReportInfoBean> info = formBean.getReportInfo();
                         List<FormBean.ReportConditionBean> condition = formBean.getReportCondition();
                         List<FormBean.ReportColumnsBean> column = formBean.getReportColumns();
-
-//                        Log.e("info", new Gson().toJson(info));
-//                        Log.e("condition", new Gson().toJson(condition));
-//                        Log.e("column", new Gson().toJson(column));
-//                        Log.e("info",new Gson().toJson(info));
                         getFixconditions(info);
 
                         getAxisField(info);
@@ -343,7 +335,6 @@ public class FormWithChartActivity extends AppCompatActivity {
 
     private void getChildXAxisName() {
         for (FormBean.ReportColumnsBean column : columnsBeans) {
-//            Log.e("xmana",column.getSFieldsName());
             if (childXValue.equals(column.getSFieldsName()) && column.isChild()) {
                 childXName = column.getSFieldsdisplayName();
                 Log.e("chidldxmana", childXName);
@@ -494,35 +485,24 @@ public class FormWithChartActivity extends AppCompatActivity {
         }
         setChildFormRowTotalName(glchildForm);
         llChild.addView(glchildForm);
-//        glchildForm.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                scrollView.scrollTo(0, llContent.getHeight());
-//            }
-//        });
-
     }
 
     private void setChildtFormTotaData(int i, String data, GridLayout glchildForm) throws JSONException, Exception {
-//        addFormTotalChild(ChartData.get(0).getList().size() + 1, i, data, false, R.color.form_menu_total);
         FormChartBean style = new FormChartBean().setRow(ChildChartData.size() + 1).setCol(i).setText(data).setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
         glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(ChildChartData.get(0).getList().size() + 1, i));
     }
 
     private void setChildFormRowTotalName(GridLayout glchildForm) throws JSONException, Exception {
-//        addFormTotalChild(ChartData.get(0).getList().size() + 1, 0, "总计", false, R.color.form_menu_total);
         FormChartBean style = new FormChartBean().setRow(ChildChartData.size() + 1).setCol(0).setText("总计").setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
         glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(ChildChartData.get(0).getList().size() + 1, 0));
     }
 
     private void setChildFormColumnName(int i, GridLayout glchildForm) throws JSONException, Exception {
-//        addChildFormChild(0, i, ChildChartData.get(i - 1).getName(), true, glchildForm);
         FormChartBean style = new FormChartBean().setRow(0).setCol(i).setText(ChildChartData.get(i - 1).getName()).setTextColor(R.color.white).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL);
         glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(0, i));
     }
 
     private void setChildFormRowName(GridLayout glchildForm) throws JSONException, Exception {
-//        addChildFormChild(0, 0, childXName, true, glchildForm);
         FormChartBean style = new FormChartBean().setRow(0).setCol(0).setText(childXName).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.white);
         glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(0, 0));
     }
@@ -537,16 +517,10 @@ public class FormWithChartActivity extends AppCompatActivity {
             if (i == 0) {
                 FormChartBean style = new FormChartBean().setRow(j + 1).setCol(0).setText(datas.get(j).getxValue()).setBackgroundColor(R.color.form_menu_item).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.form_menu_title);
                 glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, 0));
-//                addFormTotalChild(j + 1, 0, datas.get(j).getxValue(), false, R.color.form_menu_item);
             }
-//            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
             FormChartBean style = new FormChartBean().setRow(j + 1).setCol(i + 1).setText(StringUtil.float2Str(datas.get(j).getyValue())).setBackgroundColor(R.color.form_menu_white).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.default_content_color);
             glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, i + 1));
 
-//            if (i == 0) {
-//                addChildFormChild(j + 1, 0, datas.get(j).getxValue(), false, glchildForm);
-//            }
-//            addChildFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false, glchildForm);
         }
     }
 
@@ -639,7 +613,6 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*获取图表数据源名字*/
     private void getChartFields(JSONArray jsonArray) throws JSONException, Exception {
         fields.clear();
-//        Log.e("fileds",jsonArray.optString(0));
         for (int i = 0; i < jsonArray.length(); i++) {
             if (!fields.contains(jsonArray.getJSONObject(i).optString(field)))
                 fields.add(jsonArray.getJSONObject(i).optString(field));
@@ -804,7 +777,6 @@ public class FormWithChartActivity extends AppCompatActivity {
     /*获取关联图表数据源名字*/
     private void getChildChartFields(JSONArray jsonArray) throws JSONException, Exception {
         childFields.clear();
-//        Log.e("fileds",jsonArray.optString(0));
         for (int i = 0; i < jsonArray.length(); i++) {
             if (!childFields.contains(jsonArray.getJSONObject(i).optString(childField)))
                 childFields.add(jsonArray.getJSONObject(i).optString(childField));
@@ -862,27 +834,22 @@ public class FormWithChartActivity extends AppCompatActivity {
     }
 
     private void setFormTotaData(int i, String data) throws JSONException, Exception {
-//        addFormTotalChild(ChartData.get(0).getList().size() + 1, i, data, false, R.color.form_menu_total);
         FormChartBean style = new FormChartBean().setRow(ChartData.get(0).getList().size() + 1).setCol(i).setText(data).setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
         glForm.addView(FormUtil.getColumn(this, style), getChildParam(ChartData.get(0).getList().size() + 1, i));
     }
 
     private void setFormRowTotalName() throws JSONException, Exception {
-//        addFormTotalChild(ChartData.get(0).getList().size() + 1, 0, "总计", false, R.color.form_menu_total);
         FormChartBean style = new FormChartBean().setRow(ChartData.get(0).getList().size() + 1).setCol(0).setText("总计").setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
         glForm.addView(FormUtil.getColumn(this, style), getChildParam(ChartData.get(0).getList().size() + 1, 0));
     }
 
     private void setFormColumnName(int i) throws JSONException, Exception {
-//        addFormChild(0, i, ChartData.get(i - 1).getName(), true);
 
         FormChartBean style = new FormChartBean().setRow(0).setCol(i).setText(ChartData.get(i - 1).getName()).setTextColor(R.color.white).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL);
         glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, i));
     }
 
     private void setFormRowName() throws JSONException, Exception {
-//        addFormChild(0, 0, xName, true);
-
         FormChartBean style = new FormChartBean().setRow(0).setCol(0).setText(xName).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.white);
         glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, 0));
     }
@@ -902,44 +869,13 @@ public class FormWithChartActivity extends AppCompatActivity {
                         judgeChild(((TextView) v).getText().toString());
                     }
                 });
-//                glForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, 0));
                 glForm.addView(textView, getChildParam(j + 1, 0));
-//                addFormTotalChild(j + 1, 0, datas.get(j).getxValue(), false, R.color.form_menu_item);
             }
-//            addFormChild(j + 1, i + 1, datas.get(j).getyValue() + "", false);
             FormChartBean style = new FormChartBean().setRow(j + 1).setCol(i + 1).setText(StringUtil.float2Str(datas.get(j).getyValue())).setBackgroundColor(R.color.form_menu_white).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.default_content_color);
             glForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, i + 1));
         }
     }
 
-    private void addFormChild(int row, int col, String text, boolean isTitle) throws Exception {
-        TextView textView = getChildView(text, isTitle, glForm);
-        if (col == 0 && row != ChartData.get(0).getList().size() + 1 && isTitle == false && haveChild) {
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    llChild.removeAllViews();
-                    judgeChild(((TextView) v).getText().toString());
-
-                }
-            });
-        }
-
-        glForm.addView(textView, getChildParam(row, col));
-
-    }
-
-    private void addFormTotalChild(int row, int col, String text, boolean isTitle, @ColorRes int color) throws Exception {
-        TextView textView = getChildView(text, isTitle, glForm);
-        textView.setBackgroundColor(getColor(color));
-        glForm.addView(textView, getChildParam(row, col));
-    }
-
-    private TextView getChild() {
-        TextView textView = new TextView(this);
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
-        return textView;
-    }
 
     private void setChildView() {
         switch (childChartType) {
@@ -1093,7 +1029,7 @@ public class FormWithChartActivity extends AppCompatActivity {
             public void run() {
                 LoadingDialog.cancelDialogForLoading();
                 if (StringUtil.isNotEmpty(message))
-                    Toasts.showShort(FormWithChartActivity.this, message);
+                    Toasts.showShort(FormWithChartActivitytest.this, message);
             }
         });
     }
@@ -1176,7 +1112,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                     e.printStackTrace();
                     loadFail("数据解析错误");
                 }
-
             }
 
             @Override
