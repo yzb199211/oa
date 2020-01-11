@@ -148,9 +148,6 @@ public class LoginActivity extends BaseActivity {
 //                    address = NetConfig.addressLocal;
 //                }
                 permission(intent);
-
-
-
 //                String filePath = "/storage/emulated/0/Download/browser/031001700311-20586419.pdf";
 //                String fileName = "031001700311-20586419.pdf";
 //                DisplayFileActivity.openDispalyFileActivity(LoginActivity.this, filePath, fileName);

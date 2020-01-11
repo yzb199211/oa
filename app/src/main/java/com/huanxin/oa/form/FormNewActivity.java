@@ -115,6 +115,7 @@ public class FormNewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String string) {
                 try {
+                    Log.e("data", string);
                     JSONObject data = new JSONObject(string);
                     boolean isSucess = data.optBoolean("success");
                     if (isSucess) {
@@ -148,6 +149,7 @@ public class FormNewActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "GetReportInfo"));
         params.add(new NetParams("iFormID", menuId));
         params.add(new NetParams("userid", userId));
+        params.add(new NetParams("isMerge", "1"));
         return params;
     }
 
@@ -276,6 +278,7 @@ public class FormNewActivity extends AppCompatActivity {
         params.add(new NetParams("otype", "getReportData"));
         params.add(new NetParams("userid", userId));
         params.add(new NetParams("iFormID", menuId));
+        params.add(new NetParams("isMerge", "1"));
 
         if (StringUtil.isNotEmpty(fixfilter) && StringUtil.isNotEmpty(filter)) {
             params.add(new NetParams("filters", filter + " and " + fixfilter));

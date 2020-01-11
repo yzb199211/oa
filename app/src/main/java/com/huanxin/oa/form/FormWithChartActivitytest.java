@@ -120,6 +120,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
 
     private String address;
     String url;
+    FormAndCharts firstForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,7 +200,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                         if (info.size() > 0) {
                             getChildInfo(info.get(0));
                         }
-
 
                         if (TextUtils.isEmpty(field)) {
                             loadFail("字段类型未配置");
@@ -388,69 +388,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
         loadFail("");
     }
 
-    LineCharts lineCharts;
-    LineCubicCharts lineCubicCharts;
-    BarCharts barCharts;
-    BarHorCharts barHorCharts;
-    BarStackCharts barStackCharts;
-    RadarCharts radarCharts;
-
-    /*设置图表*/
-    private void setView() throws Exception {
-        switch (chartType) {
-            case "0":
-                lineCharts = new LineCharts(this);
-                lineCharts.setData(ChartData);
-                llContent.addView(lineCharts);
-                break;
-            case "1":
-                barCharts = new BarCharts(this);
-                barCharts.setData(ChartData);
-                barCharts.build();
-                llContent.addView(barCharts);
-                break;
-            case "2":
-                for (int i = 0; i < ChartData.size(); i++) {
-                    PieCharts pieCharts = new PieCharts(this);
-                    pieCharts.setData(ChartData.get(0).getList());
-                    pieCharts.setCenterText(TextUtils.isEmpty(ChartData.get(0).getName()) ? "" : ChartData.get(0).getName());
-                    pieCharts.build();
-                    llContent.addView(pieCharts);
-                    break;
-                }
-                break;
-
-            case "3":
-                lineCubicCharts = new LineCubicCharts(this);
-                lineCubicCharts.setData(ChartData);
-                lineCubicCharts.build();
-                llContent.addView(lineCubicCharts);
-                break;
-            case "4":
-                barHorCharts = new BarHorCharts(this);
-                barHorCharts.setData(ChartData);
-                barHorCharts.build();
-                llContent.addView(barHorCharts);
-                break;
-            case "5":
-                radarCharts = new RadarCharts(this);
-                radarCharts.setData(ChartData);
-                radarCharts.build();
-                llContent.addView(radarCharts);
-                break;
-            case "6":
-                barStackCharts = new BarStackCharts(this);
-                barStackCharts.setData(ChartData);
-                barStackCharts.build();
-                llContent.addView(barStackCharts);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
     /*初始化图数据*/
     private void initChart(String data) throws JSONException, Exception {
         if (isXTypeTrue() == false) {
@@ -638,8 +575,9 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        setView();
-                        initForm();
+                        setForm();
+//                        setView();
+//                        initForm();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -647,6 +585,19 @@ public class FormWithChartActivitytest extends AppCompatActivity {
             });
         }
     }
+
+    private void setForm() {
+        if (firstForm == null) {
+            firstForm = new FormAndCharts(this);
+            firstForm.setFormXName(xName);
+            firstForm.setData(ChartData);
+            firstForm.setTitles(fields);
+            firstForm.Build();
+        }else {
+
+        }
+    }
+
 
     private void makeChartDataSameLength() {
         int length = ChartData.get(0).getList().size();
@@ -812,27 +763,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
         }
     }
 
-    /*初始化表*/
-    private void initForm() throws JSONException, Exception {
-        glForm = new GridLayout(this);
-        glForm.setBackgroundColor(getColor(R.color.form_menu_bg));
-        glForm.setRowCount(ChartData.get(0).getList().size() + 2);
-        glForm.setColumnCount(fields.size() + 1);
-        setFormRowName();
-        int length = ChartData.get(0).getList().size();
-        for (int i = 0; i < ChartData.size(); i++) {
-            setFormColumnName(i + 1);
-            List<ChartBean.Line> datas = new ArrayList<>();
-            datas.addAll(ChartData.get(i).getList());
-            setFormData(length, datas, i);
-        }
-        for (int j = 0; j < ChartData.size(); j++) {
-            setFormTotaData(j + 1, StringUtil.float2Str(ChartData.get(j).getTotal()));
-        }
-        setFormRowTotalName();
-        llContent.addView(glForm);
-    }
-
     private void setFormTotaData(int i, String data) throws JSONException, Exception {
         FormChartBean style = new FormChartBean().setRow(ChartData.get(0).getList().size() + 1).setCol(i).setText(data).setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
         glForm.addView(FormUtil.getColumn(this, style), getChildParam(ChartData.get(0).getList().size() + 1, i));
@@ -876,29 +806,35 @@ public class FormWithChartActivitytest extends AppCompatActivity {
         }
     }
 
+    LineCharts childLineChart;
+    BarCharts childBarChart;
+    PieCharts childPirChart;
 
     private void setChildView() {
         switch (childChartType) {
             case "0":
-                LineCharts lineCharts = new LineCharts(this);
-                lineCharts.setData(ChildChartData);
-                llChild.addView(lineCharts);
+                if (childLineChart == null)
+                    childLineChart = new LineCharts(this);
+                childLineChart.setData(ChildChartData);
+                llChild.addView(childLineChart);
 
                 break;
             case "1":
-                BarCharts barCharts = new BarCharts(this);
-                barCharts.setData(ChildChartData);
-                barCharts.build();
-                llChild.addView(barCharts);
+                if (childBarChart == null)
+                    childBarChart = new BarCharts(this);
+                childBarChart.setData(ChildChartData);
+                childBarChart.build();
+                llChild.addView(childBarChart);
 
                 break;
             case "2":
+                if (childPirChart == null)
+                    childPirChart = new PieCharts(this);
                 for (int i = 0; i < ChildChartData.size(); i++) {
-                    PieCharts pieCharts = new PieCharts(this);
-                    pieCharts.setData(ChildChartData.get(0).getList());
-                    pieCharts.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
-                    pieCharts.build();
-                    llChild.addView(pieCharts);
+                    childPirChart.setData(ChildChartData.get(0).getList());
+                    childPirChart.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
+                    childPirChart.build();
+                    llChild.addView(childPirChart);
 
                     break;
                 }
@@ -1104,7 +1040,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                     } else {
                         loadFail(jsonObject.optString("message"));
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     loadFail("json数据解析错误");

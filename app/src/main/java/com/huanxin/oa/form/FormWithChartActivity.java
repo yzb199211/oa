@@ -660,7 +660,7 @@ public class FormWithChartActivity extends AppCompatActivity {
         /*数据处理为相同长度*/
         if (ChartData.size() > 0) {
             makeChartDataSameLength();
-            Log.e("TAG", new Gson().toJson(ChartData));
+//            Log.e("TAG", new Gson().toJson(ChartData));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

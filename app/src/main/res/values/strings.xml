@@ -47,6 +47,10 @@
     <string name="pickerview_hours">时</string>
     <string name="pickerview_minutes">分</string>
     <string name="pickerview_seconds">秒</string>
+    <!--表格-->
+    <string name="form_empty_title">未设置表格标题</string>
+    <string name="form_empty_detail">未设置图表数据</string>
+    <string name="form_chart_error">图表加载错误</string>
     <!--首页菜单标题-->
     <string name="menu_message">提醒</string>
     <string name="menu_review">审核</string>

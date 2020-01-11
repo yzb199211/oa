@@ -19,4 +19,5 @@ public class FormUtil {
         textView.setPadding(context.getResources().getDimensionPixelOffset(styles.getPaddingLeft()), context.getResources().getDimensionPixelOffset(styles.getPaddingTop()), context.getResources().getDimensionPixelOffset(styles.getPaddingRight()), context.getResources().getDimensionPixelOffset(styles.getPaddingBottom()));
         return textView;
     }
+
 }
