@@ -241,8 +241,8 @@ public class FormFragment extends Fragment {
                             startActivity(intent);
                         } else if (isUnion == 0 && isChart == 1) {
                             Intent intent = new Intent();
-                            intent.setClass(getActivity(), FormWithChartActivity.class);
-//                            intent.setClass(getActivity(), FormWithChartActivitytest.class);
+//                            intent.setClass(getActivity(), FormWithChartActivity.class);
+                            intent.setClass(getActivity(), FormWithChartActivitytest.class);
                             intent.putExtra("menuid", menuId + "");
                             intent.putExtra("title", menus.get(position).getSMenuName());
                             startActivity(intent);

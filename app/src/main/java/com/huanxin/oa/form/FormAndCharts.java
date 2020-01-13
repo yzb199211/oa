@@ -68,7 +68,13 @@ public class FormAndCharts extends LinearLayout {
 
     private void init() {
         setOrientation(VERTICAL);
+        initList();
         initForm();
+    }
+
+    private void initList() {
+        ChartData = new ArrayList<>();
+        titles = new ArrayList<>();
     }
 
     private void initForm() {
@@ -200,6 +206,7 @@ public class FormAndCharts extends LinearLayout {
             setFormTotalData(j + 1, StringUtil.float2Str(ChartData.get(j).getTotal()));
         }
         setFormRowTotalName();
+        addView(glForm);
     }
 
     private void setFormTotalData(int i, String data) throws Exception {
@@ -291,6 +298,11 @@ public class FormAndCharts extends LinearLayout {
 
     public FormAndCharts setHaveChart(boolean haveChart) {
         this.haveChart = haveChart;
+        return this;
+    }
+
+    public FormAndCharts setChartType(String chartType) {
+        this.chartType = chartType;
         return this;
     }
 

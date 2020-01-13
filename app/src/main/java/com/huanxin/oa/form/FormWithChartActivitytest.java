@@ -1,12 +1,9 @@
 package com.huanxin.oa.form;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -14,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,9 +18,7 @@ import com.google.gson.Gson;
 import com.huanxin.oa.R;
 import com.huanxin.oa.dialog.LoadingDialog;
 import com.huanxin.oa.form.model.FormBean;
-import com.huanxin.oa.form.model.FormChartBean;
 import com.huanxin.oa.form.model.FormConditionBean;
-import com.huanxin.oa.form.utils.FormUtil;
 import com.huanxin.oa.interfaces.ResponseListener;
 import com.huanxin.oa.main.interfaces.OnItemClickListener;
 import com.huanxin.oa.utils.SharedPreferencesHelper;
@@ -35,13 +29,6 @@ import com.huanxin.oa.utils.net.NetParams;
 import com.huanxin.oa.utils.net.NetUtil;
 import com.huanxin.oa.utils.net.Otype;
 import com.huanxin.oa.view.chart.ChartBean;
-import com.huanxin.oa.view.chart.bar.BarCharts;
-import com.huanxin.oa.view.chart.bar.BarHorCharts;
-import com.huanxin.oa.view.chart.bar.BarStackCharts;
-import com.huanxin.oa.view.chart.line.LineCharts;
-import com.huanxin.oa.view.chart.line.LineCubicCharts;
-import com.huanxin.oa.view.chart.pie.PieCharts;
-import com.huanxin.oa.view.chart.radar.RadarCharts;
 import com.huanxin.oa.view.tab.TabView;
 
 import org.json.JSONArray;
@@ -75,7 +62,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
     LinearLayout llChild;
     @BindView(R.id.scroll)
     ScrollView scrollView;
-    GridLayout glForm;
 
     String userid;
     String menuid;
@@ -88,6 +74,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
     String title = "";
     String fixfilter = "";
 
+    boolean haveChart;
     boolean haveChild;
     boolean childIsStore;
     boolean isShowChildChart;
@@ -98,7 +85,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
     String childXName = "";
     String childChartType;
     String childFilter = "";
-    int childChartHeight;
 
     TabView currentView;
     int currenViewPos = -1;
@@ -110,7 +96,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
 
     List<String> fields;
     List<String> childFields;
-    List<String> titlte;
     List<ChartBean> ChartData;
     List<ChartBean> ChildChartData;
     List<ChartBean.Line> pieData;
@@ -121,6 +106,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
     private String address;
     String url;
     FormAndCharts firstForm;
+    FormAndCharts secondForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +176,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                         List<FormBean.ReportConditionBean> condition = formBean.getReportCondition();
                         List<FormBean.ReportColumnsBean> column = formBean.getReportColumns();
                         getFixconditions(info);
-
                         getAxisField(info);
 
                         getCoditionData(condition);
@@ -272,6 +257,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
             if (StringUtil.isNotEmpty(fixcondition.getSAppFiltersName4())) {
                 fixconditions.add(new FormConditionBean(fixcondition.getSAppFiltersName4(), TextUtils.isEmpty(fixcondition.getSAppFilters4()) ? "" : fixcondition.getSAppFilters4()));
             }
+            haveChart = fixcondition.getIShowChart() == 1 ? true : false;
         }
         setFixConditions();
     }
@@ -316,7 +302,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                     currentView = (TabView) view;
                     currentView.setChecked(true);
                     fixfilter = fixconditions.get(position).getFilters();
-                    llContent.removeAllViews();
+//                    llContent.removeAllViews();
                     llChild.removeAllViews();
                     getFormData();
                 }
@@ -404,69 +390,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
 
     }
 
-    /*初始化表*/
-    private void initChildForm() throws JSONException, Exception {
-        GridLayout glchildForm = new GridLayout(this);
-        glchildForm.setRowCount(ChildChartData.get(0).getList().size() + 2);
-        glchildForm.setColumnCount(childFields.size() + 1);
-        setChildFormRowName(glchildForm);
-        int length = ChildChartData.get(0).getList().size();
-        for (int i = 0; i < ChildChartData.size(); i++) {
-            setChildFormColumnName(i + 1, glchildForm);
-            List<ChartBean.Line> datas = new ArrayList<>();
-            datas.addAll(ChildChartData.get(i).getList());
-            setChildFormData(length, datas, i, glchildForm);
-        }
-        for (int j = 0; j < ChildChartData.size(); j++) {
-            setChildtFormTotaData(j + 1, StringUtil.float2Str(ChildChartData.get(j).getTotal()), glchildForm);
-        }
-        setChildFormRowTotalName(glchildForm);
-        llChild.addView(glchildForm);
-    }
-
-    private void setChildtFormTotaData(int i, String data, GridLayout glchildForm) throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(ChildChartData.size() + 1).setCol(i).setText(data).setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
-        glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(ChildChartData.get(0).getList().size() + 1, i));
-    }
-
-    private void setChildFormRowTotalName(GridLayout glchildForm) throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(ChildChartData.size() + 1).setCol(0).setText("总计").setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
-        glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(ChildChartData.get(0).getList().size() + 1, 0));
-    }
-
-    private void setChildFormColumnName(int i, GridLayout glchildForm) throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(0).setCol(i).setText(ChildChartData.get(i - 1).getName()).setTextColor(R.color.white).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL);
-        glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(0, i));
-    }
-
-    private void setChildFormRowName(GridLayout glchildForm) throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(0).setCol(0).setText(childXName).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.white);
-        glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(0, 0));
-    }
-
-    private void setChildFormData(int length, List<ChartBean.Line> datas, int i, GridLayout glchildForm) throws JSONException, Exception {
-        for (int j = 0; j < length; j++) {
-            if (datas.size() < length) {
-                datas.add(new ChartBean.Line());
-            }
-
-
-            if (i == 0) {
-                FormChartBean style = new FormChartBean().setRow(j + 1).setCol(0).setText(datas.get(j).getxValue()).setBackgroundColor(R.color.form_menu_item).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.form_menu_title);
-                glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, 0));
-            }
-            FormChartBean style = new FormChartBean().setRow(j + 1).setCol(i + 1).setText(StringUtil.float2Str(datas.get(j).getyValue())).setBackgroundColor(R.color.form_menu_white).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.default_content_color);
-            glchildForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, i + 1));
-
-        }
-    }
-
-    private void addChildFormChild(int row, int col, String text, boolean isTitle, GridLayout glchildForm) throws Exception {
-        TextView textView = getChildView(text, isTitle, glchildForm);
-        glchildForm.addView(textView, getChildParam(row, col));
-
-    }
-
     private void judgeChild(String s) {
 
         if (TextUtils.isEmpty(childField)) {
@@ -481,17 +404,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
 
     }
 
-
-    private TextView getChildView(String text, boolean isTitle, GridLayout glForm) throws Exception {
-        TextView tvTitle = (TextView) LayoutInflater.from(this).inflate(R.layout.item_form, glForm, false);
-        tvTitle.setText(text);
-        tvTitle.setGravity(Gravity.CENTER);
-        if (isTitle) {
-            tvTitle.setBackgroundColor(getColor(R.color.blue));
-            tvTitle.setTextColor(getColor(R.color.white));
-        }
-        return tvTitle;
-    }
 
     private GridLayout.LayoutParams getChildParam(int row, int col) throws Exception {
         GridLayout.Spec rowSpec;
@@ -576,8 +488,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                 public void run() {
                     try {
                         setForm();
-//                        setView();
-//                        initForm();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -589,13 +499,27 @@ public class FormWithChartActivitytest extends AppCompatActivity {
     private void setForm() {
         if (firstForm == null) {
             firstForm = new FormAndCharts(this);
-            firstForm.setFormXName(xName);
-            firstForm.setData(ChartData);
-            firstForm.setTitles(fields);
-            firstForm.Build();
-        }else {
-
+            firstForm.setFormXName(xName)
+                    .setData(ChartData)
+                    .setTitles(fields)
+                    .setChartType(chartType)
+                    .setHaveChart(haveChart)
+                    .Build();
+            setFormListener();
+            llContent.addView(firstForm);
+        } else {
+            firstForm.setData(ChartData)
+                    .Build();
         }
+    }
+
+    private void setFormListener() {
+        firstForm.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toasts.showLong(FormWithChartActivitytest.this, ((TextView) view).getText().toString());
+            }
+        });
     }
 
 
@@ -607,7 +531,6 @@ public class FormWithChartActivitytest extends AppCompatActivity {
 
             } else {
                 chartDataReduceLength(length, i);
-
             }
         }
     }
@@ -752,9 +675,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        if (isShowChildChart)
-                            setChildView();
-                        initChildForm();
+                        setChildView();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -763,86 +684,28 @@ public class FormWithChartActivitytest extends AppCompatActivity {
         }
     }
 
-    private void setFormTotaData(int i, String data) throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(ChartData.get(0).getList().size() + 1).setCol(i).setText(data).setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
-        glForm.addView(FormUtil.getColumn(this, style), getChildParam(ChartData.get(0).getList().size() + 1, i));
-    }
-
-    private void setFormRowTotalName() throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(ChartData.get(0).getList().size() + 1).setCol(0).setText("总计").setTypeface(Typeface.DEFAULT_BOLD).setTextColor(R.color.default_text_color).setBackgroundColor(R.color.form_menu_total).setGravity(Gravity.CENTER_HORIZONTAL);
-        glForm.addView(FormUtil.getColumn(this, style), getChildParam(ChartData.get(0).getList().size() + 1, 0));
-    }
-
-    private void setFormColumnName(int i) throws JSONException, Exception {
-
-        FormChartBean style = new FormChartBean().setRow(0).setCol(i).setText(ChartData.get(i - 1).getName()).setTextColor(R.color.white).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL);
-        glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, i));
-    }
-
-    private void setFormRowName() throws JSONException, Exception {
-        FormChartBean style = new FormChartBean().setRow(0).setCol(0).setText(xName).setBackgroundColor(R.color.blue).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.white);
-        glForm.addView(FormUtil.getColumn(this, style), getChildParam(0, 0));
-    }
-
-    private void setFormData(int length, List<ChartBean.Line> datas, int i) throws JSONException, Exception {
-        for (int j = 0; j < length; j++) {
-            if (datas.size() < length) {
-                datas.add(new ChartBean.Line());
-            }
-            if (i == 0) {
-                FormChartBean style = new FormChartBean().setRow(j + 1).setCol(0).setText(datas.get(j).getxValue()).setBackgroundColor(R.color.form_menu_item).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.form_menu_title);
-                TextView textView = FormUtil.getColumn(this, style);
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        llChild.removeAllViews();
-                        judgeChild(((TextView) v).getText().toString());
-                    }
-                });
-                glForm.addView(textView, getChildParam(j + 1, 0));
-            }
-            FormChartBean style = new FormChartBean().setRow(j + 1).setCol(i + 1).setText(StringUtil.float2Str(datas.get(j).getyValue())).setBackgroundColor(R.color.form_menu_white).setGravity(Gravity.CENTER_HORIZONTAL).setTextColor(R.color.default_content_color);
-            glForm.addView(FormUtil.getColumn(this, style), getChildParam(j + 1, i + 1));
-        }
-    }
-
-    LineCharts childLineChart;
-    BarCharts childBarChart;
-    PieCharts childPirChart;
 
     private void setChildView() {
-        switch (childChartType) {
-            case "0":
-                if (childLineChart == null)
-                    childLineChart = new LineCharts(this);
-                childLineChart.setData(ChildChartData);
-                llChild.addView(childLineChart);
-
-                break;
-            case "1":
-                if (childBarChart == null)
-                    childBarChart = new BarCharts(this);
-                childBarChart.setData(ChildChartData);
-                childBarChart.build();
-                llChild.addView(childBarChart);
-
-                break;
-            case "2":
-                if (childPirChart == null)
-                    childPirChart = new PieCharts(this);
-                for (int i = 0; i < ChildChartData.size(); i++) {
-                    childPirChart.setData(ChildChartData.get(0).getList());
-                    childPirChart.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
-                    childPirChart.build();
-                    llChild.addView(childPirChart);
-
-                    break;
-                }
-                break;
-            default:
-                break;
+        if (secondForm == null) {
+            secondForm = new FormAndCharts(this);
+            secondForm.setHaveChart(isShowChildChart)
+                    .setFormXName(childXName)
+                    .setChartType(childChartType)
+                    .setTitles(childFields)
+                    .setData(ChildChartData)
+                    .Build();
+            llChild.addView(secondForm);
+        } else {
+            secondForm.setHaveChart(isShowChildChart)
+                    .setFormXName(childXName)
+                    .setChartType(childChartType)
+                    .setTitles(childFields)
+                    .setData(ChildChartData)
+                    .Build();
         }
+
     }
+
 
     private void makeChildChartDataSameLength() {
         int length = ChildChartData.get(0).getList().size();
@@ -1032,7 +895,7 @@ public class FormWithChartActivitytest extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     loadFail("");
-                                    llContent.removeAllViews();
+//                                    llContent.removeAllViews();
                                     llChild.removeAllViews();
                                 }
                             });

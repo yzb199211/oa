@@ -947,7 +947,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                 LineCharts lineCharts = new LineCharts(this);
                 lineCharts.setData(ChildChartData);
                 llChild.addView(lineCharts);
-
                 break;
             case "1":
                 BarCharts barCharts = new BarCharts(this);
@@ -963,7 +962,6 @@ public class FormWithChartActivity extends AppCompatActivity {
                     pieCharts.setCenterText(TextUtils.isEmpty(ChildChartData.get(0).getName()) ? "" : ChildChartData.get(0).getName());
                     pieCharts.build();
                     llChild.addView(pieCharts);
-
                     break;
                 }
                 break;
