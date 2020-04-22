@@ -95,7 +95,7 @@ public class SignActivity extends BaseActivity {
     private LocationService locationService;
     SharedPreferencesHelper preferencesHelper;
     String customers;
-    String customerid;
+    String customerid = "";
     String userid;
     String address;
     String url;
@@ -120,6 +120,7 @@ public class SignActivity extends BaseActivity {
         locationService = ((BaseApplication) getApplication()).locationService;
         //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
         locationService.registerListener(mListener);
+        Log.e("succsser", locationService.registerListener(mListener) + "");
         //注册监听
         int type = getIntent().getIntExtra("from", 0);
         if (type == 0) {
@@ -136,13 +137,15 @@ public class SignActivity extends BaseActivity {
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
+
+        super.onStop();
         locationService.unregisterListener(mListener); //注销掉监听
         locationService.stop(); //停止定位服务
-        super.onStop();
     }
 
     private void initView() {
         tvDisagree.setVisibility(View.GONE);
+        tvAgree.setText("签到");
         line.setVisibility(View.GONE);
         bottomReview.setVisibility(View.VISIBLE);
         tvTitle.setText("考勤");
@@ -191,6 +194,7 @@ public class SignActivity extends BaseActivity {
         });
     }
 
+
     /*获取客户数据参数*/
     private List<NetParams> getCustomerParams() {
         List<NetParams> params = new ArrayList<>();
@@ -217,6 +221,10 @@ public class SignActivity extends BaseActivity {
                 canCamera();
                 break;
             case R.id.tv_agree:
+                if (TextUtils.isEmpty(customerid)) {
+                    Toasts.showShort(SignActivity.this, "请选择客户");
+                    return;
+                }
                 upLoad();
                 break;
             case R.id.tv_disagree:
@@ -349,7 +357,7 @@ public class SignActivity extends BaseActivity {
         @Override
         public void onReceiveLocation(BDLocation location) {
             String address = "";
-
+            Log.e("error", location.getLocType() + "");
 //            // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
                 if (location.getPoiList() != null && !location.getPoiList().isEmpty()) {
@@ -364,6 +372,7 @@ public class SignActivity extends BaseActivity {
                 }
                 logMsg(address);
             } else {
+
                 switch (location.getLocType()) {
                     case BDLocation.TypeServerError:
                         LocFail("服务端网络定位失败");

@@ -2,8 +2,10 @@ package com.huanxin.oa.utils.net;
 
 import android.widget.Toast;
 
+import com.huanxin.oa.R;
 import com.huanxin.oa.application.BaseApplication;
 import com.huanxin.oa.interfaces.ResponseListener;
+import com.huanxin.oa.utils.SharedPreferencesHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,6 +77,8 @@ public class NetUtil {
      * @return
      */
     public NetUtil params(List<NetParams> list, String url, boolean b) {
+        SharedPreferencesHelper preferencesHelper = new SharedPreferencesHelper(application.getApplicationContext(), application.getApplicationContext().getString(R.string.preferenceCache));
+        list.add(new NetParams("companycode", (String) preferencesHelper.getSharedPreference("companyCode", "")));
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++)

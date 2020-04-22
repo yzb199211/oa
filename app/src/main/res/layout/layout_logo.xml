@@ -12,8 +12,7 @@
         android:id="@+id/iv_logo"
         android:layout_width="@dimen/dp_60"
         android:layout_height="@dimen/dp_60"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/placeholder" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/tv_code"

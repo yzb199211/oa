@@ -3,6 +3,7 @@ package com.huanxin.oa.login;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -63,7 +66,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.OkHttpClient;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements View.OnKeyListener {
     private final String TAG = "LoginActivity";
 
     @BindView(R.id.iv_login_header)
@@ -89,7 +92,7 @@ public class LoginActivity extends BaseActivity {
     String dowmloadUrl;
 
     ProgressDialog progressDialog;
-    //    Dialog loading;
+
     File file;
     boolean isTest;
 
@@ -104,7 +107,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void inti() {
-        isTest = true;
+        isTest = false;
         address = (String) preferencesHelper.getSharedPreference("address", "");
         if (isTest == true) {
             preferencesHelper.put("address", NetConfig.address);
@@ -119,6 +122,8 @@ public class LoginActivity extends BaseActivity {
         String passWord = (String) preferencesHelper.getSharedPreference("password", "");
 
         etUser.setText(userId);
+        etPwd.setOnKeyListener(this);
+        etUser.setOnKeyListener(this);
 //        etUser.setSelection(userId.length());
         etPwd.setText(passWord);
 //        etPwd.setSelection(passWord.length());
@@ -410,13 +415,14 @@ public class LoginActivity extends BaseActivity {
         JSONObject jsonObject = new JSONObject(content);
         String address = jsonObject.optString("ServerAddr");
         String addressImg = jsonObject.optString("ServerImageAddr");
+        String companyCode = jsonObject.optString("companyCode");
         if (StringUtil.isNotEmpty(address)) {
             preferencesHelper.put("address", address);
             this.address = address;
         } else {
             Toasts.showShort(this, getString(R.string.login_address_empty));
         }
-
+        preferencesHelper.put("companyCode", TextUtils.isEmpty(companyCode) ? "" : companyCode);
         if (StringUtil.isNotEmpty(addressImg)) {
             preferencesHelper.put("addressImg", address);
         } else {
@@ -514,7 +520,6 @@ public class LoginActivity extends BaseActivity {
                 Message msg = mHandler.obtainMessage();
                 msg.what = 0;
                 mHandler.sendMessage(msg);
-
             }
 
             @Override
@@ -555,10 +560,27 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+//        Log.e("code", keyCode + "");
+        if ((keyCode == EditorInfo.IME_ACTION_SEND
+                || keyCode == EditorInfo.IME_ACTION_DONE || keyCode == KeyEvent.KEYCODE_ENTER) && event.getAction() == KeyEvent.ACTION_DOWN) {
+            closeKeybord();
+            return true;
         }
-        return super.onKeyDown(keyCode, event);
+        return false;
     }
+
+    public void closeKeybord() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+        }
+    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }
